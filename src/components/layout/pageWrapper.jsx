@@ -1,9 +1,8 @@
-import React from "react";
-import Seo from "../langHelpers/seo";
-import GlobalStyles from "./globalStyles";
-import Header from "./header";
-import Footer from "./footer";
-import LangProvider from "../../context/langProvider";
+import React from 'react';
+import Seo from '../langHelpers/seo';
+import Header from './header';
+import Footer from './footer';
+import LangProvider from '../../context/langProvider';
 
 const PageWrapper = ({
   pageData,
@@ -17,26 +16,20 @@ const PageWrapper = ({
   noFooter,
   children,
 }) => (
-  <>
-    <GlobalStyles />
+  <LangProvider pageData={pageData || notFoundPage}>
+    <Seo
+      seoTitle={seoTitle}
+      seoDescription={seoDescription}
+      seoImage={seoImage}
+      notFoundPage={notFoundPage}
+      notFoundPageLocale={notFoundPageLocale}
+      notFoundPageManifest={notFoundPageManifest}
+    />
 
-    <LangProvider pageData={pageData || notFoundPage}>
-      <Seo
-        seoTitle={seoTitle}
-        seoDescription={seoDescription}
-        seoImage={seoImage}
-        notFoundPage={notFoundPage}
-        notFoundPageLocale={notFoundPageLocale}
-        notFoundPageManifest={notFoundPageManifest}
-      />
-
-      {noHeader || <Header />}
-
-      <main>{children}</main>
-
-      {noFooter || <Footer />}
-    </LangProvider>
-  </>
+    {noHeader || <Header />}
+    <main>{children}</main>
+    {noFooter || <Footer />}
+  </LangProvider>
 );
 
 export default PageWrapper;

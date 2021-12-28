@@ -1,9 +1,9 @@
-import React from "react";
-import { graphql } from "gatsby";
-import { StructuredText } from "react-datocms";
-import Navigator from "../components/langHelpers/navigator";
-import PageWrapper from "../components/layout/pageWrapper";
-import Hero from "../components/layout/hero";
+import React from 'react';
+import { graphql } from 'gatsby';
+import { StructuredText } from 'react-datocms';
+import Navigator from '../components/langHelpers/navigator';
+import PageWrapper from '../components/layout/pageWrapper';
+import Hero from '../components/layout/hero';
 import {
   SectionContainerGridThreeCols,
   SectionContainerFlexTwoCols,
@@ -11,12 +11,12 @@ import {
   SectionContainerFlexTwoColsReverse,
   ColumnFlexTwoCols,
   TextBox,
-} from "../components/layout/sectionStyles";
+} from '../components/layout/sectionStyles';
 import {
   HeadingMedium,
   HeadingSmall,
-} from "../components/layout/headingStyles";
-import { Paragraph } from "../components/layout/paragraphStyles";
+} from '../components/layout/headingStyles';
+import { Paragraph } from '../components/layout/paragraphStyles';
 
 const OtherPageTemplate = ({
   data: {
@@ -38,7 +38,7 @@ const OtherPageTemplate = ({
       seoDescription={seoDescription}
       seoImage={seoImageUrl}
     >
-      {structuredBody.value && (
+      {structuredBody?.value && (
         <StructuredText
           data={structuredBody}
           renderBlock={({
@@ -60,7 +60,7 @@ const OtherPageTemplate = ({
             },
           }) => {
             switch (typeName) {
-              case "hero":
+              case 'hero':
                 return (
                   <Hero
                     alt={heroAlt}
@@ -68,7 +68,7 @@ const OtherPageTemplate = ({
                     subtitle={heroSubtitle}
                   />
                 );
-              case "section image left":
+              case 'section image left':
                 return (
                   <SectionWrapper>
                     <SectionContainerFlexTwoCols>
@@ -86,7 +86,7 @@ const OtherPageTemplate = ({
                                 transformedMeta,
                               }) => {
                                 switch (typeName) {
-                                  case "page":
+                                  case 'page':
                                     return (
                                       <Navigator
                                         {...transformedMeta}
@@ -96,7 +96,7 @@ const OtherPageTemplate = ({
                                         {children}
                                       </Navigator>
                                     );
-                                  case "home":
+                                  case 'home':
                                     return (
                                       <Navigator {...transformedMeta} home>
                                         {children}
@@ -114,7 +114,7 @@ const OtherPageTemplate = ({
                     </SectionContainerFlexTwoCols>
                   </SectionWrapper>
                 );
-              case "section image right":
+              case 'section image right':
                 return (
                   <SectionWrapper>
                     <SectionContainerFlexTwoColsReverse>
@@ -129,7 +129,7 @@ const OtherPageTemplate = ({
                                 transformedMeta,
                               }) => {
                                 switch (typeName) {
-                                  case "page":
+                                  case 'page':
                                     return (
                                       <Navigator
                                         {...transformedMeta}
@@ -139,7 +139,7 @@ const OtherPageTemplate = ({
                                         {children}
                                       </Navigator>
                                     );
-                                  case "home":
+                                  case 'home':
                                     return (
                                       <Navigator {...transformedMeta} home>
                                         {children}
@@ -160,7 +160,7 @@ const OtherPageTemplate = ({
                     </SectionContainerFlexTwoColsReverse>
                   </SectionWrapper>
                 );
-              case "three features set":
+              case 'three features set':
                 return (
                   <SectionWrapper>
                     <SectionContainerGridThreeCols>

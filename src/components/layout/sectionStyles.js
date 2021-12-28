@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from 'styled-components';
 
 // Sections
 
@@ -12,22 +12,23 @@ export const SectionWrapper = styled.section`
 
   ${({ isBlog, noTopPaddings }) => {
     if (isBlog) {
-      return `
-          padding: var(--globalPaddingLr) var(--globalPaddingLr) var(--globalPaddingTb);
-        `;
+      return css`
+        padding: var(--globalPaddingLr) var(--globalPaddingLr)
+          var(--globalPaddingTb);
+      `;
     }
     if (noTopPaddings) {
-      return `
-          padding: 0 var(--globalPaddingLr);
-        `;
+      return css`
+        padding: 0 var(--globalPaddingLr);
+      `;
     }
-    return `
-          padding: var(--globalPaddingTb) var(--globalPaddingLr);
-        `;
+    return css`
+      padding: var(--globalPaddingTb) var(--globalPaddingLr);
+    `;
   }}
 
   @media screen and (max-width: 860px) {
-    align-items: ${({ isArticle }) => (isArticle ? "flex-start" : "center")};
+    align-items: ${({ isArticle }) => (isArticle ? 'flex-start' : 'center')};
   }
 `;
 
@@ -102,7 +103,7 @@ export const SectionTitleContainer = styled.header`
   display: flex;
   align-items: center;
   margin-bottom: var(--gapXL);
-  justify-content: ${({ hasButton }) => (hasButton ? "space-between" : "")};
+  justify-content: ${({ hasButton }) => (hasButton ? 'space-between' : '')};
 
   @media screen and (max-width: 1170px) {
     width: 100%;
@@ -130,21 +131,21 @@ export const ColumnFlexTwoCols = styled.div`
     justify-content: flex-start;
 
     & img {
-      width: ${({ hasImg }) => hasImg && "150px"};
+      width: ${({ hasImg }) => hasImg && '150px'};
     }
   }
 `;
 
 export const TextBox = styled.section`
   display: grid;
-  row-gap: ${({ small }) => (small ? "var(--gapSmall)" : "var(--gapRegular)")};
+  row-gap: ${({ small }) => (small ? 'var(--gapSmall)' : 'var(--gapRegular)')};
   align-content: baseline;
 `;
 
 export const Divider = styled.hr`
   width: var(--globalContainer);
-  bottom: ${({ bottom }) => bottom && "0"};
-  top: ${({ top }) => top && "0"};
+  bottom: ${({ bottom }) => bottom && '0'};
+  top: ${({ top }) => top && '0'};
   position: absolute;
   height: 1px;
   margin: 0;

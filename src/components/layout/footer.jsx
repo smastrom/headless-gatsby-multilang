@@ -1,10 +1,10 @@
-import React, { Fragment, useContext } from "react";
-import { graphql, useStaticQuery } from "gatsby";
-import styled from "styled-components";
-import { StructuredText } from "react-datocms";
-import { LangContext } from "../../context/langProvider";
-import { Paragraph } from "./paragraphStyles";
-import { SectionWrapper, Divider } from "./sectionStyles";
+import React, { Fragment, useContext } from 'react';
+import { graphql, useStaticQuery } from 'gatsby';
+import styled from 'styled-components';
+import { StructuredText } from 'react-datocms';
+import { LangContext } from '../../context/langProvider';
+import { Paragraph } from './paragraphStyles';
+import { SectionWrapper, Divider } from './sectionStyles';
 
 const FooterContainer = styled.div`
   display: flex;
@@ -48,22 +48,32 @@ const Footer = () => {
 
   const { currentLanguage } = useContext(LangContext);
 
+  const {
+    allDatoCmsFooter: { nodes },
+  } = data;
+
   return (
     <SectionWrapper as="footer">
       <Divider top />
       <FooterContainer>
-        {data.allDatoCmsFooter.nodes
+        {nodes
           .filter(({ locale }) => locale === currentLanguage)
-          .map(({ id, textLeft, textRight }) => (
-            <Fragment key={id}>
-              <Paragraph small centered as="div">
-                <StructuredText data={textLeft.value} />
-              </Paragraph>
-              <Paragraph small centered as="div">
-                <StructuredText data={textRight.value} />
-              </Paragraph>
-            </Fragment>
-          ))}
+          .map(
+            ({
+              id,
+              textLeft: { value: textLeftValue },
+              textRight: { value: textRightValue },
+            }) => (
+              <Fragment key={id}>
+                <Paragraph small centered as="div">
+                  <StructuredText data={textLeftValue} />
+                </Paragraph>
+                <Paragraph small centered as="div">
+                  <StructuredText data={textRightValue} />
+                </Paragraph>
+              </Fragment>
+            )
+          )}
       </FooterContainer>
     </SectionWrapper>
   );

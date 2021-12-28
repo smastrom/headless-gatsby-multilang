@@ -1,9 +1,9 @@
-import React, { useState, useContext, Fragment } from "react";
-import { graphql, useStaticQuery, Link } from "gatsby";
-import styled, { css } from "styled-components";
-import Hamburger from "../ui/hamburger";
-import { LangContext } from "../../context/langProvider";
-import useLanguages from "../../hooks/useLanguages";
+import React, { useState, useContext, Fragment } from 'react';
+import { graphql, useStaticQuery, Link } from 'gatsby';
+import styled, { css } from 'styled-components';
+import Hamburger from '../ui/hamburger';
+import { LangContext } from '../../context/langProvider';
+import useLanguages from '../../hooks/useLanguages';
 
 // Scoped styles
 
@@ -88,12 +88,16 @@ const MobileMenu = () => {
 
   const [isOpen, setIsOpen] = useState(false);
 
+  const {
+    allDatoCmsMenu: { nodes: menuNodes },
+  } = data;
+
   return (
     <MobileMenuWrapper>
       <Hamburger isOpen={isOpen} onClick={() => setIsOpen(!isOpen)} />
       <MobileMenuNav isOpen={isOpen} aria-hidden={!isOpen || false}>
         <MobileMenuNavList>
-          {data.allDatoCmsMenu.nodes
+          {menuNodes
             .filter(({ locale }) => locale === currentLanguage)
             .map(({ links }) =>
               links.map(({ id, locale, slug, ariaLabel, name }, index) => (

@@ -1,10 +1,10 @@
-import React, { useContext } from "react";
-import { graphql, useStaticQuery } from "gatsby";
-import { Helmet } from "react-helmet";
-import { LangContext } from "../../context/langProvider";
-import { useLocation } from "@reach/router";
-import useLanguages from "../../hooks/useLanguages";
-import useSiteUrl from "../../hooks/useSiteUrl";
+import React, { useContext } from 'react';
+import { graphql, useStaticQuery } from 'gatsby';
+import { Helmet } from 'react-helmet';
+import { useLocation } from '@reach/router';
+import { LangContext } from '../../context/langProvider';
+import useLanguages from '../../hooks/useLanguages';
+import useSiteUrl from '../../hooks/useSiteUrl';
 
 const Seo = ({
   seoTitle,
@@ -17,7 +17,7 @@ const Seo = ({
   const data = useStaticQuery(graphql`
     query {
       allDatoCmsWebsiteSetting {
-        nodes {
+        settingsNodes: nodes {
           locale
           siteUrl
           title
@@ -36,29 +36,28 @@ const Seo = ({
     }
   `);
 
+  const { pathname } = useLocation();
+  const { defaultLanguage } = useLanguages();
+  const { siteUrl } = useSiteUrl();
   const { currentLanguage, pageType, archivePageNumber } =
     useContext(LangContext);
 
-  const { pathname } = useLocation();
-
-  const { defaultLanguage } = useLanguages();
-
-  const { siteUrl } = useSiteUrl();
-
-  // Helpers
-
-  const isHome = pageType === "isHome";
-
-  const isPage = pageType === "isPage";
-
-  const isArchiveRoot = pageType === "isArchiveRoot";
-
-  const isPaginatedArchive = pageType === "isPaginatedArchive";
-
-  const isPost = pageType === "isPost";
-
+  const isHome = pageType === 'isHome';
+  const isPage = pageType === 'isPage';
+  const isArchiveRoot = pageType === 'isArchiveRoot';
+  const isPaginatedArchive = pageType === 'isPaginatedArchive';
+  const isPost = pageType === 'isPost';
   const hasDefaultSchema =
     (seoTitle && isHome) || (seoTitle && isPage) || (seoTitle && isArchiveRoot);
+
+  const {
+    allDatoCmsWebsiteSetting: { settingsNodes },
+  } = data;
+  const [
+    {
+      primaryColor: { hex },
+    },
+  ] = settingsNodes;
 
   return (
     <Helmet>
@@ -67,20 +66,17 @@ const Seo = ({
         rel="manifest"
         href={
           currentLanguage === defaultLanguage
-            ? "/manifest.webmanifest"
+            ? '/manifest.webmanifest'
             : !notFoundPage && currentLanguage !== defaultLanguage
             ? `/manifest_${currentLanguage}.webmanifest`
             : notFoundPage
             ? notFoundPageManifest
-            : "/"
+            : '/'
         }
         crossOrigin="anonymous"
       />
 
-      <meta
-        name="theme-color"
-        content={data.allDatoCmsWebsiteSetting.nodes[0].primaryColor.hex}
-      />
+      <meta name="theme-color" content={hex} />
       <link rel="icon" href="/favicon-32.png" type="image/png" />
       <link
         rel="apple-touch-icon"
@@ -94,14 +90,13 @@ const Seo = ({
       />
 
       {/* SEO */}
-
       <meta charSet="utf-8" />
       <html lang={currentLanguage || notFoundPageLocale} />
       <meta property="og:url" content={`${siteUrl}${pathname}`} />
       <meta property="og:type" content="blog" />
       <meta property="twitter:url" content={`${siteUrl}${pathname}`} />
 
-      {data.allDatoCmsWebsiteSetting.nodes
+      {settingsNodes
         .filter(
           ({ locale }) =>
             locale === currentLanguage || locale === notFoundPageLocale

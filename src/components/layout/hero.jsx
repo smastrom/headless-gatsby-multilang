@@ -1,14 +1,14 @@
-import React from "react";
-import styled from "styled-components";
-import { HeroSubtitle, HeroTitle, HeroAlt } from "./headingStyles";
-import { Divider } from "./sectionStyles";
+import React from 'react';
+import styled from 'styled-components';
+import { HeroSubtitle, HeroTitle, HeroAlt } from './headingStyles';
+import { Divider } from './sectionStyles';
 
 const HeroWrapper = styled.section`
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: ${({ fullView }) => fullView && "100vh"};
+  height: ${({ fullView }) => fullView && '100vh'};
   padding: var(--globalPaddingTb) var(--globalPaddingLr);
   flex-direction: column;
   position: relative;
@@ -18,7 +18,7 @@ const HeroContainer = styled.div`
   width: var(--globalContainer);
   display: grid;
   row-gap: var(--gapXL);
-  justify-content: ${({ centered }) => centered && "center"};
+  justify-content: ${({ centered }) => centered && 'center'};
 
   @media screen and (max-width: 1170px) {
     width: 100%;
@@ -30,7 +30,7 @@ const HeroTextBox = styled.div`
   grid-template-columns: 1fr;
   row-gap: var(--gapRegular);
   width: 600px;
-  justify-items: ${({ centered }) => centered && "center"};
+  justify-items: ${({ centered }) => centered && 'center'};
 
   @media screen and (max-width: 767px) {
     width: 100%;

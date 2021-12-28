@@ -1,115 +1,123 @@
-import React from "react";
-import { graphql } from "gatsby";
-import PageWrapper from "../components/layout/pageWrapper";
-import Navigator from "../components/langHelpers/navigator";
-import HomeRedirect from "../components/langHelpers/homeRedirect";
-import Hero from "../components/layout/hero";
+import React from 'react';
+import { graphql } from 'gatsby';
+import PageWrapper from '../components/layout/pageWrapper';
+import Navigator from '../components/langHelpers/navigator';
+import Hero from '../components/layout/hero';
 import {
   SectionContainerGridThreeCols,
   SectionWrapper,
   SectionTitleContainer,
   TextBox,
-} from "../components/layout/sectionStyles";
-import { HeadingSmall, SectionTitle } from "../components/layout/headingStyles";
-import { Paragraph } from "../components/layout/paragraphStyles";
-import ArticleCard, { CardImgArtDir } from "../components/ui/articleCard";
+} from '../components/layout/sectionStyles';
+import { HeadingSmall, SectionTitle } from '../components/layout/headingStyles';
+import { Paragraph } from '../components/layout/paragraphStyles';
+import ArticleCard, { CardImgArtDir } from '../components/ui/articleCard';
 
-const HomePageTemplate = ({ data, pageContext }) => {
-  const { seo, hero, features, featuredPostsTitle } = data.datoCmsHomepage;
+const HomePageTemplate = ({
+  data: {
+    datoCmsHomepage: {
+      seo: { seoTitle, seoDescription },
+      hero: [heroEntry],
+      features,
+      featuredPostsTitle,
+    },
+    datoCmsOtherPage: { guidePageSlug },
+    allDatoCmsBlogPost: { postNodes },
+    datoCmsWebsiteSetting: { seeTheGuideButton, seeAllButton, minsReadSuffix },
+  },
+  pageContext,
+}) => {
+  const { heroAlt, heroTitle, heroSubtitle } = heroEntry;
 
   return (
-    <HomeRedirect>
-      <PageWrapper
-        pageData={pageContext}
-        seoTitle={seo.title}
-        seoDescription={seo.description}
-      >
-        <Hero
-          hasDivider
-          alt={hero[0].heroAlt}
-          title={hero[0].heroTitle}
-          subtitle={hero[0].heroSubtitle}
-          button={
-            <Navigator
-              className="classicButton classicButtonOutline"
-              page
-              to={data.guidePageLink.slug}
-            >
-              {data.datoCmsWebsiteSetting.seeTheGuideButton}
-            </Navigator>
-          }
-          sectionChildren={
-            <SectionContainerGridThreeCols>
-              {features.map(({ id, title, description }) => (
-                <TextBox small key={id}>
-                  <HeadingSmall hasTip>{title}</HeadingSmall>
-                  <Paragraph>{description}</Paragraph>
-                </TextBox>
-              ))}
-            </SectionContainerGridThreeCols>
-          }
-        />
-        <SectionWrapper>
-          <SectionTitleContainer hasButton>
-            <SectionTitle>{featuredPostsTitle}</SectionTitle>
-            <Navigator className="classicButton classicButtonOutline" archive>
-              {data.datoCmsWebsiteSetting.seeAllButton}
-            </Navigator>
-          </SectionTitleContainer>
+    <PageWrapper
+      pageData={pageContext}
+      seoTitle={seoTitle}
+      seoDescription={seoDescription}
+    >
+      <Hero
+        hasDivider
+        alt={heroAlt}
+        title={heroTitle}
+        subtitle={heroSubtitle}
+        button={
+          <Navigator
+            className="classicButton classicButtonOutline"
+            page
+            to={guidePageSlug}
+          >
+            {seeTheGuideButton}
+          </Navigator>
+        }
+        sectionChildren={
           <SectionContainerGridThreeCols>
-            {data.allDatoCmsBlogPost.nodes.map(
-              ({
-                id,
-                meta,
-                minutesOfReading,
-                cardImage,
-                title,
-                subtitle,
-                author,
-                slug,
-              }) => (
-                <ArticleCard
-                  key={id}
-                  date={meta.publishedAt}
-                  time={`${minutesOfReading} ${data.datoCmsWebsiteSetting.minsReadSuffix}`}
-                  cardImg={
-                    cardImage &&
-                    CardImgArtDir(
-                      cardImage.gatsbyImageData,
-                      cardImage.squaredImage,
-                      cardImage.alt
-                    )
-                  }
-                  title={title}
-                  excerpt={subtitle}
-                  authorImg={author.picture.gatsbyImageData}
-                  authorAltImg={author.picture.alt}
-                  authorName={author.name}
-                  slug={slug}
-                />
-              )
-            )}
+            {features.map(({ id, title, description }) => (
+              <TextBox small key={id}>
+                <HeadingSmall hasTip>{title}</HeadingSmall>
+                <Paragraph>{description}</Paragraph>
+              </TextBox>
+            ))}
           </SectionContainerGridThreeCols>
-        </SectionWrapper>
-      </PageWrapper>
-    </HomeRedirect>
+        }
+      />
+      <SectionWrapper>
+        <SectionTitleContainer hasButton>
+          <SectionTitle>{featuredPostsTitle}</SectionTitle>
+          <Navigator className="classicButton classicButtonOutline" archive>
+            {seeAllButton}
+          </Navigator>
+        </SectionTitleContainer>
+        <SectionContainerGridThreeCols>
+          {postNodes.map(
+            ({
+              id,
+              meta: { publishedAt },
+              minutesOfReading,
+              cardImage,
+              title,
+              subtitle,
+              author: {
+                authorName,
+                picture: { authorImageData, authorImageAlt },
+              },
+              slug,
+            }) => (
+              <ArticleCard
+                key={id}
+                date={publishedAt}
+                time={`${minutesOfReading} ${minsReadSuffix}`}
+                cardImg={
+                  cardImage &&
+                  CardImgArtDir(
+                    cardImage.gatsbyImageData,
+                    cardImage.squaredImage,
+                    cardImage.alt
+                  )
+                }
+                title={title}
+                excerpt={subtitle}
+                authorImg={authorImageData}
+                authorAltImg={authorImageAlt}
+                authorName={authorName}
+                slug={slug}
+              />
+            )
+          )}
+        </SectionContainerGridThreeCols>
+      </SectionWrapper>
+    </PageWrapper>
   );
 };
 
 export default HomePageTemplate;
-
-// Main query
 
 export const query = graphql`
   query HomePageTemplate($locale: String!) {
     datoCmsHomepage(locale: { eq: $locale }) {
       locale
       seo {
-        title
-        description
-        image {
-          url
-        }
+        seoTitle: title
+        seoDescription: description
       }
       hero {
         heroAlt
@@ -123,18 +131,15 @@ export const query = graphql`
       }
       featuredPostsTitle
     }
-    guidePageLink: datoCmsOtherPage(
-      locale: { eq: $locale }
-      reference: { eq: "guide" }
-    ) {
-      slug
+    datoCmsOtherPage(locale: { eq: $locale }, reference: { eq: "guide" }) {
+      guidePageSlug: slug
     }
     allDatoCmsBlogPost(
       sort: { order: ASC, fields: meta___firstPublishedAt }
       filter: { locale: { eq: $locale }, featuredInHomepage: { eq: true } }
       limit: 6
     ) {
-      nodes {
+      postNodes: nodes {
         id: originalId
         meta {
           publishedAt(locale: $locale, formatString: "DD MMM YYYY")
@@ -155,10 +160,10 @@ export const query = graphql`
           alt
         }
         author {
-          name
+          authorName: name
           picture {
-            gatsbyImageData(height: 30, width: 30)
-            alt
+            authorImageData: gatsbyImageData(height: 30, width: 30)
+            authorImageAlt: alt
           }
         }
         subtitle

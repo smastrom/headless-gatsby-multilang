@@ -1,7 +1,7 @@
-import React, { useContext } from "react";
-import { Link } from "gatsby";
-import { LangContext } from "../../context/langProvider";
-import useLanguages from "../../hooks/useLanguages";
+import React, { useContext } from 'react';
+import { Link } from 'gatsby';
+import { LangContext } from '../../context/langProvider';
+import useLanguages from '../../hooks/useLanguages';
 
 const Navigator = ({
   article,
@@ -16,30 +16,30 @@ const Navigator = ({
 }) => {
   const { currentLanguage } = useContext(LangContext);
   const { defaultLanguage, defaultBlogPath } = useLanguages();
+  const isCurrentDefaultLanguage = currentLanguage === defaultLanguage;
+
   return (
     <Link
       aria-label={ariaLabel}
       className={className}
       to={
         article
-          ? currentLanguage === defaultLanguage
-            ? `/${defaultBlogPath}/${to}` // If navigating from a default language page, keep link as it is
-            : `/${currentLanguage}/${defaultBlogPath}/${to}` // If navigating from a secondary language page, add current language slug
+          ? isCurrentDefaultLanguage
+            ? `/${defaultBlogPath}/${to}`
+            : `/${currentLanguage}/${defaultBlogPath}/${to}`
           : page
-          ? currentLanguage === defaultLanguage
-            ? `/${to}` // If navigating from a default language page, keep link as it is
-            : `/${currentLanguage}/${to}` // If navigating from a secondary language page, add current language slug
+          ? isCurrentDefaultLanguage
+            ? `/${to}`
+            : `/${currentLanguage}/${to}`
           : archive
-          ? currentLanguage === defaultLanguage
-            ? `/${defaultBlogPath}` // If navigating from a default language page, keep link as it is
-            : `/${currentLanguage}/${defaultBlogPath}` // If navigating from a secondary language page, add current language slug
+          ? isCurrentDefaultLanguage
+            ? `/${defaultBlogPath}`
+            : `/${currentLanguage}/${defaultBlogPath}`
           : home
-          ? currentLanguage === defaultLanguage
-            ? "/" // If navigating from a default language page, keep link as it is
-            : `/${currentLanguage}` // If navigating from a secondary language page, add current language slug
-          : notFoundPage
-          ? notFoundPage
-          : "/"
+          ? isCurrentDefaultLanguage
+            ? '/'
+            : `/${currentLanguage}`
+          : notFoundPage || '/'
       }
     >
       {children}

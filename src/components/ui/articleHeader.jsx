@@ -1,13 +1,13 @@
-import React from "react";
-import styled from "styled-components";
-import { GatsbyImage } from "gatsby-plugin-image";
-import { useLocation } from "@reach/router";
-import useSiteUrl from "../../hooks/useSiteUrl";
-import { Dot } from "./articleCard";
-import { ArticleTitle, ArticleSubtitle } from "../layout/headingStyles";
-import BackButtonIcon from "../vectors/backButton";
-import Navigator from "../langHelpers/navigator";
-import * as Social from "../vectors/socialIcons";
+import React from 'react';
+import styled from 'styled-components';
+import { GatsbyImage } from 'gatsby-plugin-image';
+import { useLocation } from '@reach/router';
+import useSiteUrl from '../../hooks/useSiteUrl';
+import { Dot } from './articleCard';
+import { ArticleTitle, ArticleSubtitle } from '../layout/headingStyles';
+import BackButtonIcon from '../vectors/backButton';
+import Navigator from '../langHelpers/navigator';
+import * as Social from '../vectors/socialIcons';
 
 // Scoped styles
 

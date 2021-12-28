@@ -1,10 +1,9 @@
-import React, { useContext } from "react";
-import { graphql, useStaticQuery, Link } from "gatsby";
-import styled from "styled-components";
-import { LangContext } from "../../context/langProvider";
-import useLanguages from "../../hooks/useLanguages";
-import useSiteUrl from "../../hooks/useSiteUrl";
-import { saveLocale } from "./utils";
+import React, { useContext } from 'react';
+import { graphql, useStaticQuery, Link } from 'gatsby';
+import styled from 'styled-components';
+import { LangContext } from '../../context/langProvider';
+import useLanguages from '../../hooks/useLanguages';
+import { storeLocale, getLangCode } from '../../utils/misc';
 
 // Scoped styles
 
@@ -62,12 +61,12 @@ const LanguageSwitcher = () => {
   const data = useStaticQuery(graphql`
     query {
       allDatoCmsSite {
-        nodes {
+        siteNodes: nodes {
           locale
         }
       }
       allSitePage {
-        nodes {
+        pagesNodes: nodes {
           pageContext
         }
       }
@@ -75,9 +74,6 @@ const LanguageSwitcher = () => {
   `);
 
   const { defaultLanguage, defaultBlogPath } = useLanguages();
-
-  const { siteUrl } = useSiteUrl();
-
   const {
     currentLanguage,
     pageType,
@@ -85,69 +81,70 @@ const LanguageSwitcher = () => {
     archivePageNumber,
   } = useContext(LangContext);
 
+  const {
+    allDatoCmsSite: { siteNodes },
+    allSitePage: { pagesNodes },
+  } = data;
+
   // Helpers
 
-  const isHome = pageType === "isHome";
-
-  const isPage = pageType === "isPage";
-
-  const isArchiveRoot = pageType === "isArchiveRoot";
-
-  const isPaginatedArchive = pageType === "isPaginatedArchive";
-
-  const isPost = pageType === "isPost";
+  const isHome = pageType === 'isHome';
+  const isPage = pageType === 'isPage';
+  const isArchiveRoot = pageType === 'isArchiveRoot';
+  const isPaginatedArchive = pageType === 'isPaginatedArchive';
+  const isPost = pageType === 'isPost';
 
   return (
     <LangNav>
       {isHome ? (
         <LangNavList>
-          {data.allDatoCmsSite.nodes.map(({ locale }) => (
+          {siteNodes.map(({ locale }) => (
             <li key={locale}>
               <LanguageSwitcherLink
-                className={locale === currentLanguage && "activeClassLangNav"}
-                as={locale === currentLanguage && "span"}
-                to={locale === defaultLanguage ? "/" : `/${locale}`}
-                onClick={() => saveLocale(siteUrl, locale)}
+                className={locale === currentLanguage && 'activeClassLangNav'}
+                as={locale === currentLanguage && 'span'}
+                to={locale === defaultLanguage ? '/' : `/${locale}`}
+                onClick={() => storeLocale(locale)}
               >
-                {locale}
+                {getLangCode(locale)}
               </LanguageSwitcherLink>
             </li>
           ))}
         </LangNavList>
       ) : isArchiveRoot ? (
         <LangNavList>
-          {data.allDatoCmsSite.nodes.map(({ locale }) => (
+          {siteNodes.map(({ locale }) => (
             <li key={locale}>
               <LanguageSwitcherLink
-                className={locale === currentLanguage && "activeClassLangNav"}
-                as={locale === currentLanguage && "span"}
+                className={locale === currentLanguage && 'activeClassLangNav'}
+                as={locale === currentLanguage && 'span'}
                 to={
                   locale === defaultLanguage
                     ? `/${defaultBlogPath}`
                     : `/${locale}/${defaultBlogPath}`
                 }
-                onClick={() => saveLocale(siteUrl, locale)}
+                onClick={() => storeLocale(locale)}
               >
-                {locale}
+                {getLangCode(locale)}
               </LanguageSwitcherLink>
             </li>
           ))}
         </LangNavList>
       ) : isPaginatedArchive ? (
         <LangNavList>
-          {data.allDatoCmsSite.nodes.map(({ locale }) => (
+          {siteNodes.map(({ locale }) => (
             <li key={locale}>
               <LanguageSwitcherLink
-                className={locale === currentLanguage && "activeClassLangNav"}
-                as={locale === currentLanguage && "span"}
+                className={locale === currentLanguage && 'activeClassLangNav'}
+                as={locale === currentLanguage && 'span'}
                 to={
                   locale === defaultLanguage
                     ? `/${defaultBlogPath}/${archivePageNumber}`
                     : `/${locale}/${defaultBlogPath}/${archivePageNumber}`
                 }
-                onClick={() => saveLocale(siteUrl, locale)}
+                onClick={() => storeLocale(locale)}
               >
-                {locale}
+                {getLangCode(locale)}
               </LanguageSwitcherLink>
             </li>
           ))}
@@ -155,21 +152,29 @@ const LanguageSwitcher = () => {
       ) : (
         (isPost || isPage) && (
           <LangNavList>
-            {data.allDatoCmsSite.nodes.map(({ locale }) =>
-              // Iterate through all available languages..
+            {siteNodes.map(({ locale }) =>
+              /**
+               * Iterate through all available languages..
+               */
+
               locale === currentLanguage ? (
-                // Disable the anchor tag if I'm rendering the link for the same locale of the page
+                /**
+                 * Disable the anchor tag if rendering the link for the same locale of the page
+                 */
                 <li key={locale}>
                   <LanguageSwitcherLink
                     as="span"
                     className="activeClassLangNav"
                   >
-                    {locale}
+                    {getLangCode(locale)}
                   </LanguageSwitcherLink>
                 </li>
               ) : (
-                // Else, iterate through all the pages generated by gatsby-node.js and check...
-                data.allSitePage.nodes.map(
+                /**
+                 * Else, iterate through all the pages generated by gatsby-node.js and check...
+                 */
+
+                pagesNodes.map(
                   ({
                     pageContext: {
                       locale: contextLocale,
@@ -177,16 +182,22 @@ const LanguageSwitcher = () => {
                       reference: contextReference,
                     },
                   }) =>
+                    /**
+                     * Is there a page with the same slug of the page I'm rendering the component into
+                     * Which has the same locale of the page that I'm rendering the link into?
+                     */
+
                     contextSlug === pageSlug &&
-                    // Is there a page with the same slug of the page I'm rendering the component into
                     contextLocale === currentLanguage &&
-                    // Which has the same locale of the page that I'm rendering the link into?
-                    //
-                    // The above condition will occur only once ensuring no duplicated languages links
-                    // are rendered inside the switcher when a page has the same slug for different languages
-                    //
-                    // Then, iterate again through all the pages...
-                    data.allSitePage.nodes.map(
+                    /**
+                     * The above condition will occur only once ensuring no duplicated
+                     * languages links are rendered inside the switcher when a page has
+                     *  the same slug for different languages
+                     *
+                     * Then, iterate again through all the pages...
+                     */
+
+                    pagesNodes.map(
                       ({
                         pageContext: {
                           locale: matchLocale,
@@ -194,10 +205,13 @@ const LanguageSwitcher = () => {
                           reference: matchReference,
                         },
                       }) =>
+                        /**
+                         * Is there a page of the same locale I am rendering the link
+                         * which has the same reference of the page found before?
+                         */
+
                         matchLocale === locale &&
-                        // Is there a page of the same locale I am rendering the link
                         matchReference === contextReference && (
-                          // which has the same reference of the page found before?
                           <li key={locale}>
                             <LanguageSwitcherLink
                               to={
@@ -209,11 +223,11 @@ const LanguageSwitcher = () => {
                                   ? locale === defaultLanguage
                                     ? `/${matchSlug}`
                                     : `/${locale}/${matchSlug}`
-                                  : "/"
+                                  : '/'
                               }
-                              onClick={() => saveLocale(siteUrl, locale)}
+                              onClick={() => storeLocale(locale)}
                             >
-                              {locale}
+                              {getLangCode(locale)}
                             </LanguageSwitcherLink>
                           </li>
                         )

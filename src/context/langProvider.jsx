@@ -1,10 +1,9 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useState } from 'react';
 
 export const LangContext = createContext({});
 
 const LangProvider = ({ children, pageData }) => {
   const { pageType, locale, slug, archivePageNumber } = pageData;
-
   const [currentLanguage] = useState(locale);
 
   const store = {

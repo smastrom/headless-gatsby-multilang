@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import { Link } from "gatsby";
+import styled from 'styled-components';
+import { Link } from 'gatsby';
 
 export const ArchiveNav = styled.nav`
   margin: var(--globalPaddingTb) 0 0 0;

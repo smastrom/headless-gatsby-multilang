@@ -1,45 +1,46 @@
-import React from "react";
-import { graphql } from "gatsby";
-import PageWrapper from "../components/layout/pageWrapper";
-import Hero from "../components/layout/hero";
-import useLanguages from "../hooks/useLanguages";
-
+import React from 'react';
+import { graphql } from 'gatsby';
+import PageWrapper from '../components/layout/pageWrapper';
+import Hero from '../components/layout/hero';
+import useLanguages from '../hooks/useLanguages';
 import {
   SectionContainerGridThreeCols,
   SectionWrapper,
-} from "../components/layout/sectionStyles";
-
-import ArticleCard, { CardImgArtDir } from "../components/ui/articleCard";
-
+} from '../components/layout/sectionStyles';
+import ArticleCard, { CardImgArtDir } from '../components/ui/articleCard';
 import {
   ArchiveNav,
   ArchiveList,
   ArchiveListLink,
-} from "../components/ui/archivePagination";
+} from '../components/ui/archivePagination';
 
-const BlogArchiveTemplate = ({ data, pageContext }) => {
+const BlogArchiveTemplate = ({
+  data: {
+    datoCmsArchivePage: {
+      hero: [{ heroTitle, heroSubtitle }],
+      seo: { seoTitle, seoDescription },
+    },
+    allDatoCmsBlogPost: { blogPostNodes },
+    datoCmsWebsiteSetting: { minsReadSuffix },
+  },
+  pageContext,
+}) => {
   const { defaultLanguage, defaultBlogPath } = useLanguages();
   const { pagesNumber, archivePageNumber, locale } = pageContext;
-
-  const {
-    datoCmsArchivePage: { hero, seo },
-  } = data;
-
-  const { allDatoCmsBlogPost } = data;
 
   return (
     <PageWrapper
       pageData={pageContext}
-      seoTitle={seo.title}
-      seoDescription={seo.description}
+      seoTitle={seoTitle}
+      seoDescription={seoDescription}
     >
-      <Hero title={hero[0].heroTitle} subtitle={hero[0].heroSubtitle} />
+      <Hero title={heroTitle} subtitle={heroSubtitle} />
       <SectionWrapper isBlog>
         <SectionContainerGridThreeCols>
-          {allDatoCmsBlogPost.nodes.map(
+          {blogPostNodes.map(
             ({
               id,
-              meta,
+              meta: { publishedAt },
               minutesOfReading,
               cardImage,
               title,
@@ -49,8 +50,8 @@ const BlogArchiveTemplate = ({ data, pageContext }) => {
             }) => (
               <ArticleCard
                 key={id}
-                date={meta.publishedAt}
-                time={`${minutesOfReading} ${data.datoCmsWebsiteSetting.minsReadSuffix}`}
+                date={publishedAt}
+                time={`${minutesOfReading} ${minsReadSuffix}`}
                 cardImg={
                   cardImage &&
                   CardImgArtDir(
@@ -61,9 +62,9 @@ const BlogArchiveTemplate = ({ data, pageContext }) => {
                 }
                 title={title}
                 excerpt={subtitle}
-                authorImg={author && author.picture.gatsbyImageData}
-                authorAltImg={author && author.picture.alt}
-                authorName={author && author.name}
+                authorImg={author?.picture.gatsbyImageData}
+                authorAltImg={author?.picture.alt}
+                authorName={author?.name}
                 slug={slug}
               />
             )
@@ -74,23 +75,18 @@ const BlogArchiveTemplate = ({ data, pageContext }) => {
             {Array.from({ length: pagesNumber }, (_, index) => (
               <li key={`page_number${index + 1}`}>
                 <ArchiveListLink
-                  as={index === archivePageNumber - 1 ? "span" : ""}
-                  to={(() => {
-                    if (
-                      locale === defaultLanguage &&
-                      index !== archivePageNumber - 1
-                    )
-                      return `/${defaultBlogPath}/${
-                        index === 0 ? "" : index + 1
-                      }`;
-                    if (
-                      locale !== defaultLanguage &&
-                      index !== archivePageNumber - 1
-                    )
-                      return `/${locale}/${defaultBlogPath}/${
-                        index === 0 ? "" : index + 1
-                      }`;
-                  })()}
+                  as={index === archivePageNumber - 1 ? 'span' : ''}
+                  to={
+                    locale === defaultLanguage &&
+                    index !== archivePageNumber - 1
+                      ? `/${defaultBlogPath}/${index === 0 ? '' : index + 1}`
+                      : locale !== defaultLanguage &&
+                        index !== archivePageNumber - 1
+                      ? `/${locale}/${defaultBlogPath}/${
+                          index === 0 ? '' : index + 1
+                        }`
+                      : '/'
+                  }
                 >
                   {index + 1}
                 </ArchiveListLink>
@@ -112,11 +108,8 @@ export const query = graphql`
     datoCmsArchivePage(locale: { eq: $locale }) {
       locale
       seo {
-        title
-        description
-        image {
-          url
-        }
+        seoTitle: title
+        seoDescription: description
       }
       hero {
         heroTitle
@@ -129,7 +122,7 @@ export const query = graphql`
       limit: $limit
       skip: $skip
     ) {
-      nodes {
+      blogPostNodes: nodes {
         id: originalId
         meta {
           publishedAt(locale: $locale, formatString: "DD MMM YYYY")

@@ -1,12 +1,12 @@
-import React, { useContext } from "react";
-import { graphql, useStaticQuery, Link } from "gatsby";
-import styled from "styled-components";
-import { LangContext } from "../../context/langProvider";
-import LanguageSwitcher from "../langHelpers/languageSwitcher";
-import useLanguages from "../../hooks/useLanguages";
-import Navigator from "../langHelpers/navigator";
-import MobileMenu from "./mobileMenu";
-import { Divider } from "./sectionStyles";
+import React, { useContext } from 'react';
+import { graphql, useStaticQuery, Link } from 'gatsby';
+import styled from 'styled-components';
+import { LangContext } from '../../context/langProvider';
+import LanguageSwitcher from '../langHelpers/languageSwitcher';
+import useLanguages from '../../hooks/useLanguages';
+import Navigator from '../langHelpers/navigator';
+import MobileMenu from './mobileMenu';
+import { Divider } from './sectionStyles';
 
 // Scoped styles
 
@@ -102,10 +102,15 @@ const Header = () => {
   const { currentLanguage } = useContext(LangContext);
   const { defaultLanguage } = useLanguages();
 
+  const {
+    allDatoCmsWebsiteSetting: { edges: settingsEdges },
+    allDatoCmsMenu: { edges: menuEdges },
+  } = data;
+
   return (
     <HeaderWrapper>
       <HeaderContainer>
-        {data.allDatoCmsWebsiteSetting.edges
+        {settingsEdges
           .filter(({ node: { locale } }) => locale === currentLanguage)
           .map(
             ({
@@ -120,7 +125,7 @@ const Header = () => {
           )}
         <Nav>
           <NavList>
-            {data.allDatoCmsMenu.edges
+            {menuEdges
               .filter(({ node: { locale } }) => locale === currentLanguage)
               .map(({ node: { links } }) =>
                 links.map(({ id, slug, locale, ariaLabel, name }) => (

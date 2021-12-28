@@ -1,8 +1,8 @@
-import styled from "styled-components";
+import styled, { css } from 'styled-components';
 
 // Global
 
-const CommonStyles = `
+const CommonStyles = css`
   & ol {
     list-style-type: decimal;
     margin: var(--paragraphMargin);
@@ -84,9 +84,9 @@ export const Paragraph = styled.p`
   --paragraphMargin: 0 0 1em 0;
   --listMargin: 0 0 0.33em 0;
   color: var(--baseTextColor);
-  font-size: ${({ small }) => (small ? "var(--baseS)" : "var(--baseM)")};
+  font-size: ${({ small }) => (small ? 'var(--baseS)' : 'var(--baseM)')};
   line-height: 1.4;
-  text-align: ${({ centered }) => (centered ? "center" : "left")};
+  text-align: ${({ centered }) => (centered ? 'center' : 'left')};
 
   & a {
     color: var(--primaryColor);

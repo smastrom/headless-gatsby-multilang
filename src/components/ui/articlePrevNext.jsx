@@ -1,5 +1,6 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
+import Navigator from '../langHelpers/navigator';
 
 const Nav = styled.nav`
   display: grid;
@@ -53,10 +54,40 @@ const Nav = styled.nav`
   }
 `;
 
-const PrevNextNav = ({ previousNavRender, nextNavRender }) => (
+const PrevNextNav = ({
+  skipNextValue,
+  prevHeading,
+  prevSlug,
+  prevPostTitle,
+  nextHeading,
+  nextSlug,
+  nextPostTitle,
+}) => (
   <Nav>
-    {previousNavRender}
-    {nextNavRender}
+    <div>
+      {skipNextValue >= 0 && skipNextValue !== 1 && (
+        <>
+          <span>{prevHeading}</span>
+          <h2>
+            <Navigator article to={prevSlug}>
+              {prevPostTitle}
+            </Navigator>
+          </h2>
+        </>
+      )}
+    </div>
+    <div>
+      {skipNextValue > 0 && (
+        <>
+          <span>{nextHeading}</span>
+          <h2>
+            <Navigator article to={nextSlug}>
+              {nextPostTitle}
+            </Navigator>
+          </h2>
+        </>
+      )}
+    </div>
   </Nav>
 );
 

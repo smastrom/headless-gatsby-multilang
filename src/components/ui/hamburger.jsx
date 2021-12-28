@@ -1,7 +1,7 @@
-import React, { useContext } from "react";
-import styled, { css } from "styled-components";
-import { graphql, useStaticQuery } from "gatsby";
-import { LangContext } from "../../context/langProvider";
+import React, { useContext } from 'react';
+import styled, { css } from 'styled-components';
+import { graphql, useStaticQuery } from 'gatsby';
+import { LangContext } from '../../context/langProvider';
 
 // Scoped styles
 
@@ -63,9 +63,13 @@ const Hamburger = ({ isOpen, onClick }) => {
 
   const { currentLanguage } = useContext(LangContext);
 
+  const {
+    allDatoCmsMenu: { nodes },
+  } = data;
+
   return (
     <>
-      {data.allDatoCmsMenu.nodes
+      {nodes
         .filter(({ locale }) => locale === currentLanguage)
         .map(({ locale, ariaLabelHamburger }) => (
           <HamburgerButton

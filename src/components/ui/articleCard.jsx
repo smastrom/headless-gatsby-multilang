@@ -1,8 +1,8 @@
-import React from "react";
-import styled from "styled-components";
-import { GatsbyImage, getImage, withArtDirection } from "gatsby-plugin-image";
-import Navigator from "../langHelpers/navigator";
-import { HeadingSmall } from "../layout/headingStyles";
+import React from 'react';
+import styled from 'styled-components';
+import { GatsbyImage, getImage, withArtDirection } from 'gatsby-plugin-image';
+import Navigator from '../langHelpers/navigator';
+import { HeadingSmall } from '../layout/headingStyles';
 
 // Scoped styles
 
@@ -44,11 +44,11 @@ const CardImg = styled(GatsbyImage)`
 export const CardImgArtDir = (cardImg, cardImgMobile, altImg) => {
   const cardImgs = withArtDirection(getImage(cardImg), [
     {
-      media: "(max-width: 950px)",
+      media: '(max-width: 950px)',
       image: getImage(cardImgMobile),
     },
   ]);
-  return <CardImg objectFit="contain" image={cardImgs} alt={altImg || ""} />;
+  return <CardImg objectFit="contain" image={cardImgs} alt={altImg || ''} />;
 };
 
 const ContentWrapper = styled.div`
@@ -191,7 +191,7 @@ const ArticleCard = ({
         <Excerpt>{excerpt}</Excerpt>
         <AuthorCtaContainer>
           <AuthorContainer>
-            <AuthorImg image={authorImg || ""} alt={authorAltImg || ""} />
+            <AuthorImg image={authorImg || ''} alt={authorAltImg || ''} />
             <Date as="address">{authorName}</Date>
           </AuthorContainer>
         </AuthorCtaContainer>
