@@ -27,9 +27,8 @@ module.exports = {
          * refer to README.md for more infos
          */
         localeFallbacks: {
-          'lt-LT': ['en'],
-          'sv-FI': ['it'],
-          kr: ['en-US'],
+          'lt-LT': 'en',
+          'sv-FI': 'it',
         },
       },
     },

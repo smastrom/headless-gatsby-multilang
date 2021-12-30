@@ -1,6 +1,6 @@
 ![Headless Multilingual Starter for Gatsby with DatoCMS](https://i.ibb.co/0XSy2gf/splashscreen-2.png)
 
-# Headless Multilingual Starter for Gatsby v4 with DatoCMS
+# Headless Multilingual Starter for Gatsby 4 with DatoCMS
 
 A multilanguage blog starter for Gatsby completely driven by an headless CMS.
 
@@ -20,14 +20,13 @@ A multilanguage blog starter for Gatsby completely driven by an headless CMS.
 
 ## Features
 
-- **100% Headless**: create pages and articles, manage languages, branding, menus, posts per page, SEO, PWA settings, slugs and much more directly on DatoCMS.
-- **Localize everything**: Translate slugs, SEO meta tags, PWA settings, alt tags, WAI-Aria attributes, menus and much more directly on DatoCMS.
-- Localized SEO meta tags injection
+- **100% Headless**: create pages and articles, define languages, branding, blog settings and localize SEO, PWA settings, slugs and much more directly on DatoCMS.
 - Language switcher component swapping between different and equal slugs per locale
 - Automatic internal links localization using [DAST](https://www.datocms.com/docs/structured-text/dast) and custom `<Navigator />` component
-- Multiple per-locale PWA manifest files generation on build time, dynamically injected to `<head />` based on current language.
-- Correspondent localized content queried directly inside components by using GraphQL and [useStaticQuery](https://www.gatsbyjs.com/docs/how-to/querying-data/use-static-query/)
+- Multiple per-locale PWA webmanifest files generation on build time, dynamically injected based on current language.
 - Browser locale detection and redirection
+- Supports any language code path such as "/en-GB" or "/en",
+- Correspondent localized content queried directly inside components by using GraphQL and [useStaticQuery](https://www.gatsbyjs.com/docs/how-to/querying-data/use-static-query/)
 - Paginated archive pages, prev/next article navigation, social sharing and synthax highlighting.
 
 </br>
@@ -40,66 +39,65 @@ A multilanguage blog starter for Gatsby completely driven by an headless CMS.
 
 ## Table of contents
 
-- [Content of the package](#content-of-the-package)
 - [Purpose of the package](#purpose-of-the-package)
+- [Content of the package](#content-of-the-package)
 - [Why DatoCMS](#why-datocms)
 - [Important notes](#important-notes)
 - [Starter installation](#starter-installation)
 - [Starter configuration](#starter-configuration)
-   - [1. Languages](#1-languages)
-   - [2. Fields relationship](#2-fields-relationship)
-   - [3. Pages generation](#3-pages-generation)
-   - [4. Language switcher](#4-language-switcher)
-   - [5. Editing the menu](#5-editing-the-menu)
-   - [6. Internal link navigation using Navigator component](#6-internal-link-navigation-using-navigator-component)
-   - [7. Creating new templates](#7-creating-new-templates)
-   - [8. Blog features](#8-blog-features)
-   - [9. SEO](#9-seo)
-   - [10. PWA](#10-pwa)
-   - [11. Homepage Redirect](#11-homepage-redirect)
-   - [12 - 404](#12---404)
-   - [12. Styling](#12-styling)
-   - [13. Issues](#13-issues)
-
-<br />
-
-## Content of the package
-
-The package has a very simple organization of the content:
-
-| /src                    | Content                                                        |
-| ----------------------- | -------------------------------------------------------------- |
-| /components/layout      | Layout and most common reusable components                     |
-| /components/ui          | Specific UI components                                         |
-| /components/langHelpers | `<LanguageSwitcher />`, `<Navigator />` and `<HomeRedirect />` |
-| /components/vectors     | JSX icons                                                      |
-| /context                | Language provider                                              |
-| /hooks                  | Useful useStaticQuery hooks                                    |
-| /static                 | settings.json file generated during build                      |
-| /templates              | JSX templates                                                  |
-| /pages                  | 404 page                                                       |
+  - [1. Languages](#1-languages)
+  - [2. Fields relationship](#2-fields-relationship)
+  - [3. Fallbacks](#3-fallbacks)
+  - [4. Pages generation](#4-pages-generation)
+  - [5. Language switcher](#5-language-switcher)
+  - [6. Editing the menu](#6-editing-the-menu)
+  - [7. Internal link navigation using Navigator component](#7-internal-link-navigation-using-navigator-component)
+  - [8. Creating new templates](#8-creating-new-templates)
+  - [9. Blog features](#9-blog-features)
+  - [10. SEO](#10-seo)
+  - [11. PWA](#11-pwa)
+  - [12. Homepage Redirect](#12-homepage-redirect)
+  - [13 - 404](#13---404)
+  - [14. Styling](#14-styling)
+- [15. Issues](#15-issues)
 
 <br />
 
 ## Purpose of the package
 
-The whole purpose of this starter is to provide a full JAMstack multilanguage boilerplate allowing your content editors to add/remove languages, style the website, manage SEO and PWA settings, edit the menu, create new posts, translate and share them in a super-friendly decoupled environment.
+The purpose is to provide a full JAMstack multilingual boilerplate which allows editors to add/remove languages, translate slugs, SEO, PWA, menus, pages, posts and much more directly on DatoCMS.
 
-After publishing any change, a build on Gatsby Cloud will automatically be executed and the website will be updated with new settings and content.
-By enforcing fields validation and presentation, you can safely give your content editors more powers and let them manage more specific aspects of the website like PWA, global SEO and CSS variables.
+By enforcing fields validation and presentation, it is possible to safely manage those aspects of the app outside of Gatsby.
 
-I designed the DatoCMS environment taking into account all those aspects but frankly, combinations are infinite and it is always possibile to decouple more and more and more.
+Since language switcher, localized meta tags injections, webmanifest generation, redirects and path generation are already set-up, you can truly focus on your content.
 
-I personally think that everyone should be able to do within a JAMstack environment what they already do with Wordpress.
+After publishing any change, a build on Gatsby Cloud will automatically be executed and the website will be updated with new localized content.
 
-</br>
+<br />
+
+## Content of the package
+
+| /src                    | Content                                                               |
+| ----------------------- | --------------------------------------------------------------------- |
+| /components/layout      | Layout and most common reusable components                            |
+| /components/ui          | Specific UI components                                                |
+| /components/langHelpers | `<LanguageSwitcher />`, `<Navigator />`, `<Redirect />` and `<Seo />` |
+| /components/vectors     | JSX icons                                                             |
+| /context                | Language provider                                                     |
+| /hooks                  | Useful useStaticQuery hooks                                           |
+| /static                 | colors.json generated during build                                    |
+| /templates              | JSX templates                                                         |
+| /pages                  | 404 page                                                              |
+| /utils                  | Useful functions                                                      |
+
+<br />
 
 ## Why DatoCMS
 
 As of writing, Gatsby Cloud integrates perfectly with four headless CMSs, Dato is by far my favourite one: it is simple, powerful and honest.
 The query schema is excellently crafted and makes possible to handle data in a very simple and clean way.
 
-You content editors can also enjoy instant previews on Gatsby Cloud, without any futher configuration, all they need to do is to save the draft, wait for 5 seconds and preview the article.
+Moreover, you can enjoy instant previews on Gatsby Cloud, without any futher configuration, just save the draft, wait for 5 seconds and preview the content.
 
 if you are not familiar with DatoCMS, the following links will be useful:
 
@@ -109,7 +107,7 @@ if you are not familiar with DatoCMS, the following links will be useful:
 - [Modular Content Fields](https://www.datocms.com/docs/content-modelling/modular-content)
 - [Structured Text](https://www.datocms.com/docs/content-modelling/structured-text)
 
-However, multi-language features of this starter can be adapted and used with other headless CMSs as long as locales and localized data are organized and queriable in a Dato-like way.
+However, multi-language features of this starter can be adapted and used with other headless CMSs as long as locales and localized data are queriable in a Dato-like way.
 
 <br />
 
@@ -121,7 +119,7 @@ However, multi-language features of this starter can be adapted and used with ot
 
 The list of the available languages comes directly from Dato, and the GraphQL schema for any content model gets updated everytime you add or remove new languages making possible to separate the languages management and the code itself.
 
-Moreover, knowledge of Gatsby's `createPages API` and `pageContext` object is required in order to customize any starter. In any case, everything's perfectly explained [here](https://www.gatsbyjs.com/docs/creating-and-modifying-pages/#trade-offs-of-querying-for-all-fields-in-the-context-object-of-gatsby-nodejs).
+Moreover, knowledge of Gatsby's `createPages API` and `pageContext` object is required in order to customize the starter. In any case, everything's perfectly explained [here](https://www.gatsbyjs.com/docs/creating-and-modifying-pages/#trade-offs-of-querying-for-all-fields-in-the-context-object-of-gatsby-nodejs).
 
 <br />
 
@@ -142,9 +140,9 @@ gatsby new headless-gatsby-multilang https://github.com/smastrom/headless-gatsby
 
    ```js
    {
-     resolve: "gatsby-source-datocms",
+     resolve: 'gatsby-source-datocms',
      options: {
-       apiToken: "YOUR_API_TOKEN",
+       apiToken: 'YOUR_API_TOKEN',
      },
    },
    ```
@@ -171,7 +169,7 @@ Drag to the left at the first position your main language, and rearrange in orde
 Pre-existent localized fields' content will vanish once you delete the related language.
 ![Language Selection](https://i.ibb.co/d7Qyk22/Schermata-2021-07-26-alle-20-42-36.png)
 
-Once a new language is added, a new tab will appear for each content model.
+Once a new language is added, a new tab for translations will appear for each content model.
 
 In any query you will run, the results will always be sorted based on the aforementioned order.
 
@@ -207,12 +205,12 @@ The language path for your main language won't be generated, instead it will for
 ```
 https://yourgatsbywebsite.com/contact
 https://youtgatsbywebsite.com/it/contatti
-https://youtgatsbywebsite.com/es/contactos
+https://youtgatsbywebsite.com/es-ES/contactos
 ```
 
 <br />
 
-## 2. Fields relationship
+## 2. Fields relationships
 
 Before adapting your DatoCMS environment to your needs and start editing core files, please make sure to understand the relationship between the following fields and the core files.
 
@@ -328,23 +326,52 @@ The following fieldset handles the localization of various strings used in the f
 
 <br />
 
-## 3. Pages generation
+## 3. Fallbacks
+
+Since translations are set as mandatory on DatoCMS you won't be able to publish new content if you haven't actually translated it.
+
+When adding new languages, a build will automatically be executed and the new language will be displayed in the switcher. If you haven't translated the content, you most likely will get errors while browsing that language pages in development mode.
+
+If you want to get rid of the errors simply set the fallbacks in _gatsby-config.js_ under _gatsby-source-datocms_:
+
+```js
+{
+  resolve: 'gatsby-source-datocms',
+  options: {
+    apiToken: 'YOUR_API_TOKEN',
+    localeFallbacks: {
+      'lt-LT': 'en',
+      kr: 'en-US',
+    },
+  },
+}
+```
+
+Fields' values not yet translated (returning `null`) will return the value of the fallback language.
+
+If you want to be able to publish content on Dato even if it is not translated, you can uncheck the mandatory translation in the **content model settings**.
+
+<br />
+
+## 4. Pages generation
 
 In order to prevent build failures, please check that:
 
 - In case you set up new languages not included in the starter, you will always have to fill up any field marked as required in **any content model**.
-- In case you removed any non-mandatory content field such as `heroTitle` etc, make sure that they are not queried anymore in any file.
 - Before starting the dev server always make sure that content for any language is published and marked without any error:  
   ![Content correctly published](https://i.ibb.co/tXQYxqT/Schermata-2021-08-03-alle-17-27-14.png)
+- If you want the build to succeed even if you haven't translated yet the content for new languages, set the fallbacks in `gatsby-config.js` and uncheck the mandatory translation as explained in the previous section.
 
-Just generate pages as you normally would, the only difference is that you will **always** have to export the `reference` field to the `pageContext` object as well.
+- In case you removed any non-mandatory content field such as `heroTitle` etc, make sure that they are not queried anymore in any file.
+
+Generate pages as you normally would, the only difference is that you will **always** have to export the `reference` field to the `pageContext` object as well.
 
 Remember to always **name** `context` object properties as displayed below.
 
 A typical dynamic pages generation would look like:
 
 ```js
-  const { data: { allDatoCmsOtherPage }, }  = await graphql(`
+  const data = await graphql(`
     query {
       allDatoCmsOtherPage {
         nodes {
@@ -357,7 +384,7 @@ A typical dynamic pages generation would look like:
     }
   `);
 
-  allDatoCmsOtherPage.nodes.forEach(({ locale, slug, id, reference }) => {
+  data.allDatoCmsOtherPage.nodes.forEach(({ locale, slug, id, reference }) => {
     createPage({
       path: `${
         locale === defaultLanguage
@@ -378,14 +405,13 @@ A typical dynamic pages generation would look like:
 
 <br />
 
-## 4. Language switcher
+## 5. Language switcher
 
 The language switcher works out-of-the-box and needs no futher configuration.
 As long as you follow the presentation below each related field on DatoCMS, there won't be issues.
 
-Just to make sure, let's make a recap:
+Just to make sure:
 
-- A post/page slug cannot be shorter than 3 characters
 - For any generated page, the `reference` field should always be exported to the `pageContext` object.
 - The `reference` field value must be equal to the value assigned to the `slug` of your main language
 - In case any of your page/post has the same slug for different locales, you should never set the slug field as non-localizable.
@@ -395,13 +421,13 @@ As soon as you add new languages, localize and publish the content, a new langua
 
 <br />
 
-## 5. Editing the menu
+## 6. Editing the menu
 
 Just edit the content model named **Menu** by adding/removing block items and localize the name and the corresponding slug.
 
 <br />
 
-## 6. Internal link navigation using Navigator component
+## 7. Internal link navigation using Navigator component
 
 When creating an internal link you need to use the built-in `<Navigator />` component. It's built on top of `GatsbyLink` and supports any type of page included in the starter.
 
@@ -415,7 +441,7 @@ When creating an internal link you need to use the built-in `<Navigator />` comp
 | `className` | String  | Your own className                                                        |
 | `ariaLabel` | String  | Accessible link name                                                      |
 
-### 6a. Usage - Case A - Providing a specific slug
+### 7a. Usage - Case A - Providing a specific slug
 
 **Used in /src/templates/home.jsx**
 
@@ -424,7 +450,7 @@ When creating an internal link you need to use the built-in `<Navigator />` comp
 A typical usage would look like:
 
 ```jsx
-import Navigator from "../components/langHelpers/navigator";
+import Navigator from '../components/langHelpers/navigator';
 
 ...
 
@@ -455,7 +481,7 @@ export const query = graphql`
 
 ---
 
-### 6b. Usage - Case B - Dynamic rendering with `<StructuredText />`
+### 7b. Usage - Case B - Dynamic rendering with `<StructuredText />`
 
 **Used in /src/templates/article.jsx**
 
@@ -485,9 +511,8 @@ A typical usage would look like:
 
 ```jsx
 
-import { StructuredText } from "react-datocms";
-
-import Navigator from "../components/langHelpers/navigator";
+import { StructuredText } from 'react-datocms';
+import Navigator from '../components/langHelpers/navigator';
 
 ...
 
@@ -495,25 +520,25 @@ import Navigator from "../components/langHelpers/navigator";
     data={data.datoCmsBlogPost.structuredBody}
     renderLinkToRecord={({ record, children, transformedMeta }) => {
       switch (record.typeName) {
-        case "page":
+        case 'page':
           return (
             <Navigator {...transformedMeta} page to={record.slug}>
               {children}
             </Navigator>
           );
-        case "article":
+        case 'article':
           return (
             <Navigator {...transformedMeta} article to={record.slug}>
               {children}
             </Navigator>
           );
-        case "archive":
+        case 'archive':
           return (
             <Navigator {...transformedMeta} archive>
               {children}
             </Navigator>
           );
-        case "home":
+        case 'home':
           return (
             <Navigator {...transformedMeta} home>
               {children}
@@ -574,15 +599,14 @@ Basically, `renderLinkToRecord` will check for the value assigned to the `type_n
 
 ---
 
-### 6c. Usage - Other cases
+### 7c. Usage - Other cases
 
 A redirect to the homepage would look like:
 
 ```jsx
 
-import Navigator from "../components/langHelpers/navigator";
-
-import { LogoIcon } from "../components/vectors/logo";
+import Navigator from '../components/langHelpers/navigator';
+import { LogoIcon } from '../components/vectors/logo';
 
 ...
 
@@ -598,9 +622,8 @@ A redirect to the archive page would look like:
 
 ```jsx
 
-import Navigator from "../components/langHelpers/navigator";
-
-import { BackToArchiveButton } from "../components/buttons";
+import Navigator from '../components/langHelpers/navigator';
+import { BackToArchiveButton } from '../components/buttons';
 
 ...
 
@@ -614,17 +637,16 @@ import { BackToArchiveButton } from "../components/buttons";
 
 <br />
 
-## 7. Creating new templates
+## 8. Creating new templates
 
 When creating new templates (e.g. single pages), always import and wrap your template around the `PageWrapper` component. Always pass to the `pageData` prop the entire `pageContext` object:
 
 ```js
 ...
 
-import PageWrapper from "../layout/pageWrapper";
+import PageWrapper from '../layout/pageWrapper';
 
 const BlogPostTemplate = ({ data, pageContext }) => {
-
   return (
     <PageWrapper pageData={pageContext} ...
 
@@ -636,7 +658,7 @@ In the next section, there's an example on how to use custom components to rende
 
 <br />
   
-## 8. Blog features
+## 9. Blog features
 
 Instead of writing blog articles in markdown, you can take advantage of [Structured Text Fields](https://www.datocms.com/docs/react/structured-text-fields) and give your content editors a Medium-like fullscreen writing experience:
 
@@ -644,12 +666,12 @@ Instead of writing blog articles in markdown, you can take advantage of [Structu
 
 **Please take note** that this starter only supports Structured Text Fields to handle blog posts content and if you want to stick with the markdown approach (by using a _multi-line text field_), internal navigation and synthax highlighting won't work.
 
-### 8a. Archive pagination
+### 9a. Archive pagination
 
 Archive pagination works out-of-the box and needs no further configuration besides setting the number of posts per page on Dato.
 I have used the same logic explained [here](https://www.gatsbyjs.com/docs/adding-pagination/) by Gatsby folks.
 
-### 8b. Prev/next navigation
+### 9b. Prev/next navigation
 
 The prev/next navigation works out-of-the-box as well.
 
@@ -719,7 +741,7 @@ Then, just use the queried post values to build the prev/next component render l
 
 The complete logic to extract the counter variable starts in _gatsby-node.js_ at line ~170 and the prev/next render logic can be found in _article.jsx_.
 
-### 8c. Synthax highlighting
+### 9c. Synthax highlighting
 
 It works out-of-the-box and needs no further configuration, all you need to do is to add code to the Structured Text Field and choose the language.
 
@@ -730,12 +752,11 @@ If you wish to use another synthax highlighter package, you can set your own ren
 To change the theme, simply import your favourite style. Complete documentation can be found [here](https://github.com/react-syntax-highlighter/react-syntax-highlighter).
 
 ```js
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-
-import { atomDark } from "react-syntax-highlighter/dist/esm/styles/prism";
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 ```
 
-### 8d. Images
+### 9d. Images
 
 Simply add the _Article Body Image_ block to your Structured Text Field article body, and assign to the Type Name field to the only value you can choose.
 
@@ -763,13 +784,13 @@ I have created only this block to handle articles' images, but you can always cr
 
 Don't forget that with Structured Text Fields you can build the entire layout of the page, all you need to do is to set the your custom renderers for the blocks.
 
-### 8e. Article Body Styles
+### 9e. Article Body Styles
 
 All the article body substyles such as `h1, h2, ul` etc, can be found and customized in `/src/layout/paragraphStyles.js`. The styled component named `ArticleBody` styles all the HTML elements you can find inside the structured text field, basically, it is just the wrapper of the `<StructuredText />` component.
 
 You will also find a template literal variable called `CommonStyles` which holds all the substyles shared with the other component named `Paragraph` which is just another structured text wrapper used in other pages such as _Features_.
 
-### 8f. Social sharing
+### 9f. Social sharing
 
 It works out-of-the box and needs no further configuration, you can customize the appearance in `/src/components/ui/articleHeader.jsx`.
 
@@ -779,9 +800,9 @@ By using DatoCMS relationship fields, each article can have its own Author assig
 
 <br />
 
-## 9. SEO
+## 10. SEO
 
-### 9.1 Configuring Global SEO
+### 10.1 Configuring Global SEO
 
 Access the **Website Settings** content model and set the Global SEO fields.
 
@@ -795,7 +816,7 @@ Access the **Website Settings** content model and set the Global SEO fields.
 
 Once you have updated and localized the fields according to your content, you can configure SEO for any content model which will be generated as a page.
 
-### 9.2 Manage SEO
+### 10.2 Manage SEO
 
 DatoCMS provides a localizable [SEO Field](https://www.datocms.com/docs/content-modelling/seo-fields) which can be considered as a fieldset containing other SEO specific fields, in particular:
 
@@ -816,14 +837,14 @@ Each template is wrapped in a component named `<PageWrapper />` which accepts th
 If your related content model has a SEO field set, you should definitely set these props and query the related fields.
 
 ```jsx
-const HomePageTemplate = ({ data: { datoCmsHomePage }, pageContext }) => {
+const HomePageTemplate = ({ data, pageContext }) => {
 
   return (
     <PageWrapper
       pageData={pageContext}
-      seoTitle={datoCmsHomepage.seo.title}
-      seoDescription={datoCmsHomepage.seo.description}
-      seoImage={datoCmsHomepage.seo.image.url}
+      seoTitle={data.datoCmsHomepage.seo.title}
+      seoDescription={data.datoCmsHomepage.seo.description}
+      seoImage={data.datoCmsHomepage.seo.image.url}
     >
 
     ...
@@ -855,13 +876,13 @@ export const query = graphql`
 
 <br />
 
-## 10. PWA
+## 11. PWA
 
 PWA support for any configured languages works out-of-the-box. All you need to do is to edit and localize the related settings fields:
 
 ![PWA Settings](https://i.ibb.co/WPwKMtQ/Schermata-2021-09-11-alle-17-44-21.png)
 
-As soon as you will add a new language on Dato and localize its PWA settings, a new webmanifest file named `manifest_[lang].webmanifest` will be exported to the /public folder and dynamically injected to the `<head>`. Instead, the default language webmanifest will always be named `manifest.webmanifest`.
+As soon as you will add a new language on Dato and localize its PWA settings, a new webmanifest file named `manifest_<lang-code>.webmanifest` will be exported to the /public folder and dynamically injected to the `<head>`. Instead, the default language webmanifest will always be named `manifest.webmanifest`.
 
 ![PWA Icon](https://i.ibb.co/VN9Jm6v/icon.png) ![Webmanifest files](https://i.ibb.co/vcnkFgW/Schermata-2021-09-11-alle-17-57-23.png)
 
@@ -871,55 +892,90 @@ If you wish to customize the manifest JSON schema, you can edit the `manifest` o
 
 <br />
 
-## 11. Homepage Redirect
+## 12. Redirect
 
-When an user accesses the homepage ("/") for the very first time, the behavior is the following:
+**When a redirect takes place?**
 
-- If among all its browser languages are present one or more languages also available in the website, the first one (picked at the top of the browser languages list) is set as the preferred
-  - If the preferred language is equal to the website's default language ("en"), no redirect takes place.
-  - If the preferred language is equal to one of the website secondary languages ("it", "es"), the user is redirected to the homepage for that specific language ("/it", "/es").
-- If no browser language match any website language, the website's default language is set as preferred and no redirect takes place.
+Once the user's preferred language has been evaluated and stored to `localStorage`, a redirect takes place when the user visits the homepage in default language ("/") via direct access (refresh / link).
 
-If you want to disable this behavior, simply unwrap the homepage template from `<HomeRedirect>` component.
+**When a redirect doesn't take place?**
 
-<br />
+If the user's preferred language is equal to the website default language ("/") no redirect will take place.
 
-## 12 - 404
+**How the preferred language is evaluated?**
 
-When an user switches the language, the preferred language is always saved/overwritten in `localStorage` as well.
-In case the user will try to access a non-existent page in the future, content in preferred language will be displayed and the _back to home_ button will redirect to the homepage for its preferred language.
+When the user visits the homepage ("/") for the very first time, we try to find a match among the app's languages and the browser available languages:
 
-If user never visited the website before and tries to access to a non-existent page, the behavior follows the same logic of the homepage redirect.
+- Browser Languages: `["de-CH", "en-US"]`
 
-Content for 404 page can be localized on DatoCMS in the content model named "404 Page".
+- App Languages: `["fr", "de", "en"]`
 
-<br />
+In such case `de` is stored as `preferred_lang` in `localStorage` and the user is redirected to ("/de"). The language is evaluated according to the order priority of the browser (user) languages.
 
-## 12. Styling
+When no languages are specified in the browser languages list, the system default language will be used to evaluate the preferred language.
 
-By keeping the default starter configuration, CSS color variables and logo can be configured directly on DatoCMS without no further intervention on the core files. Data is queried in _gatsby-node.js_ and saved to _/src/static_ during build time. Then the JSON file containing the hex color codes is imported in _src/layout/globalStyles.js_ and values are assigned direct to CSS variables. The SVG logo url instead, is queried with useStaticQuery in _src/components/ui/header.jsx_.
+If there is no match, the app's default language will be stored as the preferred one.
+
+**How the preferred language is updated?**
+
+- When the user accesses any page in a secondary language ("/es/guia") or a page in default language ("/guide") via direct link, we assume that the user wants to set that language as the preferred one.
+
+- When the user switches the language from the switcher a new `preferred_lang` value is stored/overwritten in `localStorage`
+
+If you want to disable the redirect, just remove the `<Redirect>` component in `gatsby-browser.js`.
 
 ```js
-import { createGlobalStyle } from "styled-components";
+import Redirect from './src/components/langHelpers/redirect';
+import GlobalStyles from './src/components/layout/globalStyles';
 
-import Settings from "../../static/settings.json";
+export const wrapPageElement = ({ element }) => (
+  <>
+    <GlobalStyles />
+    <Redirect /> // <- Remove
+    {element}
+  </>
+);
+```
+
+Wheter or not you have set the `<Redirect />` component, the preferred language will always be stored/overwritten once the user switches the language from the switcher.
+
+<br />
+
+## 13 - 404
+
+If user never visited the website before and tries to access to a non-existent page, the behavior follows the same logic of the homepage redirect, the preferred language is evaluated and content is displayed in the correspondent language.
+
+In case the user will try to access a non-existent page in the future, content in preferred language will be displayed and the _back to home_ button will redirect to the correspont homepage.
+
+Content for 404 page can be localized on DatoCMS in the content model named **404 Page**.
+
+<br />
+
+## 14. Styling
+
+By keeping the default starter configuration, CSS color variables and logo can be configured directly on DatoCMS without no further intervention on the core files.
+
+Data is queried in _gatsby-node.js_ and saved to _/src/static_ during build time. Then the JSON file containing the hex color codes is imported in _src/layout/globalStyles.js_ and values are assigned direct to CSS variables.
+
+```js
+import { createGlobalStyle } from 'styled-components';
+import Colors from '../../static/colos.json';
 
 const GlobalStyles = createGlobalStyle`
 
         :root {
-
-            // Colors
-
-            --primaryColor: ${Settings.primaryColor.hex};
-            --primaryDark: ${Settings.primaryDark.hex};
-            --primaryLight: ${Settings.primaryLight.hex};
+            --primaryColor: ${Colors.primaryColor};
+            --primaryDark: ${Colors.primaryDark};
+            --primaryLight: ${Colors.primaryLight};
 ...
 ```
 
-If this approach doesn't fit your needs, you can safely remove the first block of code in _gatsby-node.js_ commented as "Colors". Then, adjust _createGlobalStyles.js_ and _header.jsx_ and delete the related fields on Dato.
+The SVG logo url instead, is queried with useStaticQuery in _src/components/ui/header.jsx_.
+
+If this approach doesn't fit your needs, you can safely remove the first block of code in _gatsby-node.js_ commented as "Colors". Then, remove the imports in _createGlobalStyles.js_ and _header.jsx_. Optionally delete the related fields on Dato as well.
 
 ---
 
-### 13. Issues
+### 15. Issues
 
 Please do not hesitate to open an issue by attaching your build log/errors.

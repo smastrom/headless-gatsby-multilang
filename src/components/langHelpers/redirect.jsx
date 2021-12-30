@@ -70,13 +70,9 @@ const Trigger = ({ setMounted }) => {
 
         if (!storedLocale && visitsRoot) {
           const matchingLangCode = preferredLang(
-            appLangCodes,
-            browserLangCodes
+            browserLangCodes,
+            appLangCodes
           );
-          if (!matchingLangCode) {
-            storeLocale(defaultLanguage);
-            return;
-          }
 
           const defaultLanguageMatch = findStringMatch(
             defaultLanguage,

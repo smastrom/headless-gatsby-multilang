@@ -111,7 +111,7 @@ const NotFoundPage = () => {
         };
       }
 
-      const matchingLangCode = preferredLang(appLangCodes, browserLangCodes);
+      const matchingLangCode = preferredLang(browserLangCodes, appLangCodes);
 
       const defaultLanguageMatch = findStringMatch(
         defaultLanguage,
