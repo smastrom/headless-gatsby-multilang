@@ -43,7 +43,7 @@ const OtherPageTemplate = ({
           data={structuredBody}
           renderBlock={({
             record: {
-              typeName,
+              __typename,
               heroAlt,
               heroTitle,
               heroSubtitle,
@@ -59,8 +59,8 @@ const OtherPageTemplate = ({
               thirdFeatureDescription,
             },
           }) => {
-            switch (typeName) {
-              case 'hero':
+            switch (__typename) {
+              case 'DatoCmsHero':
                 return (
                   <Hero
                     alt={heroAlt}
@@ -68,7 +68,7 @@ const OtherPageTemplate = ({
                     subtitle={heroSubtitle}
                   />
                 );
-              case 'section image left':
+              case 'DatoCmsSectionImageLeft':
                 return (
                   <SectionWrapper>
                     <SectionContainerFlexTwoCols>
@@ -85,7 +85,7 @@ const OtherPageTemplate = ({
                                 children,
                                 transformedMeta,
                               }) => {
-                                switch (typeName) {
+                                switch (__typename) {
                                   case 'page':
                                     return (
                                       <Navigator
@@ -114,7 +114,7 @@ const OtherPageTemplate = ({
                     </SectionContainerFlexTwoCols>
                   </SectionWrapper>
                 );
-              case 'section image right':
+              case 'DatoCmsSectionImageRight':
                 return (
                   <SectionWrapper>
                     <SectionContainerFlexTwoColsReverse>
@@ -128,8 +128,8 @@ const OtherPageTemplate = ({
                                 children,
                                 transformedMeta,
                               }) => {
-                                switch (typeName) {
-                                  case 'page':
+                                switch (__typename) {
+                                  case 'DatoCmsOtherPage':
                                     return (
                                       <Navigator
                                         {...transformedMeta}
@@ -139,7 +139,7 @@ const OtherPageTemplate = ({
                                         {children}
                                       </Navigator>
                                     );
-                                  case 'home':
+                                  case 'DatoCmsHomepage':
                                     return (
                                       <Navigator {...transformedMeta} home>
                                         {children}
@@ -160,7 +160,7 @@ const OtherPageTemplate = ({
                     </SectionContainerFlexTwoColsReverse>
                   </SectionWrapper>
                 );
-              case 'three features set':
+              case 'DatoCmsThreeFeaturesSet':
                 return (
                   <SectionWrapper>
                     <SectionContainerGridThreeCols>
@@ -205,15 +205,15 @@ export const query = graphql`
         blocks {
           ... on DatoCmsHero {
             id: originalId
-            typeName
+            __typename
             heroTitle
             heroSubtitle
             heroAlt
           }
           ... on DatoCmsSectionImageLeft {
+            __typename
             id: originalId
             title
-            typeName
             image {
               url
               gatsbyImageData
@@ -223,21 +223,21 @@ export const query = graphql`
               value
               links {
                 ... on DatoCmsOtherPage {
+                  __typename
                   id: originalId
-                  typeName
                   slug
                 }
                 ... on DatoCmsHomepage {
+                  __typename
                   id: originalId
-                  typeName
                 }
               }
             }
           }
           ... on DatoCmsSectionImageRight {
+            __typename
             id: originalId
             title
-            typeName
             image {
               url
               gatsbyImageData
@@ -247,20 +247,20 @@ export const query = graphql`
               value
               links {
                 ... on DatoCmsOtherPage {
+                  __typename
                   id: originalId
-                  typeName
                   slug
                 }
                 ... on DatoCmsHomepage {
+                  __typename
                   id: originalId
-                  typeName
                 }
               }
             }
           }
           ... on DatoCmsThreeFeaturesSet {
+            __typename
             id: originalId
-            typeName
             firstFeatureTitle
             firstFeatureDescription
             secondFeatureTitle

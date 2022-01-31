@@ -5,7 +5,7 @@ const preferredLang = (browserLangCodes, appLangCodes) => {
 
   let matchingLangCode;
 
-  browserLangCodes.some((browserLang, index) => {
+  browserLangCodes.some((browserLang) => {
     const findIetfLangCode = appLangCodes.find(
       (appLangCode) => appLangCode === browserLang
     );

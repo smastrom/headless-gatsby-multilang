@@ -1,8 +1,7 @@
 import React from 'react';
 import { graphql } from 'gatsby';
-import { StructuredText } from 'react-datocms';
+import { StructuredText, renderNodeRule } from 'react-datocms';
 import { isCode } from 'datocms-structured-text-utils';
-import { renderRule } from 'datocms-structured-text-to-plain-text';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import PageWrapper from '../components/layout/pageWrapper';
@@ -70,7 +69,7 @@ const BlogPostTemplate = ({
               key={id}
               data={structuredBody}
               customRules={[
-                renderRule(isCode, ({ node: { language, code }, key }) => (
+                renderNodeRule(isCode, ({ node: { language, code }, key }) => (
                   <div style={{ position: 'relative' }} key={key}>
                     <LanguageContainer>{language}</LanguageContainer>
                     <SyntaxHighlighter language={language} style={atomDark}>
@@ -80,30 +79,30 @@ const BlogPostTemplate = ({
                 )),
               ]}
               renderLinkToRecord={({
-                record: { typeName, slug: recordSlug },
+                record: { __typename, slug: recordSlug },
                 children,
                 transformedMeta,
               }) => {
-                switch (typeName) {
-                  case 'page':
+                switch (__typename) {
+                  case 'DatoCmsOtherPage':
                     return (
                       <Navigator {...transformedMeta} page to={recordSlug}>
                         {children}
                       </Navigator>
                     );
-                  case 'article':
+                  case 'DatoCmsBlogPost':
                     return (
                       <Navigator {...transformedMeta} article to={recordSlug}>
                         {children}
                       </Navigator>
                     );
-                  case 'archive':
+                  case 'DatoCmsArchivePage':
                     return (
                       <Navigator {...transformedMeta} archive>
                         {children}
                       </Navigator>
                     );
-                  case 'home':
+                  case 'DatoCmsHomepage':
                     return (
                       <Navigator {...transformedMeta} home>
                         {children}
@@ -116,15 +115,15 @@ const BlogPostTemplate = ({
               }}
               renderBlock={({
                 record: {
-                  typeName,
+                  __typename,
                   image: {
                     gatsbyImageData: recordImageData,
                     alt: recordImageAlt,
                   },
                 },
               }) => {
-                switch (typeName) {
-                  case 'image':
+                switch (__typename) {
+                  case 'DatoCmsArticleBodyImage':
                     return (
                       <BodyImg image={recordImageData} alt={recordImageAlt} />
                     );
@@ -214,7 +213,7 @@ export const query = graphql`
       }
       structuredBody {
         blocks {
-          typeName
+          __typename
           id: originalId
           image {
             gatsbyImageData
@@ -223,21 +222,21 @@ export const query = graphql`
         }
         links {
           ... on DatoCmsBlogPost {
-            typeName
+            __typename
             slug
             id: originalId
           }
           ... on DatoCmsOtherPage {
-            typeName
+            __typename
             slug
             id: originalId
           }
           ... on DatoCmsHomepage {
-            typeName
+            __typename
             id: originalId
           }
           ... on DatoCmsArchivePage {
-            typeName
+            __typename
             id: originalId
           }
         }

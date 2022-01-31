@@ -23,11 +23,11 @@ Multilanguage starter for Gatsby completely driven by an headless CMS.
 - **100% Headless**: create pages and articles, define languages, branding, blog settings and localize SEO, PWA settings, slugs and much more directly on DatoCMS.
 - Language switcher component swapping between different and equal slugs per locale
 - Automatic internal links localization using [DAST](https://www.datocms.com/docs/structured-text/dast) and custom `<Navigator />` component
-- Multiple per-locale PWA webmanifest files generation on build time, dynamically injected based on current language.
+- Multiple per-locale PWA webmanifest files generation on build time, dynamically injected depending on current language.
 - Browser locale detection and redirection
 - Supports any language code path such as "/en-GB" or "/en",
-- Correspondent localized content queried directly inside components by using GraphQL and [useStaticQuery](https://www.gatsbyjs.com/docs/how-to/querying-data/use-static-query/)
 - Paginated archive pages, prev/next article navigation, social sharing and synthax highlighting.
+- Built without any internationalization plugin, just Gatsby APIs and DatoCMS native features.
 
 </br>
 
@@ -254,15 +254,14 @@ _Necessary to inject the correct SEO tags to the `<head>` with React Helmet._
 
 ---
 
-| Field ID    | Field Type         | Localized | GraphQL identifier |
-| ----------- | ------------------ | --------- | ------------------ |
-| `type_name` | Single-line string | No        | typeName           |
+| Field ID     | Field Type         | Localized | GraphQL identifier |
+| ------------ | ------------------ | --------- | ------------------ |
+| `__typename` | Single-line string | No        | \_\_typename       |
 
-_Necessary to manage internal link navigation within Structured Text Fields._
+_Necessary to manage internal link navigation and custom blocs renderer within Structured Text Fields._
 
-- Assigned to any content model that will be generated as a page with an unique URL. Although this field is not required to generate pages, it is mandatory for any page/post you want to allow your editors to create a link to it. It is also assigned to any block that will be rendered within a [Structured Text Field](https://www.datocms.com/docs/content-modelling/structured-text) field using `<StructuredText />` component.
+- Native graphql schema field which returns a string corresponding to the model/block field name. More info [here](https://graphql.org/learn/schema/).
 - Queried in _any template_ which includes a Structured Text Field.
-- Explained in detail [here](https://github.com/smastrom/datocms-multilingual#8b-usage---case-b---dynamic-rendering-with-structuredtext-)
 
 <br />
 
@@ -495,14 +494,6 @@ This is so far the best approach because you will set the template only once, th
 
 ![](https://i.ibb.co/F01fcy5/Schermata-2021-08-02-alle-11-25-15.png)
 
-**Input fields**
-
-`type_name` field settings _(in "Blog Posts" content model)_:
-![](https://i.ibb.co/GP18nnc/Schermata-2021-08-02-alle-11-38-24.png)
-
-`type_name` field value _(when creating/editing an article)_:  
-![](https://i.ibb.co/r0W21qv/Schermata-2021-08-02-alle-11-39-52.png)
-
 **Content editing**
 
 <img src="https://i.postimg.cc/qRP54NMx/Il-mio-filmato.gif" width="600px"/>
@@ -519,26 +510,26 @@ import Navigator from '../components/langHelpers/navigator';
   <StructuredText
     data={data.datoCmsBlogPost.structuredBody}
     renderLinkToRecord={({ record, children, transformedMeta }) => {
-      switch (record.typeName) {
-        case 'page':
+      switch (record.__typename) {
+        case 'DatoCmsOtherPage':
           return (
             <Navigator {...transformedMeta} page to={record.slug}>
               {children}
             </Navigator>
           );
-        case 'article':
+        case 'DatoCmsBlogPost':
           return (
             <Navigator {...transformedMeta} article to={record.slug}>
               {children}
             </Navigator>
           );
-        case 'archive':
+        case 'DatoCmsArchivePage':
           return (
             <Navigator {...transformedMeta} archive>
               {children}
             </Navigator>
           );
-        case 'home':
+        case 'DatoCmsHomepage':
           return (
             <Navigator {...transformedMeta} home>
               {children}
@@ -562,21 +553,21 @@ export const query = graphql`
         value
         links {
           ... on DatoCmsBlogPost {
-            typeName
+            __typename
             slug
             id: originalId
           }
           ... on DatoCmsOtherPage {
-            typeName
+            __typename
             slug
             id: originalId
           }
           ... on DatoCmsHomepage {
-            typeName
+            __typename
             id: originalId
           }
           ... on DatoCmsArchivePage {
-            typeName
+            __typename
             id: originalId
           }
         }
@@ -587,15 +578,13 @@ export const query = graphql`
 
 ```
 
-Basically, `renderLinkToRecord` will check for the value assigned to the `type_name` field of your linked record, if it matches the `case`, it will render it using `<Navigator />` with the right prop. Just remember to always name the field with same ID (type_name) for each content model or block or the switch statement won't work.
+Basically, `renderLinkToRecord` will check for the \_\_typename value of the queried model, if it matches the `case` clause, it will render it using `<Navigator />` with the right prop.
 
 **Caveats:**
 
 - You will always have to query `originalId` **with the alias `id`** for each fragment (content model) or the rendering will fail.
 
 - For any page rendered by an unique template, you will have to add the fragments manually to the template query and add the content model to the allowed record links for each structured text field.
-
-- I personally advise to force your content editors to choose the `type_name` value from a list of specific values in order to prevent query errors or typos.
 
 ---
 
@@ -664,7 +653,7 @@ Instead of writing blog articles in markdown, you can take advantage of [Structu
 
 ![Structured Text Focus Mode](https://i.ibb.co/CHQY4Fj/Schermata-2021-09-11-alle-18-45-46.png)
 
-**Please take note** that this starter only supports Structured Text Fields to handle blog posts content and if you want to stick with the markdown approach (by using a _multi-line text field_), internal navigation and synthax highlighting won't work.
+**Please take note** that this starter only supports Structured Texxt Fields to handle blog posts content and if you want to stick with the markdown approach (by using a _multi-line text field_), internal navigation and synthax highlighting won't work.
 
 ### 9a. Archive pagination
 
@@ -758,7 +747,7 @@ import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 ### 9d. Images
 
-Simply add the _Article Body Image_ block to your Structured Text Field article body, and assign to the Type Name field to the only value you can choose.
+Simply add the _Article Body Image_ block to your Structured Text Field article body, and query for \_**\_typename**. In the switch statament assign to the **case** clause the value returned from \_**\_typename**.
 
 ![Image Block](https://i.ibb.co/XfBG8xm/Schermata-2021-09-11-alle-19-25-28.png)
 
@@ -768,8 +757,8 @@ I have created only this block to handle articles' images, but you can always cr
 
 ```jsx
     renderBlock={({ record }) => {
-      switch (record.typeName) {
-        case "image":
+      switch (record.__typename) {
+        case "DatoCmsArticleBodyImage":
           return (
             <BodyImg
               image={record.image.gatsbyImageData}

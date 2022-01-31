@@ -1,6 +1,6 @@
 const is404 = async (href) => {
   const request = await fetch(href, {
-    hethod: 'HEAD',
+    method: 'HEAD',
   });
   if (request.status === 404) {
     return true;
