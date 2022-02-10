@@ -2,9 +2,7 @@ const path = require('path');
 const fs = require('fs');
 const https = require('https');
 
-exports.createPages = async ({ graphql, actions }) => {
-  const { createPage } = actions;
-
+exports.createPages = async ({ graphql, actions: { createPage } }) => {
   /**
    * Since graphql won't work in any other API except createPages,
    * website settings must be fetched and exported now inside this extension.
@@ -115,13 +113,20 @@ exports.createPages = async ({ graphql, actions }) => {
     },
   } = await graphql(`
     query {
-      allDatoCmsBlogPost(sort: { fields: [locale, meta___firstPublishedAt] }) {
+      allDatoCmsBlogPost(
+        sort: { fields: [locale, meta___firstPublishedAt] }
+        filter: { noTranslate: { ne: true } }
+      ) {
         allBlogPostsEdges: edges {
           node {
             id: originalId
             locale
             slug
             reference
+            categoryLink {
+              categorySlug: slug
+              categoryLocale: locale
+            }
           }
         }
       }
@@ -185,21 +190,26 @@ exports.createPages = async ({ graphql, actions }) => {
 
     allBlogPostsEdges
       .filter(({ node: { locale } }) => locale === nodeLocale)
-      .forEach(({ node: { locale, slug, reference, id } }) => {
+      .forEach(({ node: { locale, slug, reference, id, categoryLink } }) => {
+        const categorySlug = categoryLink?.categorySlug;
+        const isUncategorized = categoryLink === null;
         pageCounter += 1;
         createPage({
-          path:
-            locale === defaultLanguage
+          path: isUncategorized
+            ? locale === defaultLanguage
               ? `${blogPath}/${slug}`
-              : locale !== defaultLanguage
-              ? `${locale}/${blogPath}/${slug}`
-              : '/',
+              : `${locale}/${blogPath}/${slug}`
+            : locale === defaultLanguage
+            ? `${blogPath}/${categorySlug}/${slug}`
+            : `${locale}/${blogPath}/${categorySlug}/${slug}`,
           component: ArticleTemplate,
           context: {
             id,
             locale,
             slug,
             reference,
+            isUncategorized,
+            categorySlug,
             articlesPerLocale: allBlogPostsPerLocale,
             pageType: 'isPost',
 

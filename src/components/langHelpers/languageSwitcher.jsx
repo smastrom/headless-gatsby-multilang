@@ -70,29 +70,92 @@ const LanguageSwitcher = () => {
           pageContext
         }
       }
+      allUnavailableBlogPosts: allDatoCmsBlogPost(
+        filter: { noTranslate: { eq: true } }
+      ) {
+        unavailableNodes: nodes {
+          reference
+          locale
+        }
+      }
     }
   `);
-
-  const { defaultLanguage, blogPath } = useLanguages();
-  const {
-    currentLanguage,
-    pageType,
-    slug: pageSlug,
-    archivePageNumber,
-  } = useContext(LangContext);
 
   const {
     allDatoCmsSite: { siteNodes },
     allSitePage: { pagesNodes },
+    allUnavailableBlogPosts: { unavailableNodes },
   } = data;
 
-  // Helpers
+  const {
+    currentLanguage,
+    pageType,
+    archivePageNumber,
+    reference: pageReference,
+  } = useContext(LangContext);
 
+  const { defaultLanguage, blogPath } = useLanguages();
+
+  // Boolean helpers
   const isHome = pageType === 'isHome';
   const isPage = pageType === 'isPage';
   const isArchiveRoot = pageType === 'isArchiveRoot';
   const isPaginatedArchive = pageType === 'isPaginatedArchive';
   const isPost = pageType === 'isPost';
+
+  const isPostUnavailable = (locale) =>
+    unavailableNodes.some(
+      ({ reference: unavReference, locale: unavLocale }) =>
+        unavReference === pageReference && unavLocale === locale
+    );
+  const isRenderingCurrentLang = (locale) => locale === currentLanguage;
+  const isRenderingDefaultLang = (locale) => locale === defaultLanguage;
+
+  // Prop helpers
+  const getCurrentLangProps = (locale) =>
+    isRenderingCurrentLang(locale) && {
+      className: 'activeClassLangNav',
+      as: 'span',
+    };
+
+  // Slug renderer for pages and posts
+  const renderMatchingSlug = (locale, reference) =>
+    pagesNodes.map(
+      ({
+        pageContext: {
+          locale: matchLocale,
+          slug: matchSlug,
+          reference: matchReference,
+          isUncategorized,
+          categorySlug,
+        },
+      }) =>
+        matchLocale === locale &&
+        matchReference === reference && (
+          <li key={locale}>
+            <LanguageSwitcherLink
+              to={
+                isPost && isUncategorized
+                  ? locale === defaultLanguage
+                    ? `/${blogPath}/${matchSlug}`
+                    : `/${locale}/${blogPath}/${matchSlug}`
+                  : isPost && !isUncategorized
+                  ? locale === defaultLanguage
+                    ? `/${blogPath}/${categorySlug}/${matchSlug}`
+                    : `/${locale}/${blogPath}/${categorySlug}/${matchSlug}`
+                  : isPage
+                  ? locale === defaultLanguage
+                    ? `/${matchSlug}`
+                    : `/${locale}/${matchSlug}`
+                  : '/'
+              }
+              onClick={() => storeLocale(locale)}
+            >
+              {getLangCode(locale)}
+            </LanguageSwitcherLink>
+          </li>
+        )
+    );
 
   return (
     <LangNav>
@@ -101,9 +164,8 @@ const LanguageSwitcher = () => {
           {siteNodes.map(({ locale }) => (
             <li key={locale}>
               <LanguageSwitcherLink
-                className={locale === currentLanguage && 'activeClassLangNav'}
-                as={locale === currentLanguage && 'span'}
-                to={locale === defaultLanguage ? '/' : `/${locale}`}
+                {...getCurrentLangProps(locale)}
+                to={isRenderingDefaultLang(locale) ? '/' : `/${locale}`}
                 onClick={() => storeLocale(locale)}
               >
                 {getLangCode(locale)}
@@ -116,10 +178,9 @@ const LanguageSwitcher = () => {
           {siteNodes.map(({ locale }) => (
             <li key={locale}>
               <LanguageSwitcherLink
-                className={locale === currentLanguage && 'activeClassLangNav'}
-                as={locale === currentLanguage && 'span'}
+                {...getCurrentLangProps(locale)}
                 to={
-                  locale === defaultLanguage
+                  isRenderingDefaultLang(locale)
                     ? `/${blogPath}`
                     : `/${locale}/${blogPath}`
                 }
@@ -135,10 +196,9 @@ const LanguageSwitcher = () => {
           {siteNodes.map(({ locale }) => (
             <li key={locale}>
               <LanguageSwitcherLink
-                className={locale === currentLanguage && 'activeClassLangNav'}
-                as={locale === currentLanguage && 'span'}
+                {...getCurrentLangProps(locale)}
                 to={
-                  locale === defaultLanguage
+                  isRenderingDefaultLang(locale)
                     ? `/${blogPath}/${archivePageNumber}`
                     : `/${locale}/${blogPath}/${archivePageNumber}`
                 }
@@ -153,86 +213,27 @@ const LanguageSwitcher = () => {
         (isPost || isPage) && (
           <LangNavList>
             {siteNodes.map(({ locale }) =>
-              /**
-               * Iterate through all available languages..
-               */
-
-              locale === currentLanguage ? (
-                /**
-                 * Disable the anchor tag if rendering the link for the same locale of the page
-                 */
+              isRenderingCurrentLang(locale) ? (
+                <li key={locale}>
+                  <LanguageSwitcherLink {...getCurrentLangProps(locale)}>
+                    {getLangCode(locale)}
+                  </LanguageSwitcherLink>
+                </li>
+              ) : isPostUnavailable(locale) ? (
                 <li key={locale}>
                   <LanguageSwitcherLink
-                    as="span"
-                    className="activeClassLangNav"
+                    to={
+                      isPost && isRenderingDefaultLang(locale)
+                        ? `/${blogPath}/`
+                        : `/${locale}/${blogPath}/`
+                    }
+                    onClick={() => storeLocale(locale)}
                   >
                     {getLangCode(locale)}
                   </LanguageSwitcherLink>
                 </li>
               ) : (
-                /**
-                 * Else, iterate through all the pages generated by gatsby-node.js and check...
-                 */
-
-                pagesNodes.map(
-                  ({
-                    pageContext: {
-                      locale: contextLocale,
-                      slug: contextSlug,
-                      reference: contextReference,
-                    },
-                  }) =>
-                    /**
-                     * Is there a page with the same slug of the page I'm rendering the component into
-                     * Which has the same locale of the page that I'm rendering the link into?
-                     */
-
-                    contextSlug === pageSlug &&
-                    contextLocale === currentLanguage &&
-                    /**
-                     * The above condition will occur only once ensuring no duplicated
-                     * languages links are rendered inside the switcher when a page has
-                     *  the same slug for different languages
-                     *
-                     * Then, iterate again through all the pages...
-                     */
-
-                    pagesNodes.map(
-                      ({
-                        pageContext: {
-                          locale: matchLocale,
-                          slug: matchSlug,
-                          reference: matchReference,
-                        },
-                      }) =>
-                        /**
-                         * Is there a page of the same locale I am rendering the link
-                         * which has the same reference of the page found before?
-                         */
-
-                        matchLocale === locale &&
-                        matchReference === contextReference && (
-                          <li key={locale}>
-                            <LanguageSwitcherLink
-                              to={
-                                isPost
-                                  ? locale === defaultLanguage
-                                    ? `/${blogPath}/${matchSlug}`
-                                    : `/${locale}/${blogPath}/${matchSlug}`
-                                  : isPage
-                                  ? locale === defaultLanguage
-                                    ? `/${matchSlug}`
-                                    : `/${locale}/${matchSlug}`
-                                  : '/'
-                              }
-                              onClick={() => storeLocale(locale)}
-                            >
-                              {getLangCode(locale)}
-                            </LanguageSwitcherLink>
-                          </li>
-                        )
-                    )
-                )
+                renderMatchingSlug(locale, pageReference)
               )
             )}
           </LangNavList>

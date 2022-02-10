@@ -62,6 +62,8 @@ const PrevNextNav = ({
   nextHeading,
   nextSlug,
   nextPostTitle,
+  prevCategorySlug,
+  nextCategorySlug,
 }) => (
   <Nav>
     <div>
@@ -69,7 +71,7 @@ const PrevNextNav = ({
         <>
           <span>{prevHeading}</span>
           <h2>
-            <Navigator article to={prevSlug}>
+            <Navigator article categorySlug={prevCategorySlug} to={prevSlug}>
               {prevPostTitle}
             </Navigator>
           </h2>
@@ -81,7 +83,7 @@ const PrevNextNav = ({
         <>
           <span>{nextHeading}</span>
           <h2>
-            <Navigator article to={nextSlug}>
+            <Navigator article categorySlug={nextCategorySlug} to={nextSlug}>
               {nextPostTitle}
             </Navigator>
           </h2>

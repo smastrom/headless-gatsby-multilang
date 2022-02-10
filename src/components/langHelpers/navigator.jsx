@@ -13,6 +13,7 @@ const Navigator = ({
   children,
   to,
   notFoundPage,
+  categorySlug,
 }) => {
   const { currentLanguage } = useContext(LangContext);
   const { defaultLanguage, blogPath } = useLanguages();
@@ -23,10 +24,14 @@ const Navigator = ({
       aria-label={ariaLabel}
       className={className}
       to={
-        article
+        article && !categorySlug
           ? isCurrentDefaultLanguage
             ? `/${blogPath}/${to}`
             : `/${currentLanguage}/${blogPath}/${to}`
+          : article && categorySlug
+          ? isCurrentDefaultLanguage
+            ? `/${blogPath}/${categorySlug}/${to}`
+            : `/${currentLanguage}/${blogPath}/${categorySlug}/${to}`
           : page
           ? isCurrentDefaultLanguage
             ? `/${to}`

@@ -110,16 +110,6 @@ export const Dot = styled.span`
   }
 `;
 
-const Time = styled(Date)`
-  &&& {
-    text-transform: lowercase;
-  }
-
-  @media screen and (min-width: 621px) and (max-width: 680px) {
-    display: none;
-  }
-`;
-
 const Excerpt = styled.p`
   color: var(--baseTextColor);
   font-size: var(--baseM);
@@ -171,21 +161,20 @@ const ArticleCard = ({
   slug,
   cardImg,
   date,
-  time,
   title,
   excerpt,
   authorImg,
   authorAltImg,
   authorName,
+  categorySlug,
 }) => (
   <article>
-    <CardLink article to={slug}>
+    <CardLink article categorySlug={categorySlug} to={slug}>
       {cardImg}
       <ContentWrapper>
         <DateTimeContainer>
           <Date>{date}</Date>
           <Dot />
-          <Time as="span">{time}</Time>
         </DateTimeContainer>
         <PostTitle>{title}</PostTitle>
         <Excerpt>{excerpt}</Excerpt>

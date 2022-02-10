@@ -72,10 +72,10 @@ const HomePageTemplate = ({
             ({
               id,
               meta: { firstPublishedAt },
-              minutesOfReading,
               cardImage,
               title,
               subtitle,
+              categoryLink,
               author: {
                 authorName,
                 picture: { authorImageData, authorImageAlt },
@@ -85,7 +85,6 @@ const HomePageTemplate = ({
               <ArticleCard
                 key={id}
                 date={firstPublishedAt}
-                time={`${minutesOfReading} ${minsReadSuffix}`}
                 cardImg={
                   cardImage &&
                   CardImgArtDir(
@@ -99,6 +98,7 @@ const HomePageTemplate = ({
                 authorImg={authorImageData}
                 authorAltImg={authorImageAlt}
                 authorName={authorName}
+                categorySlug={categoryLink?.categorySlug}
                 slug={slug}
               />
             )
@@ -136,7 +136,11 @@ export const query = graphql`
     }
     allDatoCmsBlogPost(
       sort: { order: ASC, fields: meta___firstPublishedAt }
-      filter: { locale: { eq: $locale }, featuredInHomepage: { eq: true } }
+      filter: {
+        locale: { eq: $locale }
+        featuredInHomepage: { eq: true }
+        noTranslate: { ne: true }
+      }
       limit: 6
     ) {
       postNodes: nodes {
@@ -144,7 +148,9 @@ export const query = graphql`
         meta {
           firstPublishedAt(locale: $locale, formatString: "DD MMM YYYY")
         }
-        minutesOfReading
+        categoryLink {
+          categorySlug: slug
+        }
         cardImage {
           gatsbyImageData(
             width: 280

@@ -41,17 +41,16 @@ const BlogArchiveTemplate = ({
             ({
               id,
               meta: { firstPublishedAt },
-              minutesOfReading,
               cardImage,
               title,
               subtitle,
               author,
               slug,
+              categoryLink,
             }) => (
               <ArticleCard
                 key={id}
                 date={firstPublishedAt}
-                time={`${minutesOfReading} ${minsReadSuffix}`}
                 cardImg={
                   cardImage &&
                   CardImgArtDir(
@@ -64,6 +63,7 @@ const BlogArchiveTemplate = ({
                 excerpt={subtitle}
                 authorImg={author?.picture.gatsbyImageData}
                 authorAltImg={author?.picture.alt}
+                categorySlug={categoryLink?.categorySlug}
                 authorName={author?.name}
                 slug={slug}
               />
@@ -116,7 +116,7 @@ export const query = graphql`
     }
     allDatoCmsBlogPost(
       sort: { order: ASC, fields: meta___firstPublishedAt }
-      filter: { locale: { eq: $locale } }
+      filter: { locale: { eq: $locale }, noTranslate: { ne: true } }
       limit: $limit
       skip: $skip
     ) {
@@ -125,7 +125,9 @@ export const query = graphql`
         meta {
           firstPublishedAt(locale: $locale, formatString: "DD MMM YYYY")
         }
-        minutesOfReading
+        categoryLink {
+          categorySlug: slug
+        }
         cardImage {
           gatsbyImageData(
             width: 280

@@ -34,10 +34,10 @@ const BlogPostTemplate = ({
       meta: { firstPublishedAt },
     },
     previous: {
-      nodes: [{ prevPostSlug, prevPostTitle }],
+      nodes: [{ prevPostSlug, prevPostTitle, prevCategoryLink }],
     },
     next: {
-      nodes: [{ nextPostSlug, nextPostTitle }],
+      nodes: [{ nextPostSlug, nextPostTitle, nextCategoryLink }],
     },
     datoCmsWebsiteSetting: { prevHeading, nextHeading },
   },
@@ -79,7 +79,7 @@ const BlogPostTemplate = ({
                 )),
               ]}
               renderLinkToRecord={({
-                record: { __typename, slug: recordSlug },
+                record: { __typename, slug: recordSlug, categoryLink },
                 children,
                 transformedMeta,
               }) => {
@@ -92,7 +92,12 @@ const BlogPostTemplate = ({
                     );
                   case 'DatoCmsBlogPost':
                     return (
-                      <Navigator {...transformedMeta} article to={recordSlug}>
+                      <Navigator
+                        {...transformedMeta}
+                        categorySlug={categoryLink?.categorySlug}
+                        article
+                        to={recordSlug}
+                      >
                         {children}
                       </Navigator>
                     );
@@ -136,6 +141,8 @@ const BlogPostTemplate = ({
         </ArticleBody>
         <PrevNextNav
           skipNextValue={skipNext}
+          prevCategorySlug={prevCategoryLink?.categorySlug}
+          nextCategorySlug={nextCategoryLink?.categorySlug}
           prevHeading={prevHeading}
           prevSlug={prevPostSlug}
           prevPostTitle={prevPostTitle}
@@ -160,7 +167,7 @@ export const query = graphql`
     $skipPrevious: Int!
   ) {
     next: allDatoCmsBlogPost(
-      filter: { locale: { eq: $locale } }
+      filter: { locale: { eq: $locale }, noTranslate: { ne: true } }
       sort: { fields: meta___firstPublishedAt }
       limit: 1
       skip: $skipNext
@@ -168,10 +175,13 @@ export const query = graphql`
       nodes {
         nextPostSlug: slug
         nextPostTitle: title
+        nextCategoryLink: categoryLink {
+          categorySlug: slug
+        }
       }
     }
     previous: allDatoCmsBlogPost(
-      filter: { locale: { eq: $locale } }
+      filter: { locale: { eq: $locale }, noTranslate: { ne: true } }
       sort: { fields: meta___firstPublishedAt }
       skip: $skipPrevious
       limit: 1
@@ -179,6 +189,9 @@ export const query = graphql`
       nodes {
         prevPostSlug: slug
         prevPostTitle: title
+        prevCategoryLink: categoryLink {
+          categorySlug: slug
+        }
       }
     }
     datoCmsWebsiteSetting(locale: { eq: $locale }) {
@@ -225,6 +238,9 @@ export const query = graphql`
             __typename
             slug
             id: originalId
+            categoryLink {
+              categorySlug: slug
+            }
           }
           ... on DatoCmsOtherPage {
             __typename
