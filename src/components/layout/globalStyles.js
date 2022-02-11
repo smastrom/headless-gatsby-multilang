@@ -27,6 +27,7 @@ const GlobalStyles = createGlobalStyle`
         --disabledColor: ${disabledColor};
         --dividerColor: ${dividerColor};
         --markColor: ${markColor};
+        --transparent: rgba(0, 0, 0, 0);
         
         /* Containers */
         --globalContainer: 1100px;
@@ -130,6 +131,7 @@ const GlobalStyles = createGlobalStyle`
     /* Classes */
     .activeClassLink {
         color: var(--primaryColor) !important;
+        cursor: default;
     }
 
     .classicButton {

@@ -102,7 +102,7 @@ exports.createPages = async ({ graphql, actions: { createPage } }) => {
   `);
 
   /**
-   * Archive pages generation based on locale with pagination
+   * Archive page (blog root) generation based on locale with pagination
    * Blog posts should be sorted using the same fields as in any other template
    * in order to have a coherent prev/next navigation.
    */
@@ -174,6 +174,44 @@ exports.createPages = async ({ graphql, actions: { createPage } }) => {
     });
   });
 
+  // Categories generation
+
+  const {
+    data: {
+      allDatoCmsCategory: { allCategoryNodes },
+    },
+  } = await graphql(`
+    query {
+      allDatoCmsCategory(filter: { noTranslate: { ne: true } }) {
+        allCategoryNodes: nodes {
+          id: originalId
+          locale
+          slug
+          reference
+        }
+      }
+    }
+  `);
+
+  const CategoryTemplate = path.resolve('src/templates/categoryArchive.jsx');
+
+  allCategoryNodes.forEach(({ id, locale, slug, reference }) => {
+    createPage({
+      path: (() => {
+        if (locale === defaultLanguage) return `${blogPath}/${slug}`;
+        return `/${locale}/${blogPath}/${slug}`;
+      })(),
+      component: CategoryTemplate,
+      context: {
+        id,
+        locale,
+        slug,
+        reference,
+        pageType: 'isCategory',
+      },
+    });
+  });
+
   // Articles Generation
 
   const ArticleTemplate = path.resolve('src/templates/article.jsx');
@@ -193,15 +231,21 @@ exports.createPages = async ({ graphql, actions: { createPage } }) => {
       .forEach(({ node: { locale, slug, reference, id, categoryLink } }) => {
         const categorySlug = categoryLink?.categorySlug;
         const isUncategorized = categoryLink === null;
+        const isGeneratingDefaultLang = locale === defaultLanguage;
+
         pageCounter += 1;
+
         createPage({
-          path: isUncategorized
-            ? locale === defaultLanguage
-              ? `${blogPath}/${slug}`
-              : `${locale}/${blogPath}/${slug}`
-            : locale === defaultLanguage
-            ? `${blogPath}/${categorySlug}/${slug}`
-            : `${locale}/${blogPath}/${categorySlug}/${slug}`,
+          path: (() => {
+            if (isUncategorized) {
+              if (isGeneratingDefaultLang) return `${blogPath}/${slug}`;
+              return `${locale}/${blogPath}/${slug}`;
+            } else {
+              if (isGeneratingDefaultLang)
+                return `${blogPath}/${categorySlug}/${slug}`;
+              return `${locale}/${blogPath}/${categorySlug}/${slug}`;
+            }
+          })(),
           component: ArticleTemplate,
           context: {
             id,

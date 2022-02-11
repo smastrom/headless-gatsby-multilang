@@ -15,10 +15,15 @@ const CardLink = styled(Navigator)`
 
   @media screen and (max-width: 950px) {
     width: 100%;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
     column-gap: var(--gapRegular);
     align-items: initial;
   }
+`;
+
+const CardImgContainer = styled.div`
+  position: relative;
+  display: flex;
 `;
 
 const CardImg = styled(GatsbyImage)`
@@ -26,19 +31,34 @@ const CardImg = styled(GatsbyImage)`
   z-index: 2;
 
   @media screen and (max-width: 950px) {
-    min-width: 50px;
-    min-height: 50px;
+    --widthMobile: 50px;
+    min-width: var(--widthMobile);
+    min-height: var(--widthMobile);
   }
 
   & picture {
     & img {
       border-radius: var(--defaultRadius);
-      // Gatsby Image override
       @media screen and (max-width: 950px) {
         height: unset !important;
       }
     }
   }
+`;
+
+const CateogoryBox = styled.span`
+  position: absolute;
+  z-index: 3;
+  white-space: nowrap;
+  line-height: 1;
+  padding: 0.3em 0.5em 0.4em 0.5em;
+  top: 10px;
+  left: 10px;
+  background: var(--primaryLight);
+  color: var(--primaryColor);
+  border-radius: 5px;
+  font-size: var(--baseS);
+  font-weight: 600;
 `;
 
 export const CardImgArtDir = (cardImg, cardImgMobile, altImg) => {
@@ -48,7 +68,12 @@ export const CardImgArtDir = (cardImg, cardImgMobile, altImg) => {
       image: getImage(cardImgMobile),
     },
   ]);
-  return <CardImg objectFit="contain" image={cardImgs} alt={altImg || ''} />;
+  return (
+    <CardImgContainer>
+      <CateogoryBox>React</CateogoryBox>
+      <CardImg objectFit="contain" image={cardImgs} alt={altImg || ''} />
+    </CardImgContainer>
+  );
 };
 
 const ContentWrapper = styled.div`

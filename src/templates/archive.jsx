@@ -13,6 +13,7 @@ import {
   ArchiveList,
   ArchiveListLink,
 } from '../components/ui/archivePagination';
+import CategoriesMenu from '../components/ui/categoriesMenu';
 
 const BlogArchiveTemplate = ({
   data: {
@@ -21,7 +22,7 @@ const BlogArchiveTemplate = ({
       seo: { seoTitle, seoDescription },
     },
     allDatoCmsBlogPost: { blogPostNodes },
-    datoCmsWebsiteSetting: { minsReadSuffix },
+    allDatoCmsCategory: { categoryNodes },
   },
   pageContext,
 }) => {
@@ -35,6 +36,7 @@ const BlogArchiveTemplate = ({
       seoDescription={seoDescription}
     >
       <Hero title={heroTitle} subtitle={heroSubtitle} />
+      <CategoriesMenu categoriesArray={categoryNodes} />
       <SectionWrapper isBlog>
         <SectionContainerGridThreeCols>
           {blogPostNodes.map(
@@ -114,6 +116,13 @@ export const query = graphql`
         heroSubtitle
       }
     }
+    allDatoCmsCategory(filter: { locale: { eq: $locale } }) {
+      categoryNodes: nodes {
+        id: originalId
+        title
+        slug
+      }
+    }
     allDatoCmsBlogPost(
       sort: { order: ASC, fields: meta___firstPublishedAt }
       filter: { locale: { eq: $locale }, noTranslate: { ne: true } }
@@ -154,10 +163,6 @@ export const query = graphql`
         slug
         reference
       }
-    }
-
-    datoCmsWebsiteSetting(locale: { eq: $locale }) {
-      minsReadSuffix
     }
   }
 `;

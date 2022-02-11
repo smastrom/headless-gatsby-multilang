@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { GatsbyImage } from 'gatsby-plugin-image';
 import { useLocation } from '@reach/router';
@@ -8,18 +8,21 @@ import { ArticleTitle, ArticleSubtitle } from '../layout/headingStyles';
 import BackButtonIcon from '../vectors/backButton';
 import Navigator from '../langHelpers/navigator';
 import * as Social from '../vectors/socialIcons';
+import { LangContext } from '../../context/langProvider';
+import { formatDate, formatDateTime } from '../../utils/dateTime';
 
 // Scoped styles
 
 const BackButtonWrapper = styled(Navigator)`
   margin-bottom: var(--gapSmall);
 
-  &:hover svg g path {
-    fill: var(--primaryColor);
-  }
-
-  & svg g path {
-    transition: 0.2s fill linear;
+  @media (hover: hover) {
+    & svg g path {
+      transition: 0.2s fill linear;
+      &:hover {
+        fill: var(--primaryColor);
+      }
+    }
   }
 `;
 
@@ -95,7 +98,6 @@ const ArticleCover = styled(GatsbyImage)`
   border-radius: calc(var(--defaultRadius) * 2);
   width: 700px;
   margin: calc(var(--authorImgSize) / 2 * -1) 0 0 0;
-
   & img {
     border-radius: calc(var(--defaultRadius) * 2);
   }
@@ -128,13 +130,13 @@ export const BodyImg = styled(ArticleCover)`
 
 const SharingIcons = styled.aside`
   display: grid;
-  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-rows: repeat(3, 1fr);
   row-gap: var(--gapRegular);
   height: min-content;
   margin-top: calc(var(--authorImgSize) / 2);
 
   @media screen and (max-width: 860px) {
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(3, 1fr);
     grid-template-rows: 1fr;
     width: min-content;
     column-gap: var(--gapRegular);
@@ -157,6 +159,42 @@ const Icon = styled.a`
   }
 `;
 
+const commonTransition = `200ms ease-out`;
+
+const CategoryBox = styled.h2`
+  position: relative;
+  border-radius: var(--defaultRadius);
+  background: var(--primaryLight);
+  color: var(--primaryColor);
+  text-transform: uppercase;
+  font-size: var(--baseM);
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  letter-spacing: 0.025em;
+  padding: 0.3em 0.5em 0.4em 0.5em;
+  cursor: pointer;
+  border: 3px solid white;
+  transition: background ${commonTransition}, color ${commonTransition};
+
+  @media screen and (max-width: 860px) {
+    left: -0.25em;
+  }
+
+  @media (hover: hover) {
+    &:hover {
+      background: var(--primaryColor);
+      color: var(--primaryLight);
+    }
+  }
+`;
+
+const LastModified = styled.time`
+  font-style: italic;
+  margin-top: var(--gapRegular);
+  font-size: var(--baseM);
+`;
+
 // Main Component
 
 const ArticleHeader = ({
@@ -168,10 +206,17 @@ const ArticleHeader = ({
   coverImg,
   authorImgAlt,
   coverImgAlt,
+  lastModified,
+  lastModifiedText,
 }) => {
   const { siteUrl } = useSiteUrl();
-
   const { pathname } = useLocation();
+  const { currentLanguage } = useContext(LangContext);
+
+  const commonExtLinkProps = {
+    rel: 'noreferrer',
+    target: '_blank',
+  };
 
   return (
     <>
@@ -179,13 +224,18 @@ const ArticleHeader = ({
         <BackButtonWrapper archive>
           <BackButtonIcon />
         </BackButtonWrapper>
+        <CategoryBox>React</CategoryBox>
         <AuthorDateContainer>
           <Author>{authorName}</Author>
           <Dot />
-          <Author as="time">{date}</Author>
+          <Author as="time">{formatDate(date, currentLanguage)}</Author>
         </AuthorDateContainer>
         <ArticleTitle>{title}</ArticleTitle>
         <ArticleSubtitle>{subtitle}</ArticleSubtitle>
+        <LastModified>{`${lastModifiedText}: ${formatDateTime(
+          lastModified,
+          currentLanguage
+        )}`}</LastModified>
       </Header>
       <ImgFullWrapper>
         <ImgWrapper>
@@ -194,22 +244,19 @@ const ArticleHeader = ({
         </ImgWrapper>
         <SharingIcons>
           <Icon
-            rel="noreferrer"
-            target="_blank"
+            {...commonExtLinkProps}
             href={`https://www.facebook.com/sharer/sharer.php?u=${siteUrl}${pathname}`}
           >
             <Social.FacebookIcon />
           </Icon>
           <Icon
-            rel="noreferrer"
-            target="_blank"
+            {...commonExtLinkProps}
             href={`https://twitter.com/share?url=${siteUrl}${pathname}`}
           >
             <Social.TwitterIcon />
           </Icon>
           <Icon
-            rel="noreferrer"
-            target="_blank"
+            {...commonExtLinkProps}
             href={`https://www.linkedin.com/shareArticle?mini=true&url=${siteUrl}${pathname}`}
           >
             <Social.LinkedinIcon />

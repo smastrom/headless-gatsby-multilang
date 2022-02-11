@@ -61,7 +61,7 @@ const LanguageSwitcher = () => {
   const data = useStaticQuery(graphql`
     query {
       allDatoCmsSite {
-        siteNodes: nodes {
+        languageNodes: nodes {
           locale
         }
       }
@@ -82,7 +82,7 @@ const LanguageSwitcher = () => {
   `);
 
   const {
-    allDatoCmsSite: { siteNodes },
+    allDatoCmsSite: { languageNodes },
     allSitePage: { pagesNodes },
     allUnavailableBlogPosts: { unavailableNodes },
   } = data;
@@ -102,6 +102,7 @@ const LanguageSwitcher = () => {
   const isArchiveRoot = pageType === 'isArchiveRoot';
   const isPaginatedArchive = pageType === 'isPaginatedArchive';
   const isPost = pageType === 'isPost';
+  const isCategory = pageType === 'isCategory';
 
   const isPostUnavailable = (locale) =>
     unavailableNodes.some(
@@ -118,50 +119,114 @@ const LanguageSwitcher = () => {
       as: 'span',
     };
 
-  // Slug renderer for pages and posts
-  const renderMatchingSlug = (locale, reference) =>
-    pagesNodes.map(
-      ({
-        pageContext: {
-          locale: matchLocale,
-          slug: matchSlug,
-          reference: matchReference,
-          isUncategorized,
-          categorySlug,
-        },
-      }) =>
-        matchLocale === locale &&
-        matchReference === reference && (
-          <li key={locale}>
-            <LanguageSwitcherLink
-              to={
-                isPost && isUncategorized
-                  ? locale === defaultLanguage
-                    ? `/${blogPath}/${matchSlug}`
-                    : `/${locale}/${blogPath}/${matchSlug}`
-                  : isPost && !isUncategorized
-                  ? locale === defaultLanguage
-                    ? `/${blogPath}/${categorySlug}/${matchSlug}`
-                    : `/${locale}/${blogPath}/${categorySlug}/${matchSlug}`
-                  : isPage
-                  ? locale === defaultLanguage
-                    ? `/${matchSlug}`
-                    : `/${locale}/${matchSlug}`
-                  : '/'
-              }
-              onClick={() => storeLocale(locale)}
-            >
-              {getLangCode(locale)}
-            </LanguageSwitcherLink>
-          </li>
-        )
-    );
+  // Path renderers for pages and posts
+  const buildPagePath = (renderingLocale, contextReference) => {
+    let path;
+    pagesNodes
+      .filter(
+        ({ pageContext: { locale, pageType } }) =>
+          pageType === 'isPage' && locale === renderingLocale
+      )
+      .some(
+        ({
+          pageContext: {
+            locale: matchLocale,
+            slug: matchSlug,
+            reference: matchReference,
+          },
+        }) => {
+          if (
+            matchLocale === renderingLocale &&
+            matchReference === contextReference
+          ) {
+            const isRenderingDefaultLang = renderingLocale === defaultLanguage;
+
+            if (isRenderingDefaultLang) {
+              path = `/${matchSlug}`;
+            } else path = `/${renderingLocale}/${matchSlug}`;
+          }
+          return typeof path === 'string';
+        }
+      );
+    return path;
+  };
+
+  const buildPostPath = (renderingLocale, contextReference) => {
+    let path;
+    pagesNodes
+      .filter(
+        ({ pageContext: { locale, pageType } }) =>
+          pageType === 'isPost' && locale === renderingLocale
+      )
+      .some(
+        ({
+          pageContext: {
+            locale: matchLocale,
+            slug: matchSlug,
+            reference: matchReference,
+            isUncategorized,
+            categorySlug,
+          },
+        }) => {
+          if (
+            matchLocale === renderingLocale &&
+            matchReference === contextReference
+          ) {
+            const isRenderingDefaultLang = renderingLocale === defaultLanguage;
+
+            if (isUncategorized) {
+              if (isRenderingDefaultLang) {
+                path = `/${blogPath}/${matchSlug}`;
+              } else path = `/${renderingLocale}/${blogPath}/${matchSlug}`;
+            } else {
+              if (isRenderingDefaultLang) {
+                path = `/${blogPath}/${categorySlug}/${matchSlug}`;
+              } else
+                path = `/${renderingLocale}/${blogPath}/${categorySlug}/${matchSlug}`;
+            }
+          }
+          return typeof path === 'string';
+        }
+      );
+    return path;
+  };
+
+  const buildCategoryPath = (renderingLocale, contextReference) => {
+    let path;
+    pagesNodes
+      .filter(
+        ({ pageContext: { locale, pageType } }) =>
+          pageType === 'isCategory' && locale === renderingLocale
+      )
+      .some(
+        ({
+          pageContext: {
+            locale: matchLocale,
+            slug: matchSlug,
+            reference: matchReference,
+          },
+        }) => {
+          if (
+            matchLocale === renderingLocale &&
+            matchReference === contextReference
+          ) {
+            const isRenderingDefaultLang = renderingLocale === defaultLanguage;
+
+            if (isRenderingDefaultLang) {
+              path = `/${blogPath}/${matchSlug}`;
+            } else path = `/${renderingLocale}/${blogPath}/${matchSlug}`;
+          }
+          return typeof path === 'string';
+        }
+      );
+    return path;
+  };
 
   return (
     <LangNav>
       {isHome ? (
         <LangNavList>
-          {siteNodes.map(({ locale }) => (
+          {languageNodes.map(({ locale }) => (
             <li key={locale}>
               <LanguageSwitcherLink
                 {...getCurrentLangProps(locale)}
@@ -173,9 +238,85 @@ const LanguageSwitcher = () => {
             </li>
           ))}
         </LangNavList>
+      ) : isPost ? (
+        <LangNavList>
+          {languageNodes.map(({ locale }) =>
+            isRenderingCurrentLang(locale) ? (
+              <li key={locale}>
+                <LanguageSwitcherLink {...getCurrentLangProps(locale)}>
+                  {getLangCode(locale)}
+                </LanguageSwitcherLink>
+              </li>
+            ) : isPostUnavailable(locale) ? (
+              <li key={locale}>
+                <LanguageSwitcherLink
+                  to={
+                    isRenderingDefaultLang(locale)
+                      ? `/${blogPath}/`
+                      : `/${locale}/${blogPath}/`
+                  }
+                  onClick={() => storeLocale(locale)}
+                >
+                  {getLangCode(locale)}
+                </LanguageSwitcherLink>
+              </li>
+            ) : (
+              <li key={locale}>
+                <LanguageSwitcherLink
+                  to={buildPostPath(locale, pageReference)}
+                  onClick={() => storeLocale(locale)}
+                >
+                  {getLangCode(locale)}
+                </LanguageSwitcherLink>
+              </li>
+            )
+          )}
+        </LangNavList>
+      ) : isPage ? (
+        <LangNavList>
+          {languageNodes.map(({ locale }) =>
+            isRenderingCurrentLang(locale) ? (
+              <li key={locale}>
+                <LanguageSwitcherLink {...getCurrentLangProps(locale)}>
+                  {getLangCode(locale)}
+                </LanguageSwitcherLink>
+              </li>
+            ) : (
+              <li key={locale}>
+                <LanguageSwitcherLink
+                  to={buildPagePath(locale, pageReference)}
+                  onClick={() => storeLocale(locale)}
+                >
+                  {getLangCode(locale)}
+                </LanguageSwitcherLink>
+              </li>
+            )
+          )}
+        </LangNavList>
+      ) : isCategory ? (
+        <LangNavList>
+          {languageNodes.map(({ locale }) =>
+            isRenderingCurrentLang(locale) ? (
+              <li key={locale}>
+                <LanguageSwitcherLink {...getCurrentLangProps(locale)}>
+                  {getLangCode(locale)}
+                </LanguageSwitcherLink>
+              </li>
+            ) : (
+              <li key={locale}>
+                <LanguageSwitcherLink
+                  to={buildCategoryPath(locale, pageReference)}
+                  onClick={() => storeLocale(locale)}
+                >
+                  {getLangCode(locale)}
+                </LanguageSwitcherLink>
+              </li>
+            )
+          )}
+        </LangNavList>
       ) : isArchiveRoot ? (
         <LangNavList>
-          {siteNodes.map(({ locale }) => (
+          {languageNodes.map(({ locale }) => (
             <li key={locale}>
               <LanguageSwitcherLink
                 {...getCurrentLangProps(locale)}
@@ -191,51 +332,24 @@ const LanguageSwitcher = () => {
             </li>
           ))}
         </LangNavList>
-      ) : isPaginatedArchive ? (
-        <LangNavList>
-          {siteNodes.map(({ locale }) => (
-            <li key={locale}>
-              <LanguageSwitcherLink
-                {...getCurrentLangProps(locale)}
-                to={
-                  isRenderingDefaultLang(locale)
-                    ? `/${blogPath}/${archivePageNumber}`
-                    : `/${locale}/${blogPath}/${archivePageNumber}`
-                }
-                onClick={() => storeLocale(locale)}
-              >
-                {getLangCode(locale)}
-              </LanguageSwitcherLink>
-            </li>
-          ))}
-        </LangNavList>
       ) : (
-        (isPost || isPage) && (
+        isPaginatedArchive && (
           <LangNavList>
-            {siteNodes.map(({ locale }) =>
-              isRenderingCurrentLang(locale) ? (
-                <li key={locale}>
-                  <LanguageSwitcherLink {...getCurrentLangProps(locale)}>
-                    {getLangCode(locale)}
-                  </LanguageSwitcherLink>
-                </li>
-              ) : isPostUnavailable(locale) ? (
-                <li key={locale}>
-                  <LanguageSwitcherLink
-                    to={
-                      isPost && isRenderingDefaultLang(locale)
-                        ? `/${blogPath}/`
-                        : `/${locale}/${blogPath}/`
-                    }
-                    onClick={() => storeLocale(locale)}
-                  >
-                    {getLangCode(locale)}
-                  </LanguageSwitcherLink>
-                </li>
-              ) : (
-                renderMatchingSlug(locale, pageReference)
-              )
-            )}
+            {languageNodes.map(({ locale }) => (
+              <li key={locale}>
+                <LanguageSwitcherLink
+                  {...getCurrentLangProps(locale)}
+                  to={
+                    isRenderingDefaultLang(locale)
+                      ? `/${blogPath}/${archivePageNumber}`
+                      : `/${locale}/${blogPath}/${archivePageNumber}`
+                  }
+                  onClick={() => storeLocale(locale)}
+                >
+                  {getLangCode(locale)}
+                </LanguageSwitcherLink>
+              </li>
+            ))}
           </LangNavList>
         )
       )}

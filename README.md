@@ -20,13 +20,14 @@ Multilanguage starter for Gatsby completely driven by an headless CMS.
 
 ## Features
 
-- **100% Headless**: create pages and articles, define languages, branding, blog settings and localize SEO, PWA settings, slugs and much more directly on DatoCMS.
+- **100% Headless**: create pages and articles, define languages, branding, blog settings and localize SEO, PWA settings, categories and post slugs directly on DatoCMS.
 - Language switcher component swapping between different and equal slugs per locale
 - Automatic internal links localization using [DAST](https://www.datocms.com/docs/structured-text/dast) and custom `<Navigator />` component
 - Multiple per-locale PWA webmanifest files generation on build time, dynamically injected depending on current language.
 - Browser locale detection and redirection
+- Translate and generate only specific posts per locale
 - Supports any language code path such as "/en-GB" or "/en",
-- Paginated archive pages, prev/next article navigation, social sharing and synthax highlighting.
+- Infinite scroll, prev/next article navigation, social sharing and synthax highlighting.
 - Built without any internationalization plugin, just Gatsby APIs and DatoCMS native features.
 
 </br>
@@ -635,9 +636,10 @@ When creating new templates (e.g. single pages), always import and wrap your tem
 
 import PageWrapper from '../layout/pageWrapper';
 
-const BlogPostTemplate = ({ data, pageContext }) => {
-  return (
-    <PageWrapper pageData={pageContext} ...
+const BlogPostTemplate = ({ data, pageContext }) => (
+  <PageWrapper pageData={pageContext}
+
+  ...
 
 ```
 

@@ -31,7 +31,7 @@ const BlogPostTemplate = ({
         picture: { authorPictureData, authorPictureAlt },
       },
       coverImage: { coverImageData, coverImageAlt },
-      meta: { firstPublishedAt },
+      meta: { firstPublishedAt, updatedAt },
     },
     previous: {
       nodes: [{ prevPostSlug, prevPostTitle, prevCategoryLink }],
@@ -39,7 +39,7 @@ const BlogPostTemplate = ({
     next: {
       nodes: [{ nextPostSlug, nextPostTitle, nextCategoryLink }],
     },
-    datoCmsWebsiteSetting: { prevHeading, nextHeading },
+    datoCmsWebsiteSetting: { prevHeading, nextHeading, updatedAtText },
   },
   pageContext,
 }) => {
@@ -62,6 +62,8 @@ const BlogPostTemplate = ({
           authorImg={authorPictureData}
           authorImgAlt={authorPictureAlt}
           date={firstPublishedAt}
+          lastModified={updatedAt}
+          lastModifiedText={updatedAtText}
         />
         <ArticleBody>
           {structuredBody?.value && (
@@ -197,6 +199,7 @@ export const query = graphql`
     datoCmsWebsiteSetting(locale: { eq: $locale }) {
       prevHeading: previous
       nextHeading: next
+      updatedAtText
     }
     datoCmsBlogPost(originalId: { eq: $id }, locale: { eq: $locale }) {
       originalId
@@ -215,7 +218,8 @@ export const query = graphql`
         coverImageAlt: alt
       }
       meta {
-        firstPublishedAt(locale: $locale, formatString: "DD MMM YYYY")
+        firstPublishedAt
+        updatedAt
       }
       author {
         authorName: name

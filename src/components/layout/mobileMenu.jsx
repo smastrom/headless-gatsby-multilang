@@ -16,7 +16,7 @@ const MobileMenuWrapper = styled.div`
 `;
 
 const MobileMenuNav = styled.nav`
-  width: 200px;
+  width: 260px;
   border-radius: var(--defaultRadius);
   border: 2px solid var(--primaryColor);
   position: absolute;
