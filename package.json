@@ -39,7 +39,6 @@
   },
   "devDependencies": {
     "babel-jest": "^27.4.5",
-    "babel-preset-gatsby": "^2.4.0",
     "jest": "^27.4.5"
   }
 }

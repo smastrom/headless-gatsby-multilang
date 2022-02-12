@@ -1,10 +1,16 @@
 import React from 'react';
-import GlobalStyles from './src/components/layout/globalStyles';
-import ThemeProvider from './src/context/themeProvider';
+import { ThemeProvider } from './src/components/ContextProviders/ThemeProvider';
+import { GlobalStyle } from './src/components/Layout/SharedStyles/globalStyle';
+
+export const onRenderBody = ({ setHtmlAttributes }) => {
+  setHtmlAttributes({
+    className: 'lightTheme',
+  });
+};
 
 export const wrapPageElement = ({ element }) => (
   <ThemeProvider>
-    <GlobalStyles />
+    <GlobalStyle />
     {element}
   </ThemeProvider>
 );

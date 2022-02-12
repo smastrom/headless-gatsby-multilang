@@ -1,0 +1,16 @@
+export const rtlLangList = [
+  'ar',
+  'arc',
+  'ckb',
+  'dv',
+  'fa',
+  'ha',
+  'he',
+  'khw',
+  'ks',
+  'ps',
+  'sd',
+  'sd',
+  'uz_AF',
+  'yi',
+];

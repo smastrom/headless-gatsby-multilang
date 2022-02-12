@@ -1,11 +1,11 @@
 import React from 'react';
-import ThemeProvider from './src/context/themeProvider';
-import Redirect from './src/components/langHelpers/redirect';
-import GlobalStyles from './src/components/layout/globalStyles';
+import { ThemeProvider } from './src/components/ContextProviders/ThemeProvider';
+import { Redirect } from './src/components/LanguageHelpers/Redirect';
+import { GlobalStyle } from './src/components/Layout/SharedStyles/globalStyle';
 
 export const wrapPageElement = ({ element }) => (
   <ThemeProvider>
-    <GlobalStyles />
+    <GlobalStyle />
     <Redirect />
     {element}
   </ThemeProvider>

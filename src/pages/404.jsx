@@ -1,19 +1,18 @@
 import React from 'react';
-import { graphql, useStaticQuery } from 'gatsby';
-import useLanguages from '../hooks/useLanguages';
-import PageWrapper from '../components/layout/pageWrapper';
-import Hero from '../components/layout/hero';
-import Navigator from '../components/langHelpers/navigator';
+import { graphql, Link, useStaticQuery } from 'gatsby';
+import { useDefaultLanguage } from '../hooks/useDefaultLanguage';
+import { Hero } from '../components/Layout/Hero';
 import {
   storeLocale,
   getStoredLocale,
-  isSSR,
   getSecondaryLangs,
   findSecondaryLang,
   isDefaultStored,
   isSecondaryStored,
-} from '../utils/misc';
-import preferredLang from '../utils/preferredLang';
+} from '../functions/langUtils';
+import { getPreferredLang } from '../functions/getPreferredLang';
+import { isSSR } from '../functions/isSSR';
+import { NotFoundPageHead } from '../components/Head/NotFoundPageHead';
 
 const NotFoundPage = () => {
   const data = useStaticQuery(graphql`
@@ -25,7 +24,6 @@ const NotFoundPage = () => {
         nodes {
           seo {
             seoTitle: title
-            seoDescription: description
           }
           title
           subtitle
@@ -35,7 +33,9 @@ const NotFoundPage = () => {
       }
     }
   `);
-  const { defaultLanguage } = useLanguages();
+
+  const { defaultLanguage } = useDefaultLanguage();
+
   const {
     datoCmsSite: { locales },
   } = data;
@@ -45,30 +45,28 @@ const NotFoundPage = () => {
   if (!isSSR) {
     const browserLangCodes = navigator.languages;
     const {
-      allDatoCmsNotFoundPage: { nodes: propsNodes },
+      allDatoCmsNotFoundPage: { nodes: propNodes },
     } = data;
 
-    const [defaultLangPropsNode] = propsNodes;
+    const [defaultLangPropsNode] = propNodes;
 
     const {
-      seo: { seoTitle, seoDescription },
+      seo: { seoTitle },
       title,
       subtitle,
       backToHomeText,
     } = defaultLangPropsNode;
 
     const defaultLangProps = {
-      pageWrapper: {
-        seoTitle,
-        seoDescription,
-        notFoundPageLocale: defaultLanguage,
-        notFoundPageManifest: '/manifest.webmanifest',
+      headProps: {
+        title: seoTitle,
+        locale: defaultLanguage,
       },
-      hero: {
+      heroProps: {
         title,
         subtitle,
       },
-      navigator: {
+      linkProps: {
         children: backToHomeText,
         to: '/',
       },
@@ -88,29 +86,27 @@ const NotFoundPage = () => {
         defaultLanguage
       );
       if (isSecondaryLangStored) {
-        const [storedLangProps] = propsNodes.filter(
+        const storedLangProps = propNodes.find(
           ({ locale }) => locale === storedLocale
         );
 
         return {
-          pageWrapper: {
-            seoTitle: storedLangProps.seo.seoTitle,
-            seoDescription: storedLangProps.seo.seoDescription,
-            notFoundPageLocale: storedLocale,
-            notFoundPageManifest: `/manifest_${storedLocale}.webmanifest`,
+          headProps: {
+            title: storedLangProps.seo.seoTitle,
+            locale: storedLocale,
           },
-          hero: {
+          heroProps: {
             title: storedLangProps.title,
             subtitle: storedLangProps.subtitle,
           },
-          navigator: {
+          linkProps: {
             children: storedLangProps.backToHomeText,
-            notFoundPage: `/${storedLocale}`,
+            to: `/${storedLocale}`,
           },
         };
       }
 
-      const matchingLangCode = preferredLang(browserLangCodes, appLangCodes);
+      const matchingLangCode = getPreferredLang(browserLangCodes, appLangCodes);
 
       const defaultLanguageMatch = matchingLangCode === defaultLanguage;
 
@@ -126,45 +122,44 @@ const NotFoundPage = () => {
       );
       if (!storedLocale && secondaryLanguageMatch) {
         storeLocale(secondaryLanguageMatch);
-        const [secondaryLangProps] = propsNodes.filter(
+        const secondaryLangProps = propNodes.find(
           ({ locale }) => locale === secondaryLanguageMatch
         );
         return {
-          pageWrapper: {
-            seoTitle: secondaryLangProps.seo.seotitle,
-            seoDescription: secondaryLangProps.seo.seoDescription,
-            notFoundPageLocale: secondaryLanguageMatch,
-            notFoundPageManifest: `/manifest_${secondaryLanguageMatch}.webmanifest`,
+          headProps: {
+            title: secondaryLangProps.seo.seotitle,
+            locale: secondaryLanguageMatch,
           },
-          hero: {
+          heroProps: {
             title: secondaryLangProps.title,
             subtitle: secondaryLangProps.subtitle,
           },
-          navigator: {
+          linkProps: {
             children: secondaryLangProps.backToHomeText,
-            notFoundPage: `/${secondaryLanguageMatch}`,
+            to: `/${secondaryLanguageMatch}`,
           },
         };
       }
       return { ...defaultLangProps };
     };
 
-    const { pageWrapper, hero, navigator: navigatorProps } = getProps();
+    const { headProps, heroProps, linkProps } = getProps();
 
     return (
-      <PageWrapper {...pageWrapper} notFoundPage noHeader noFooter>
+      <>
+        <NotFoundPageHead {...headProps} />
         <Hero
-          {...hero}
+          {...heroProps}
           fullView
           centered
           button={
-            <Navigator
-              {...navigatorProps}
+            <Link
+              {...linkProps}
               className="classicButton classicButtonOutline"
             />
           }
         />
-      </PageWrapper>
+      </>
     );
   }
   return null;
