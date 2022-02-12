@@ -3,104 +3,39 @@ const fs = require('fs');
 const https = require('https');
 
 exports.createPages = async ({ graphql, actions: { createPage } }) => {
-  // Blog and pages generation
-
-  /**
-   * Blog and locales settings query, the first block is used to retrieve blog settings and,
-   * the second one to retrieve a list of all languages available
-   */
-
   const {
     data: {
-      datoCmsWebsiteSetting: { blogPath, postsPerPage },
-      allDatoCmsSite: { allDatoCmsSiteEdges },
+      datoCmsSite: { allLanguages },
+      datoCmsWebsiteSetting: { blogPathName },
     },
   } = await graphql(`
     query {
+      datoCmsSite {
+        allLanguages: locales
+      }
       datoCmsWebsiteSetting {
-        blogPath
-        postsPerPage
-      }
-      allDatoCmsSite {
-        allDatoCmsSiteEdges: edges {
-          node {
-            locale
-          }
-        }
+        blogPathName
       }
     }
   `);
 
-  /**
-   * Archive page (blog root) generation based on locale with pagination
-   * Blog posts should be sorted using the same fields as in any other template
-   * in order to have a coherent prev/next navigation.
-   */
+  const [defaultLanguage] = allLanguages;
 
-  const {
-    data: {
-      allDatoCmsBlogPost: { allBlogPostsEdges },
-    },
-  } = await graphql(`
-    query {
-      allDatoCmsBlogPost(
-        sort: { fields: [locale, meta___firstPublishedAt] }
-        filter: { noTranslate: { ne: true } }
-      ) {
-        allBlogPostsEdges: edges {
-          node {
-            id: originalId
-            locale
-            slug
-            reference
-            categoryLink {
-              categorySlug: slug
-              categoryLocale: locale
-            }
-          }
-        }
-      }
-    }
-  `);
+  // Blog root page generation
 
-  const [
-    {
-      node: { locale: defaultLanguage },
-    },
-  ] = allDatoCmsSiteEdges;
-  const allLanguages = allDatoCmsSiteEdges;
-  const allBlogPostsPerLocale = allBlogPostsEdges.length / allLanguages.length;
-  const pagesNumber = Math.ceil(allBlogPostsPerLocale / postsPerPage);
+  const BlogRootTemplate = path.resolve('src/templates/blogRoot.jsx');
 
-  const ArchiveTemplate = path.resolve('src/templates/archive.jsx');
-
-  allLanguages.forEach(({ node: { locale } }) => {
-    Array.from({ length: pagesNumber }).forEach((_, index) => {
-      createPage({
-        path:
-          // If generating the first default language archive page
-          locale === defaultLanguage && index === 0
-            ? `/${blogPath}`
-            : // If not generating the first default language archive page
-            locale === defaultLanguage && index > 0
-            ? `/${blogPath}/${index + 1}`
-            : // If generating the first non-default language archive page
-            locale !== defaultLanguage && index === 0
-            ? `/${locale}/${blogPath}`
-            : // If not generation the first non-default language archive page
-            locale !== defaultLanguage && index > 0
-            ? `/${locale}/${blogPath}/${index + 1}`
-            : '/',
-        component: ArchiveTemplate,
-        context: {
-          locale: locale,
-          limit: postsPerPage,
-          skip: index * postsPerPage,
-          pagesNumber,
-          archivePageNumber: index + 1,
-          pageType: index + 1 === 1 ? 'isArchiveRoot' : 'isPaginatedArchive',
-        },
-      });
+  allLanguages.forEach((siteLocale) => {
+    createPage({
+      path: (() => {
+        if (siteLocale === defaultLanguage) return `/${blogPathName}`;
+        return `/${siteLocale}/${blogPathName}/`; // else (if not generating default language path)
+      })(),
+      component: BlogRootTemplate,
+      context: {
+        locale: siteLocale,
+        pageType: 'isBlogRoot',
+      },
     });
   });
 
@@ -108,12 +43,12 @@ exports.createPages = async ({ graphql, actions: { createPage } }) => {
 
   const {
     data: {
-      allDatoCmsCategory: { allCategoryNodes },
+      allDatoCmsCategory: { categoryNodes },
     },
   } = await graphql(`
     query {
       allDatoCmsCategory(filter: { noTranslate: { ne: true } }) {
-        allCategoryNodes: nodes {
+        categoryNodes: nodes {
           id: originalId
           locale
           slug
@@ -125,11 +60,11 @@ exports.createPages = async ({ graphql, actions: { createPage } }) => {
 
   const CategoryTemplate = path.resolve('src/templates/categoryArchive.jsx');
 
-  allCategoryNodes.forEach(({ id, locale, slug, reference }) => {
+  categoryNodes.forEach(({ id, locale, slug, reference }) => {
     createPage({
       path: (() => {
-        if (locale === defaultLanguage) return `${blogPath}/${slug}`;
-        return `/${locale}/${blogPath}/${slug}`;
+        if (locale === defaultLanguage) return `${blogPathName}/${slug}`;
+        return `/${locale}/${blogPathName}/${slug}`;
       })(),
       component: CategoryTemplate,
       context: {
@@ -144,9 +79,35 @@ exports.createPages = async ({ graphql, actions: { createPage } }) => {
 
   // Articles Generation
 
+  const {
+    data: {
+      allDatoCmsBlogPost: { blogPostNodes },
+    },
+  } = await graphql(`
+    query {
+      allDatoCmsBlogPost(
+        sort: { fields: [locale, meta___firstPublishedAt] }
+        filter: { noTranslate: { ne: true } }
+      ) {
+        blogPostNodes: nodes {
+          id: originalId
+          locale
+          slug
+          reference
+          categoryLink {
+            categorySlug: slug
+            categoryLocale: locale
+          }
+        }
+      }
+    }
+  `);
+
+  const allBlogPostsPerLocale = blogPostNodes.length / allLanguages.length;
+
   const ArticleTemplate = path.resolve('src/templates/article.jsx');
 
-  allLanguages.forEach(({ node: { locale: nodeLocale } }) => {
+  allLanguages.forEach((siteLocale) => {
     let pageCounter = 0;
 
     /**
@@ -156,9 +117,9 @@ exports.createPages = async ({ graphql, actions: { createPage } }) => {
      * we can export a skipNext variable which we will use to skip all the previous posts.
      */
 
-    allBlogPostsEdges
-      .filter(({ node: { locale } }) => locale === nodeLocale)
-      .forEach(({ node: { locale, slug, reference, id, categoryLink } }) => {
+    blogPostNodes
+      .filter(({ locale }) => locale === siteLocale)
+      .forEach(({ locale, slug, reference, id, categoryLink }) => {
         const categorySlug = categoryLink?.categorySlug;
         const isUncategorized = categoryLink === null;
         const isGeneratingDefaultLang = locale === defaultLanguage;
@@ -168,12 +129,12 @@ exports.createPages = async ({ graphql, actions: { createPage } }) => {
         createPage({
           path: (() => {
             if (isUncategorized) {
-              if (isGeneratingDefaultLang) return `${blogPath}/${slug}`;
-              return `${locale}/${blogPath}/${slug}`;
+              if (isGeneratingDefaultLang) return `${blogPathName}/${slug}`;
+              return `${locale}/${blogPathName}/${slug}`;
             } else {
               if (isGeneratingDefaultLang)
-                return `${blogPath}/${categorySlug}/${slug}`;
-              return `${locale}/${blogPath}/${categorySlug}/${slug}`;
+                return `${blogPathName}/${categorySlug}/${slug}`;
+              return `${locale}/${blogPathName}/${categorySlug}/${slug}`;
             }
           })(),
           component: ArticleTemplate,
@@ -189,7 +150,7 @@ exports.createPages = async ({ graphql, actions: { createPage } }) => {
 
             /**
              * If generating the last article, assign the value "0" since
-             * there won't be next posts to display
+             * there won't be a next post to display
              */
 
             skipNext: pageCounter === allBlogPostsPerLocale ? 0 : pageCounter,

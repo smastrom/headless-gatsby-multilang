@@ -28,7 +28,7 @@ const Seo = ({
           defaultOgImage {
             url
           }
-          primaryColor {
+          pwaThemeColor {
             hex
           }
         }
@@ -55,7 +55,7 @@ const Seo = ({
   } = data;
   const [
     {
-      primaryColor: { hex },
+      pwaThemeColor: { hex },
     },
   ] = settingsNodes;
 

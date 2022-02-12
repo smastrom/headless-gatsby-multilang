@@ -4,35 +4,26 @@ const useLanguages = () => {
   const data = useStaticQuery(
     graphql`
       query {
-        allDatoCmsSite {
-          edges {
-            node {
-              locale
-            }
-          }
+        datoCmsSite {
+          locales
         }
         datoCmsWebsiteSetting {
-          blogPath
+          blogPathName
         }
       }
     `
   );
 
   const {
-    allDatoCmsSite: {
-      edges: [
-        {
-          node: { locale: defaultLanguage },
-        },
-      ],
-    },
-
-    datoCmsWebsiteSetting: { blogPath },
+    datoCmsSite: { locales },
+    datoCmsWebsiteSetting: { blogPathName },
   } = data;
+
+  const [defaultLanguage] = locales;
 
   return {
     defaultLanguage,
-    blogPath,
+    blogPathName,
   };
 };
 

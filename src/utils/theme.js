@@ -4,17 +4,15 @@ import {
   STORAGE_THEME_KEY,
 } from '../constants';
 
-const HTML = document.documentElement;
-
 export const setTheme = {
   setStorageItem: function () {
     localStorage.setItem(STORAGE_THEME_KEY, this.storageValue);
   },
   removeClass: function () {
-    HTML.classList.remove(this.classToRemove);
+    document.documentElement.classList.remove(this.classToRemove);
   },
   addClass: function () {
-    HTML.classList.add(this.classToAdd);
+    document.documentElement.classList.add(this.classToAdd);
   },
   setLightThemeClass: function () {
     this.addClass.call({ classToAdd: 'lightTheme' });

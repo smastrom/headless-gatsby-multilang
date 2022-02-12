@@ -94,7 +94,7 @@ const LanguageSwitcher = () => {
     reference: pageReference,
   } = useContext(LangContext);
 
-  const { defaultLanguage, blogPath } = useLanguages();
+  const { defaultLanguage, blogPathName } = useLanguages();
 
   // Boolean helpers
   const isHome = pageType === 'isHome';
@@ -176,13 +176,13 @@ const LanguageSwitcher = () => {
 
             if (isUncategorized) {
               if (isRenderingDefaultLang) {
-                path = `/${blogPath}/${matchSlug}`;
-              } else path = `/${renderingLocale}/${blogPath}/${matchSlug}`;
+                path = `/${blogPathName}/${matchSlug}`;
+              } else path = `/${renderingLocale}/${blogPathName}/${matchSlug}`;
             } else {
               if (isRenderingDefaultLang) {
-                path = `/${blogPath}/${categorySlug}/${matchSlug}`;
+                path = `/${blogPathName}/${categorySlug}/${matchSlug}`;
               } else
-                path = `/${renderingLocale}/${blogPath}/${categorySlug}/${matchSlug}`;
+                path = `/${renderingLocale}/${blogPathName}/${categorySlug}/${matchSlug}`;
             }
           }
           return typeof path === 'string';
@@ -213,8 +213,8 @@ const LanguageSwitcher = () => {
             const isRenderingDefaultLang = renderingLocale === defaultLanguage;
 
             if (isRenderingDefaultLang) {
-              path = `/${blogPath}/${matchSlug}`;
-            } else path = `/${renderingLocale}/${blogPath}/${matchSlug}`;
+              path = `/${blogPathName}/${matchSlug}`;
+            } else path = `/${renderingLocale}/${blogPathName}/${matchSlug}`;
           }
           return typeof path === 'string';
         }
@@ -252,8 +252,8 @@ const LanguageSwitcher = () => {
                 <LanguageSwitcherLink
                   to={
                     isRenderingDefaultLang(locale)
-                      ? `/${blogPath}/`
-                      : `/${locale}/${blogPath}/`
+                      ? `/${blogPathName}/`
+                      : `/${locale}/${blogPathName}/`
                   }
                   onClick={() => storeLocale(locale)}
                 >
@@ -322,8 +322,8 @@ const LanguageSwitcher = () => {
                 {...getCurrentLangProps(locale)}
                 to={
                   isRenderingDefaultLang(locale)
-                    ? `/${blogPath}`
-                    : `/${locale}/${blogPath}`
+                    ? `/${blogPathName}`
+                    : `/${locale}/${blogPathName}`
                 }
                 onClick={() => storeLocale(locale)}
               >
@@ -341,8 +341,8 @@ const LanguageSwitcher = () => {
                   {...getCurrentLangProps(locale)}
                   to={
                     isRenderingDefaultLang(locale)
-                      ? `/${blogPath}/${archivePageNumber}`
-                      : `/${locale}/${blogPath}/${archivePageNumber}`
+                      ? `/${blogPathName}/${archivePageNumber}`
+                      : `/${locale}/${blogPathName}/${archivePageNumber}`
                   }
                   onClick={() => storeLocale(locale)}
                 >

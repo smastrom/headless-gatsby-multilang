@@ -18,7 +18,7 @@ const Navigator = ({
   activeClassName,
 }) => {
   const { currentLanguage } = useContext(LangContext);
-  const { defaultLanguage, blogPath } = useLanguages();
+  const { defaultLanguage, blogPathName } = useLanguages();
 
   const isContextLangEqualToDefaultLang = currentLanguage === defaultLanguage;
   const isDefaultLang = isContextLangEqualToDefaultLang;
@@ -33,20 +33,20 @@ const Navigator = ({
       activeClassName={activeClassName}
       to={(() => {
         if (isArticleWithoutCategory) {
-          if (isDefaultLang) return `/${blogPath}/${to}`;
-          return `/${currentLanguage}/${blogPath}/${to}`;
+          if (isDefaultLang) return `/${blogPathName}/${to}`;
+          return `/${currentLanguage}/${blogPathName}/${to}`;
         } else if (isArticleWithCategory) {
-          if (isDefaultLang) return `/${blogPath}/${categorySlug}/${to}`;
-          return `/${currentLanguage}/${blogPath}/${categorySlug}/${to}`;
+          if (isDefaultLang) return `/${blogPathName}/${categorySlug}/${to}`;
+          return `/${currentLanguage}/${blogPathName}/${categorySlug}/${to}`;
         } else if (page) {
-          if (isDefaultLang) return `/${blogPath}`;
+          if (isDefaultLang) return `/${blogPathName}`;
           return `/${currentLanguage}/${to}`;
         } else if (archive) {
-          if (isDefaultLang) return `/${blogPath}`;
-          return `/${currentLanguage}/${blogPath}`;
+          if (isDefaultLang) return `/${blogPathName}`;
+          return `/${currentLanguage}/${blogPathName}`;
         } else if (category && categorySlug) {
-          if (isDefaultLang) return `/${blogPath}/${categorySlug}`;
-          return `/${currentLanguage}/${blogPath}/${categorySlug}`;
+          if (isDefaultLang) return `/${blogPathName}/${categorySlug}`;
+          return `/${currentLanguage}/${blogPathName}/${categorySlug}`;
         } else if (home) {
           if (isDefaultLang) return '/';
           return `/${currentLanguage}`;
