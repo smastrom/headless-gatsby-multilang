@@ -1,6 +1,7 @@
-import { Link } from 'gatsby';
-import React from 'react';
+import React, { useContext, useState } from 'react';
+import { graphql, useStaticQuery } from 'gatsby';
 import styled from 'styled-components';
+import { LangContext } from '../../context/langProvider';
 import Navigator from '../langHelpers/navigator';
 
 // Scoped styles
@@ -31,7 +32,11 @@ const ScrollGradientContainer = styled.div`
     position: absolute;
     content: '';
     width: var(--gapXL);
-    background: linear-gradient(to right, var(--transparent) 25%, white 75%);
+    background: linear-gradient(
+      to right,
+      var(--transparent) 25%,
+      var(--background) 75%
+    );
     z-index: 2;
     display: block;
     height: calc(100% - calc(var(--scrollBarHeight) * 2));
@@ -97,81 +102,108 @@ const CategoryLink = styled(Navigator)`
 
 // Main component
 
-const CategoriesMenu = ({ categoriesArray }) => (
-  <MenuWrapper>
-    <ScrollGradientContainer>
-      <NavContainer>
-        <NavList>
-          {categoriesArray.map(({ id, title, slug }) => (
-            <li key={id}>
-              <CategoryLink
-                activeClassName="activeClassLink"
-                category
-                categorySlug={slug}
-              >
-                {title}
+const CategoriesMenu = () => {
+  const data = useStaticQuery(graphql`
+    {
+      allDatoCmsCategory {
+        categoryNodes: nodes {
+          id: originalId
+          locale
+          title
+          slug
+        }
+      }
+    }
+  `);
+
+  const {
+    allDatoCmsCategory: { categoryNodes },
+  } = data;
+
+  const { currentLanguage } = useContext(LangContext);
+
+  return (
+    <MenuWrapper>
+      <ScrollGradientContainer>
+        <NavContainer>
+          <NavList>
+            {categoryNodes
+              .filter(({ locale }) => locale === currentLanguage)
+              .map(({ id, title, slug }) => (
+                <li>
+                  <CategoryLink
+                    key={id}
+                    activeStyle={{
+                      gridColumn: 1,
+                    }}
+                    activeClassName="activeClassLink"
+                    category
+                    categorySlug={slug}
+                  >
+                    {title}
+                  </CategoryLink>
+                </li>
+              ))}
+            <li>
+              <CategoryLink activeClassName="activeCategoryMenuClassLink">
+                Raffaele Rubrante
               </CategoryLink>
             </li>
-          ))}
-          <li>
-            <CategoryLink activeClassName="activeClassLink">
-              Raffaele Rubrante
-            </CategoryLink>
-          </li>
-          <li>
-            <CategoryLink activeClassName="activeClassLink">
-              Raffaele Rubrante
-            </CategoryLink>
-          </li>
-          <li>
-            <CategoryLink activeClassName="activeClassLink">
-              Raffaele Rubrante
-            </CategoryLink>
-          </li>
-          <li>
-            <CategoryLink activeClassName="activeClassLink">
-              Raffaele Rubrante
-            </CategoryLink>
-          </li>
-          <li>
-            <CategoryLink activeClassName="activeClassLink">
-              Raffaele Rubrante
-            </CategoryLink>
-          </li>
-          <li>
-            <CategoryLink activeClassName="activeClassLink">
-              Raffaele Rubrante
-            </CategoryLink>
-          </li>
-          <li>
-            <CategoryLink activeClassName="activeClassLink">
-              Raffaele Rubrante
-            </CategoryLink>
-          </li>
-          <li>
-            <CategoryLink activeClassName="activeClassLink">
-              Raffaele Rubrante
-            </CategoryLink>
-          </li>
-          <li>
-            <CategoryLink activeClassName="activeClassLink">
-              Raffaele Rubrante
-            </CategoryLink>
-          </li>
-          <li>
-            <CategoryLink activeClassName="activeClassLink">
-              Raffaele Rubrante
-            </CategoryLink>
-          </li>
-          <li>
-            <CategoryLink activeClassName="activeClassLink">
-              Raffaele Rubrante
-            </CategoryLink>
-          </li>
-        </NavList>
-      </NavContainer>
-    </ScrollGradientContainer>
-  </MenuWrapper>
-);
+            <li>
+              <CategoryLink activeClassName="activeCategoryMenuClassLink">
+                Raffaele Rubrante
+              </CategoryLink>
+            </li>
+            <li>
+              <CategoryLink activeClassName="activeCategoryMenuClassLink">
+                Raffaele Rubrante
+              </CategoryLink>
+            </li>
+            <li>
+              <CategoryLink activeClassName="activeCategoryMenuClassLink">
+                Raffaele Rubrante
+              </CategoryLink>
+            </li>
+            <li>
+              <CategoryLink activeClassName="activeCategoryMenuClassLink">
+                Raffaele Rubrante
+              </CategoryLink>
+            </li>
+            <li>
+              <CategoryLink activeClassName="activeCategoryMenuClassLink">
+                Raffaele Rubrante
+              </CategoryLink>
+            </li>
+            <li>
+              <CategoryLink activeClassName="activeCategoryMenuClassLink">
+                Raffaele Rubrante
+              </CategoryLink>
+            </li>
+            <li>
+              <CategoryLink activeClassName="activeCategoryMenuClassLink">
+                Raffaele Rubrante
+              </CategoryLink>
+            </li>
+            <li>
+              <CategoryLink activeClassName="activeCategoryMenuClassLink">
+                Raffaele Rubrante
+              </CategoryLink>
+            </li>
+            <li>
+              <CategoryLink activeClassName="activeCategoryMenuClassLink">
+                Raffaele Rubrante
+              </CategoryLink>
+            </li>
+            <li>
+              <CategoryLink activeClassName="activeCategoryMenuClassLink">
+                Raffaele Rubrante
+              </CategoryLink>
+            </li>
+          </NavList>
+        </NavContainer>
+      </ScrollGradientContainer>
+    </MenuWrapper>
+  );
+};
 
 export default CategoriesMenu;

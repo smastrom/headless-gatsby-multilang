@@ -6,9 +6,9 @@ export const SectionWrapper = styled.section`
   display: flex;
   align-items: center;
   width: 100%;
-  background: white;
   flex-direction: column;
   position: relative;
+  background: ${({ backgroundColor }) => backgroundColor};
 
   ${({ isBlog, noTopPaddings }) => {
     if (isBlog) {
@@ -26,7 +26,6 @@ export const SectionWrapper = styled.section`
       padding: var(--globalPaddingTb) var(--globalPaddingLr);
     `;
   }}
-
   @media screen and (max-width: 860px) {
     align-items: ${({ isArticle }) => (isArticle ? 'flex-start' : 'center')};
   }

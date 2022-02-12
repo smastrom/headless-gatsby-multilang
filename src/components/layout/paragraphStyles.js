@@ -65,6 +65,8 @@ const CommonStyles = css`
     padding: var(--globalPaddingLr) !important;
     border-radius: var(--defaultRadius) !important;
     margin: var(--paragraphMargin) !important;
+    background: rgb(24, 27, 34) none repeat scroll 0% 0% !important;
+    border: 1px solid var(--dividerColor) !important;
 
     @media screen and (max-width: 800px) {
       border-radius: 0 !important;
@@ -73,8 +75,8 @@ const CommonStyles = css`
   }
 
   & mark {
-    background: var(--markColor);
-    color: var(--baseTextColorDark);
+    background: var(--markBackgroundColor);
+    color: var(--markTextColor);
   }
 `;
 

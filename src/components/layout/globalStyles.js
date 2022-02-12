@@ -1,37 +1,14 @@
 import { createGlobalStyle } from 'styled-components';
-import colors from '../../static/colors.json';
-
-const {
-  primaryColor,
-  primaryDark,
-  primaryLight,
-  headingsColor,
-  baseTextColor,
-  baseTextColorDark,
-  disabledColor,
-  dividerColor,
-  markColor,
-} = colors;
 
 const GlobalStyles = createGlobalStyle`
 
     :root {
-        
         /* Colors */
-        --primaryColor: ${primaryColor};
-        --primaryDark: ${primaryDark};
-        --primaryLight: ${primaryLight};
-        --headingsColor: ${headingsColor};
-        --baseTextColor: ${baseTextColor};
-        --baseTextColorDark: ${baseTextColorDark};
-        --disabledColor: ${disabledColor};
-        --dividerColor: ${dividerColor};
-        --markColor: ${markColor};
         --transparent: rgba(0, 0, 0, 0);
         
         /* Containers */
         --globalContainer: 1100px;
-        --globalPaddingLr: 1.875rem;
+        --globalPaddingLr: 30px;
         --globalPaddingTb: 60px;
 
         /* Radius */
@@ -61,7 +38,6 @@ const GlobalStyles = createGlobalStyle`
 
         --headingsHeight: 1.1;
         --paragraphHeight: 1.5;
-
     }
 
     *, *::before, *::after {
@@ -73,6 +49,37 @@ const GlobalStyles = createGlobalStyle`
         margin: 0;
         padding: 0;
         line-height: var(--paragraphHeight);
+        background: var(--background);
+    }
+
+    .lightTheme {
+        --primaryColor: #0067FA;
+        --primaryDarker: #165BBB;
+        --primaryBrighter: #EBF6FF;
+        --headingsColor: #4D4D4D;
+        --baseTextColor:#6E7581;
+        --articleTextColor: #4D4D4D;
+        --disabledColor: #6e7581;
+        --dividerColor: #e2e2e2;
+        --markBackgroundColor: #FDFFB4;
+        --markTextColor: #4D4D4D;
+        --backgroundAlt: #FFFFFF;
+        --background: #FFFFFF;
+    }
+
+    .darkTheme {
+        --primaryColor: #5995ea;
+        --primaryDarker: #165BBB;
+        --primaryBrighter: #3a4957;
+        --headingsColor: #eee;
+        --baseTextColor: #aaa;
+        --articleTextColor: #c4c4c4;
+        --disabledColor: #E2E2E2;
+        --dividerColor: #242a31;
+        --markBackgroundColor: #b2dbff;
+        --markTextColor: #181b22;
+        --background: #181b22;
+        --backgroundAlt: #1d2028;
     }
 
     body {
@@ -133,7 +140,7 @@ const GlobalStyles = createGlobalStyle`
         color: var(--primaryColor) !important;
         cursor: default;
     }
-
+    
     .classicButton {
         background: var(--primaryColor);
         color: white;

@@ -19,7 +19,7 @@ const CategoriesList = styled.ul`
   display: grid;
   grid-auto-flow: row;
   padding: var(--gapSmall) 0;
-  background: white;
+  background: var(--backgroundAlt);
   border-radius: 20px;
   border: 2px solid var(--dividerColor);
   height: min-content;

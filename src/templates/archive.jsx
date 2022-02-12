@@ -22,7 +22,6 @@ const BlogArchiveTemplate = ({
       seo: { seoTitle, seoDescription },
     },
     allDatoCmsBlogPost: { blogPostNodes },
-    allDatoCmsCategory: { categoryNodes },
   },
   pageContext,
 }) => {
@@ -36,7 +35,7 @@ const BlogArchiveTemplate = ({
       seoDescription={seoDescription}
     >
       <Hero title={heroTitle} subtitle={heroSubtitle} />
-      <CategoriesMenu categoriesArray={categoryNodes} />
+      <CategoriesMenu />
       <SectionWrapper isBlog>
         <SectionContainerGridThreeCols>
           {blogPostNodes.map(
@@ -114,13 +113,6 @@ export const query = graphql`
       hero {
         heroTitle
         heroSubtitle
-      }
-    }
-    allDatoCmsCategory(filter: { locale: { eq: $locale } }) {
-      categoryNodes: nodes {
-        id: originalId
-        title
-        slug
       }
     }
     allDatoCmsBlogPost(

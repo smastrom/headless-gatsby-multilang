@@ -60,7 +60,7 @@ const HomePageTemplate = ({
           </SectionContainerGridThreeCols>
         }
       />
-      <SectionWrapper>
+      <SectionWrapper backgroundColor="var(--backgroundAlt)">
         <SectionTitleContainer hasButton>
           <SectionTitle>{featuredPostsTitle}</SectionTitle>
           <Navigator className="classicButton classicButtonOutline" archive>

@@ -9,6 +9,7 @@ import MobileMenu from './mobileMenu';
 import { Divider } from './sectionStyles';
 import HeaderDropdown from './headerDropdown';
 import { easeOutTiming } from './animations';
+import DarkModeToggle from '../ui/DarkModeToggle';
 
 // Scoped styles
 
@@ -50,7 +51,7 @@ const NavList = styled.ul`
 
 const HeaderRight = styled.div`
   display: grid;
-  grid-template-columns: 1fr;
+  grid-auto-flow: column;
   column-gap: var(--gapRegular);
   @media screen and (max-width: 768px) {
     grid-template-columns: auto auto auto;
@@ -60,10 +61,11 @@ const HeaderRight = styled.div`
 const VerticalDivider = styled.span`
   height: 100%;
   width: 1px;
-  display: none;
   background: var(--dividerColor);
+  display: ${({ hideOnDesktop }) => (hideOnDesktop ? 'none' : 'block')};
+
   @media screen and (max-width: 768px) {
-    display: block;
+    display: ${({ hideOnMobile }) => (hideOnMobile ? 'none' : 'block')};
   }
 `;
 
@@ -239,9 +241,12 @@ const Header = () => {
               )}
           </NavList>
         </Nav>
+
         <HeaderRight>
+          <DarkModeToggle />
+          <VerticalDivider hideOnMobile />
           <LanguageSwitcher />
-          <VerticalDivider />
+          <VerticalDivider hideOnDesktop />
           <MobileMenu />
         </HeaderRight>
         <Divider bottom />

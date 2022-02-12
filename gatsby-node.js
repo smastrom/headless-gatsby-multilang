@@ -3,76 +3,6 @@ const fs = require('fs');
 const https = require('https');
 
 exports.createPages = async ({ graphql, actions: { createPage } }) => {
-  /**
-   * Since graphql won't work in any other API except createPages,
-   * website settings must be fetched and exported now inside this extension.
-   * Although it is possible to run a single query to use for any createPage call,
-   * I decided to split them for each step in order to show the process in a cleaner way
-   * and simplify the customization.
-   */
-
-  // Colors - Begin
-
-  const {
-    data: { datoCmsWebsiteSetting: colorNodes },
-  } = await graphql(`
-    query {
-      datoCmsWebsiteSetting {
-        primaryColor {
-          hex
-        }
-        primaryDark {
-          hex
-        }
-        primaryLight {
-          hex
-        }
-        headingsColor {
-          hex
-        }
-        baseTextColor {
-          hex
-        }
-        baseTextColorDark {
-          hex
-        }
-        disabledColor {
-          hex
-        }
-        dividerColor {
-          hex
-        }
-        markColor {
-          hex
-        }
-      }
-    }
-  `);
-
-  // Query the settings model on DatoCMS and define a path to export the queried settings
-  const settingsPath = 'src/static';
-
-  // Create the path if it doesn't exist
-  if (!fs.existsSync(settingsPath)) fs.mkdirSync(settingsPath);
-
-  // Manipulate the final object
-  const objArr = Object.keys(colorNodes);
-  const colors = {};
-  objArr.forEach((color) => {
-    Object.defineProperty(colors, `${color}`, {
-      value: colorNodes[color].hex,
-      enumerable: true,
-    });
-  });
-
-  // Save the JSON file with css color variables
-  fs.writeFileSync(
-    `${settingsPath}/colors.json`,
-    JSON.stringify(colors, undefined, 2)
-  );
-
-  // Colors - End
-
   // Blog and pages generation
 
   /**
@@ -359,11 +289,11 @@ exports.createPages = async ({ graphql, actions: { createPage } }) => {
             normalSize: url(imgixParams: { w: "192", h: "192" })
             bigSize: url(imgixParams: { w: "512", h: "512" })
           }
-          backgroundColor {
-            backgroundColorHex: hex
+          pwaThemeColor {
+            pwaThemeColorHex: hex
           }
-          primaryColor {
-            primaryColorHex: hex
+          pwaBackgroundColor {
+            pwaBackgroundColorHex: hex
           }
         }
       }
@@ -378,8 +308,8 @@ exports.createPages = async ({ graphql, actions: { createPage } }) => {
       shortName,
       description,
       settingsLocale,
-      backgroundColor: { backgroundColorHex },
-      primaryColor: { primaryColorHex },
+      pwaThemeColor: { pwaThemeColorHex },
+      pwaBackgroundColor: { pwaBackgroundColorHex },
     },
   ] = settingsNodes;
 
@@ -411,8 +341,8 @@ exports.createPages = async ({ graphql, actions: { createPage } }) => {
   }
 
   const commonManifestData = {
-    background_color: backgroundColorHex,
-    theme_color: primaryColorHex,
+    theme_color: pwaThemeColorHex,
+    background_color: pwaBackgroundColorHex,
     display: 'standalone',
     icons: [
       {

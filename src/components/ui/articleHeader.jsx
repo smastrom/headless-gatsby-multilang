@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { GatsbyImage } from 'gatsby-plugin-image';
 import { useLocation } from '@reach/router';
 import useSiteUrl from '../../hooks/useSiteUrl';
-import { Dot } from './articleCard';
 import { ArticleTitle, ArticleSubtitle } from '../layout/headingStyles';
 import BackButtonIcon from '../vectors/backButton';
 import Navigator from '../langHelpers/navigator';
@@ -156,6 +155,18 @@ const Icon = styled.a`
 
   &:hover {
     background: var(--primaryColor);
+  }
+`;
+
+export const Dot = styled.span`
+  --widthHeight: 0.33em;
+  width: var(--widthHeight);
+  height: var(--widthHeight);
+  background: var(--baseTextColor);
+  border-radius: 0.33em;
+
+  @media screen and (min-width: 621px) and (max-width: 680px) {
+    display: none;
   }
 `;
 

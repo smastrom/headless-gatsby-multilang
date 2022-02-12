@@ -86,18 +86,6 @@ const ContentWrapper = styled.div`
   }
 `;
 
-export const DateTimeContainer = styled.div`
-  display: grid;
-  grid-template-columns: auto auto auto;
-  align-items: center;
-  width: max-content;
-  column-gap: var(--gapSmall);
-
-  @media screen and (max-width: 950px) {
-    grid-row: 3;
-  }
-`;
-
 const PostTitle = styled(HeadingSmall)`
   &&& {
     line-height: 1.1;
@@ -120,18 +108,6 @@ const Date = styled.time`
 
   @media screen and (max-width: 768px) {
     font-size: var(--baseSMobile);
-  }
-`;
-
-export const Dot = styled.span`
-  --widthHeight: 0.33em;
-  width: var(--widthHeight);
-  height: var(--widthHeight);
-  background: var(--baseTextColor);
-  border-radius: 0.33em;
-
-  @media screen and (min-width: 621px) and (max-width: 680px) {
-    display: none;
   }
 `;
 
@@ -197,10 +173,7 @@ const ArticleCard = ({
     <CardLink article categorySlug={categorySlug} to={slug}>
       {cardImg}
       <ContentWrapper>
-        <DateTimeContainer>
-          <Date>{date}</Date>
-          <Dot />
-        </DateTimeContainer>
+        <Date>{date}</Date>
         <PostTitle>{title}</PostTitle>
         <Excerpt>{excerpt}</Excerpt>
         <AuthorCtaContainer>
