@@ -1,16 +1,16 @@
-import { isRtlLang } from '../functions/langUtils';
-import { usePageLanguage } from './usePageLanguage';
+import { isRtlLang } from '../functions/localeUtils';
+import { usePageLocale } from './usePageLocale';
 
 export const useTextDirection = () => {
-  const { pageLanguage } = usePageLanguage();
+  const { pageLocale } = usePageLocale();
 
-  if (!pageLanguage) {
+  if (!pageLocale) {
     throw new Error(
       'useTextDirection hook cannot be called inside a template file. Call it inside of a component and import it in the template file.'
     );
   }
 
-  const isRtl = isRtlLang(pageLanguage);
+  const isRtl = isRtlLang(pageLocale);
 
   return { isRtl };
 };

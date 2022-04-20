@@ -1,8 +1,8 @@
 import { useContext } from 'react';
-import { LanguageContext } from '../components/ContextProviders/LanguageProvider';
+import { LocaleContext } from '../components/ContextProviders/LocaleProvider';
 
 export const usePageId = () => {
-  const { id: pageId } = useContext(LanguageContext);
+  const { id: pageId } = useContext(LocaleContext);
 
   if (!pageId) {
     throw new Error(

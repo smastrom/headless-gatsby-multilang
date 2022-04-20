@@ -1,6 +1,4 @@
-import React from 'react';
-
-export const MoonIcon = () => (
+const MoonIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="18"
@@ -17,7 +15,7 @@ export const MoonIcon = () => (
   </svg>
 );
 
-export const SunIcon = () => (
+const SunIcon = () => (
   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20">
     <g fill="var(--baseTextColor)">
       <path d="M10 14.544a4.545 4.545 0 01-3.213-7.76 4.545 4.545 0 016.428 6.428A4.516 4.516 0 0110 14.544zm0-7.273a2.727 2.727 0 101.928.8A2.709 2.709 0 0010 7.272v-.001z" />
@@ -32,3 +30,5 @@ export const SunIcon = () => (
     </g>
   </svg>
 );
+
+export { SunIcon, MoonIcon };

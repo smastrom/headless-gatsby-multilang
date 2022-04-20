@@ -1,10 +1,12 @@
-import React from 'react';
 import { graphql, useStaticQuery } from 'gatsby';
+
 import { Helmet } from 'react-helmet';
+// eslint-disable-next-line import/no-unresolved
 import { useLocation } from '@reach/router';
-import { useDefaultLanguage } from '../../hooks/useDefaultLanguage';
+
+import { useLocales } from '../../hooks/useLocales';
 import { useTextDirection } from '../../hooks/useTextDirection';
-import { usePageLanguage } from '../../hooks/usePageLanguage';
+import { usePageLocale } from '../../hooks/usePageLocale';
 
 export const PageHead = ({ seoTitle, seoDescription, seoImage }) => {
   const data = useStaticQuery(graphql`
@@ -31,12 +33,13 @@ export const PageHead = ({ seoTitle, seoDescription, seoImage }) => {
   } = data;
 
   const { href } = useLocation();
-  const { pageLanguage } = usePageLanguage();
-  const { defaultLanguage } = useDefaultLanguage();
+  const { pageLocale } = usePageLocale();
+  const { defaultLocale } = useLocales();
+
   const { isRtl } = useTextDirection();
 
   const seoAndPwaNodesMatch = seoAndPwaNodes.find(
-    ({ locale }) => locale === pageLanguage
+    ({ locale }) => locale === pageLocale
   );
 
   const {
@@ -72,14 +75,17 @@ export const PageHead = ({ seoTitle, seoDescription, seoImage }) => {
   return (
     <Helmet>
       {/* HTML lang and dir attrs */}
-      <html lang={pageLanguage} dir={isRtl ? 'rtl' : 'ltr'} />
+
+      <html lang={pageLocale} dir={isRtl ? 'rtl' : 'ltr'} />
+
       {/* PWA */}
+
       <meta name="theme-color" content={themeHexColor} />
       <link
         rel="manifest"
         href={(() => {
-          if (pageLanguage === defaultLanguage) return '/manifest.webmanifest';
-          return `/manifest_${pageLanguage}.webmanifest`;
+          if (pageLocale === defaultLocale) return '/manifest.webmanifest';
+          return `/manifest_${pageLocale}.webmanifest`;
         })()}
         crossOrigin="anonymous"
       />
@@ -92,7 +98,9 @@ export const PageHead = ({ seoTitle, seoDescription, seoImage }) => {
           href={`/images/icon-${size}.png`}
         />
       ))}
+
       {/* SEO meta tags */}
+
       <title>{titleContent}</title>
       <meta
         name="description"

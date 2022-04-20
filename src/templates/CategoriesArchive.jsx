@@ -1,12 +1,9 @@
 import { graphql } from 'gatsby';
-import React from 'react';
+
 import { Hero } from '../components/Layout/Hero';
 import { PageWrapper } from '../components/Layout/PageWrapper';
-import {
-  SectionContainerGridThreeCols,
-  SectionWrapper,
-} from '../components/Layout/SharedStyles/Sections';
-import { CardImgArtDir, CategoryCard } from '../components/Layout/Blog/Cards';
+import { CategoryCard } from '../components/Layout/Blog/Cards/CategoryCard';
+import { SectionGridThreeCols } from '../components/Layout/sharedStyles/sectionStyles';
 
 const CategoriesArchiveTemplate = ({
   data: {
@@ -24,27 +21,20 @@ const CategoriesArchiveTemplate = ({
     seoDescription={seo?.seoDescription}
     seoImage={seo?.seoImage?.seoImageUrl}
   >
-    <Hero alt={heroAlt} title={heroTitle} subtitle={heroSubtitle} />
-    <SectionWrapper backgroundColor="var(--backgroundColorAlt)">
-      <SectionContainerGridThreeCols>
-        {categoryNodes.map(({ id, title, shortDescription, coverImage }) => (
-          <CategoryCard
-            key={id}
-            recordId={id}
-            title={title}
-            description={shortDescription}
-            cardImg={
-              coverImage &&
-              CardImgArtDir(
-                coverImage.gatsbyImageData,
-                coverImage.squaredImage,
-                title
-              )
-            }
-          />
-        ))}
-      </SectionContainerGridThreeCols>
-    </SectionWrapper>
+    <Hero caption={heroAlt} title={heroTitle} subtitle={heroSubtitle} />
+    <SectionGridThreeCols>
+      {categoryNodes.map(({ id, title, shortDescription, coverImage }) => (
+        <CategoryCard
+          key={id}
+          recordId={id}
+          title={title}
+          description={shortDescription}
+          cardImg={coverImage.gatsbyImageData}
+          cardImgMobile={coverImage.squaredImage}
+          altImg={title}
+        />
+      ))}
+    </SectionGridThreeCols>
   </PageWrapper>
 );
 

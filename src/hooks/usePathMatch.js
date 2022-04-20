@@ -1,5 +1,5 @@
 import { useStaticQuery, graphql } from 'gatsby';
-import { usePageLanguage } from './usePageLanguage';
+import { usePageLocale } from './usePageLocale';
 
 export const usePathMatch = (recordId) => {
   if (!recordId) {
@@ -23,16 +23,16 @@ export const usePathMatch = (recordId) => {
     allSitePage: { pageNodes },
   } = data;
 
-  const { pageLanguage } = usePageLanguage();
+  const { pageLocale } = usePageLocale();
 
   const pathMatch = pageNodes.find(
     ({ pageContext: { id, locale } }) =>
-      id === recordId && locale === pageLanguage
+      id === recordId && locale === pageLocale
   );
 
   if (!pathMatch) {
     throw new Error(
-      `No page for the provided recordId ${recordId} has been generated for ${pageLanguage} locale.
+      `No page for the provided recordId ${recordId} has been generated for ${pageLocale} locale.
 
       Please refer to the "Troubleshooting" section of the README.`
     );

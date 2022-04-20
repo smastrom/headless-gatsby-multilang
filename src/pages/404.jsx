@@ -1,6 +1,5 @@
-import React from 'react';
 import { graphql, Link, useStaticQuery } from 'gatsby';
-import { useDefaultLanguage } from '../hooks/useDefaultLanguage';
+
 import { Hero } from '../components/Layout/Hero';
 import {
   storeLocale,
@@ -9,17 +8,15 @@ import {
   findSecondaryLang,
   isDefaultStored,
   isSecondaryStored,
-} from '../functions/langUtils';
-import { getPreferredLang } from '../functions/getPreferredLang';
+} from '../functions/localeUtils';
+import { getPreferredLocale } from '../functions/getPreferredLocale';
 import { isSSR } from '../functions/isSSR';
 import { NotFoundPageHead } from '../components/Head/NotFoundPageHead';
+import { useLocales } from '../hooks/useLocales';
 
 const NotFoundPage = () => {
   const data = useStaticQuery(graphql`
     query {
-      datoCmsSite {
-        locales
-      }
       allDatoCmsNotFoundPage {
         nodes {
           seo {
@@ -34,11 +31,8 @@ const NotFoundPage = () => {
     }
   `);
 
-  const { defaultLanguage } = useDefaultLanguage();
+  const { defaultLocale, locales } = useLocales();
 
-  const {
-    datoCmsSite: { locales },
-  } = data;
   const appLangCodes = [...locales];
   const storedLocale = getStoredLocale();
 
@@ -50,6 +44,8 @@ const NotFoundPage = () => {
 
     const [defaultLangPropsNode] = propNodes;
 
+    // Default locale data
+
     const {
       seo: { seoTitle },
       title,
@@ -60,7 +56,7 @@ const NotFoundPage = () => {
     const defaultLangProps = {
       headProps: {
         title: seoTitle,
-        locale: defaultLanguage,
+        locale: defaultLocale,
       },
       heroProps: {
         title,
@@ -73,18 +69,24 @@ const NotFoundPage = () => {
     };
 
     const getProps = () => {
+      // If default locale is already stored
+
       const isDefaultLangStored = isDefaultStored(
         appLangCodes,
         storedLocale,
-        defaultLanguage
+        defaultLocale
       );
-      if (isDefaultLangStored) return { ...defaultLangProps };
+
+      if (isDefaultLangStored) return defaultLangProps;
+
+      // If secondary locale is already stored
 
       const isSecondaryLangStored = isSecondaryStored(
         appLangCodes,
         storedLocale,
-        defaultLanguage
+        defaultLocale
       );
+
       if (isSecondaryLangStored) {
         const storedLangProps = propNodes.find(
           ({ locale }) => locale === storedLocale
@@ -106,14 +108,26 @@ const NotFoundPage = () => {
         };
       }
 
-      const matchingLangCode = getPreferredLang(browserLangCodes, appLangCodes);
+      /**
+       * If no locale has been stored previously (e.g. first time visit), evaluate
+       * the preferred locale according to browser language list
+       */
 
-      const defaultLanguageMatch = matchingLangCode === defaultLanguage;
+      const matchingLangCode = getPreferredLocale(
+        browserLangCodes,
+        appLangCodes
+      );
 
-      if (!storedLocale && defaultLanguageMatch) {
-        storeLocale(defaultLanguage);
-        return { ...defaultLangProps };
+      const defaultLocaleMatch = matchingLangCode === defaultLocale;
+
+      // If it equals to default language
+
+      if (!storedLocale && defaultLocaleMatch) {
+        storeLocale(defaultLocale);
+        return defaultLangProps;
       }
+
+      // If it equals to secondary langauge
 
       const secondaryLanguages = getSecondaryLangs(appLangCodes);
       const secondaryLanguageMatch = findSecondaryLang(
@@ -140,7 +154,10 @@ const NotFoundPage = () => {
           },
         };
       }
-      return { ...defaultLangProps };
+
+      // Else return default locale data
+
+      return defaultLangProps;
     };
 
     const { headProps, heroProps, linkProps } = getProps();
@@ -150,8 +167,7 @@ const NotFoundPage = () => {
         <NotFoundPageHead {...headProps} />
         <Hero
           {...heroProps}
-          fullView
-          centered
+          isFullViewport
           button={
             <Link
               {...linkProps}

@@ -1,37 +1,12 @@
-import React, { Fragment } from 'react';
+import { Fragment } from 'react';
+
 import { graphql, useStaticQuery } from 'gatsby';
-import styled from 'styled-components';
+
 import { StructuredText } from 'react-datocms';
-import { SectionWrapper, Divider } from '../SharedStyles/Sections';
-import { usePageLanguage } from '../../../hooks/usePageLanguage';
 
-const FooterContainer = styled.div`
-  display: flex;
-  width: var(--globalContainer);
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  max-width: var(--globalContainer);
+import { usePageLocale } from '../../../hooks/usePageLocale';
 
-  @media screen and (max-width: 950px) {
-    flex-direction: column;
-    gap: var(--gapSmall);
-  }
-`;
-
-const FooterColumn = styled.div`
-  font-size: var(--baseS);
-  text-align: center;
-
-  & a {
-    color: var(--primaryColor);
-
-    @media (hover: hover) {
-      text-decoration: underline;
-    }
-  }
-`;
+import { Wrapper, Container, Column } from './styles';
 
 export const Footer = () => {
   const data = useStaticQuery(graphql`
@@ -51,18 +26,17 @@ export const Footer = () => {
     }
   `);
 
-  const { pageLanguage } = usePageLanguage();
+  const { pageLocale } = usePageLocale();
 
   const {
     allDatoCmsFooter: { nodes },
   } = data;
 
   return (
-    <SectionWrapper as="footer">
-      <Divider top />
-      <FooterContainer>
+    <Wrapper>
+      <Container>
         {nodes
-          .filter(({ locale }) => locale === pageLanguage)
+          .filter(({ locale }) => locale === pageLocale)
           .map(
             ({
               id,
@@ -70,16 +44,16 @@ export const Footer = () => {
               textRight: { value: textRightValue },
             }) => (
               <Fragment key={id}>
-                <FooterColumn>
+                <Column>
                   <StructuredText data={textLeftValue} />
-                </FooterColumn>
-                <FooterColumn>
+                </Column>
+                <Column>
                   <StructuredText data={textRightValue} />
-                </FooterColumn>
+                </Column>
               </Fragment>
             )
           )}
-      </FooterContainer>
-    </SectionWrapper>
+      </Container>
+    </Wrapper>
   );
 };

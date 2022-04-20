@@ -1,6 +1,6 @@
-import React from 'react';
 import { Helmet } from 'react-helmet';
-import { isRtlLang } from '../../functions/langUtils';
+
+import { isRtlLang } from '../../functions/localeUtils';
 
 export const NotFoundPageHead = ({ locale, title }) => {
   const isRtl = isRtlLang(locale);
