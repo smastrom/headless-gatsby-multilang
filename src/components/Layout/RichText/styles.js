@@ -24,9 +24,9 @@ export const RichTextStyles = styled.div`
   --paragraphMargin: 0 0 1em 0;
   --listMargin: 0 0 0.33em 0;
   color: var(--baseTextColor);
-  font-size: ${({ small }) => (small ? 'var(--baseS)' : 'var(--baseM)')};
+  font-size: var(--baseM);
   line-height: 1.4;
-  text-align: ${({ centered }) => (centered ? 'center' : 'inherit')};
+  text-align: inherit;
 
   & a {
     color: var(--primaryColor);
@@ -49,7 +49,7 @@ export const RichTextStyles = styled.div`
     color: var(--inlineCodeTextColor);
   }
 
-  @media screen and (max-width: 768px) {
+  @media (max-width: 768px) {
     font-size: var(--baseMMobile);
   }
 `;

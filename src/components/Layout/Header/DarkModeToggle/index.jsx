@@ -1,22 +1,9 @@
 import { useContext } from 'react';
 
-import styled, { css } from 'styled-components';
-
 import { ThemeContext } from '../../../ContextProviders/ThemeProvider';
 import { MoonIcon, SunIcon } from '../../Icons/DarkMode';
 
-const Button = styled.button`
-  display: flex;
-  align-items: center;
-
-  ${({ hideOnMobile }) =>
-    hideOnMobile &&
-    css`
-      @media screen and (max-width: 860px) {
-        display: none;
-      }
-    `}
-`;
+import { Button } from './styles';
 
 export const DarkModeToggle = ({ hideOnMobile }) => {
   const { isDark, handleDarkModeSwitch } = useContext(ThemeContext);

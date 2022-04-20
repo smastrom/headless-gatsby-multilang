@@ -158,7 +158,7 @@ export const GlobalStyle = createGlobalStyle`
             background: var(--primaryDark);
         }
 
-        @media screen and (max-width: 768px) {
+        @media (max-width: 768px) {
             font-size: var(--baseMMobile);
         }
     }

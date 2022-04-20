@@ -13,7 +13,7 @@ const CardLink = styled(Navigator)`
   height: min-content;
   justify-content: start;
 
-  @media screen and (max-width: 950px) {
+  @media (max-width: 950px) {
     grid-template-columns: repeat(3, 1fr);
     column-gap: var(--gapRegular);
     align-items: initial;
@@ -37,7 +37,7 @@ const CardImg = styled(GatsbyImage)`
   border-radius: var(--defaultRadius);
   z-index: 2;
 
-  @media screen and (max-width: 950px) {
+  @media (max-width: 950px) {
     --widthMobile: 50px;
     min-width: var(--widthMobile);
     min-height: var(--widthMobile);
@@ -46,7 +46,7 @@ const CardImg = styled(GatsbyImage)`
   & picture {
     & img {
       border-radius: var(--defaultRadius);
-      @media screen and (max-width: 950px) {
+      @media (max-width: 950px) {
         height: unset !important;
       }
     }
@@ -66,7 +66,7 @@ const CategoryBox = styled.span`
   font-size: var(--baseS);
   font-weight: 600;
 
-  @media screen and (max-width: 950px) {
+  @media (max-width: 950px) {
     margin-bottom: 0;
   }
 `;
@@ -86,7 +86,7 @@ const ContentWrapper = styled.div`
   display: grid;
   height: max-content;
 
-  @media screen and (max-width: 950px) {
+  @media (max-width: 950px) {
     row-gap: calc(var(--gapSmall) / 1.5);
     grid-column: 2 / span 2;
   }
@@ -101,11 +101,11 @@ const PostTitle = styled(HeadingSmall)`
   transition: color ${easeOutTiming};
   margin: calc(var(--gapSmall) - 0.66em) 0;
 
-  @media screen and (max-width: 950px) {
+  @media (max-width: 950px) {
     margin: unset;
   }
 
-  @media screen and (max-width: 768px) {
+  @media (max-width: 768px) {
     font-size: var(--baseMMobile);
   }
 `;
@@ -115,7 +115,7 @@ const Date = styled.time`
   font-size: var(--baseS);
   text-transform: capitalize;
 
-  @media screen and (max-width: 768px) {
+  @media (max-width: 768px) {
     font-size: var(--baseSMobile);
   }
 `;
@@ -141,7 +141,7 @@ const AuthorContainer = styled.div`
   column-gap: var(--gapSmall);
   align-items: center;
 
-  @media screen and (max-width: 950px) {
+  @media (max-width: 950px) {
     --imgWidthHeight: 20px;
     column-gap: calc(var(--gapSmall) - 0.33em);
     grid-template-columns: var(--imgWidthHeight) auto;

@@ -12,7 +12,7 @@ export const Image = styled(GatsbyImage)`
     border-radius: calc(var(--defaultRadius) * 2);
   }
 
-  @media screen and (max-width: 860px) {
+  @media (max-width: 860px) {
     width: calc(100% + calc(var(--globalPaddingLr) * 2));
     height: 300px;
     border-radius: 0;
@@ -26,7 +26,7 @@ export const Image = styled(GatsbyImage)`
     }
   }
 
-  @media screen and (max-width: 768px) {
+  @media (max-width: 768px) {
     height: 250px;
   }
 `;

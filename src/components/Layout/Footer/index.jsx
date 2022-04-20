@@ -4,10 +4,9 @@ import { graphql, useStaticQuery } from 'gatsby';
 
 import { StructuredText } from 'react-datocms';
 
-import { SectionWrapper, Divider } from '../sharedStyles/sectionStyles';
 import { usePageLocale } from '../../../hooks/usePageLocale';
 
-import { Container, Column } from './styles';
+import { Wrapper, Container, Column } from './styles';
 
 export const Footer = () => {
   const data = useStaticQuery(graphql`
@@ -34,8 +33,7 @@ export const Footer = () => {
   } = data;
 
   return (
-    <SectionWrapper as="footer">
-      <Divider top />
+    <Wrapper>
       <Container>
         {nodes
           .filter(({ locale }) => locale === pageLanguage)
@@ -56,6 +54,6 @@ export const Footer = () => {
             )
           )}
       </Container>
-    </SectionWrapper>
+    </Wrapper>
   );
 };

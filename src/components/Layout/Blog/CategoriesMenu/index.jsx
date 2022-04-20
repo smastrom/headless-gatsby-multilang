@@ -3,13 +3,7 @@ import { graphql, useStaticQuery } from 'gatsby';
 import { useTextDirection } from '../../../../hooks/useTextDirection';
 import { usePageLocale } from '../../../../hooks/usePageLocale';
 
-import {
-  Wrapper,
-  ScrollGradientContainer,
-  NavContainer,
-  NavList,
-  CategoryLink,
-} from './styles';
+import { Wrapper, Container, Nav, NavList, CategoryLink } from './styles';
 
 export const CategoriesMenu = () => {
   const data = useStaticQuery(graphql`
@@ -33,8 +27,8 @@ export const CategoriesMenu = () => {
 
   return (
     <Wrapper>
-      <ScrollGradientContainer isRtl={isRtl}>
-        <NavContainer>
+      <Container isRtl={isRtl}>
+        <Nav>
           <NavList>
             {categoryNodes
               .filter(({ locale }) => locale === pageLanguage)
@@ -46,8 +40,8 @@ export const CategoriesMenu = () => {
                 </li>
               ))}
           </NavList>
-        </NavContainer>
-      </ScrollGradientContainer>
+        </Nav>
+      </Container>
     </Wrapper>
   );
 };

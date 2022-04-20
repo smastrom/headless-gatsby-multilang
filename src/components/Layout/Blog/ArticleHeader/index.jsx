@@ -17,6 +17,7 @@ import {
 import { useTextDirection } from '../../../../hooks/useTextDirection';
 import { usePageLocale } from '../../../../hooks/usePageLocale';
 import { Navigator } from '../../../Navigator';
+import { BackToBlog } from '../BackToBlog';
 
 import {
   Wrapper,
@@ -71,6 +72,7 @@ export const ArticleHeader = ({
   return (
     <>
       <Wrapper>
+        <BackToBlog />
         {category && (
           <CategoryBox>
             <Navigator recordId={category.id}>{category.title}</Navigator>

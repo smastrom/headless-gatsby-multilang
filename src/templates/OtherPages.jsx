@@ -7,12 +7,11 @@ import { Hero } from '../components/Layout/Hero';
 import { Navigator } from '../components/Navigator';
 import { RichText } from '../components/Layout/RichText';
 import {
-  SectionContainerGridThreeCols,
-  SectionContainerFlexTwoCols,
-  SectionWrapper,
-  SectionContainerFlexTwoColsReverse,
-  ColumnFlexTwoCols,
-  TextBox,
+  SectionGridThreeCols,
+  SectionFlexTwoCols,
+  SectionFlexTwoColsReverse,
+  ColumnFlex,
+  GridTextBox,
 } from '../components/Layout/sharedStyles/sectionStyles';
 import {
   HeadingMedium,
@@ -62,86 +61,80 @@ const OtherPagesTemplate = ({
               );
             case 'DatoCmsSectionImageLeft':
               return (
-                <SectionWrapper>
-                  <SectionContainerFlexTwoCols>
-                    <ColumnFlexTwoCols hasImg>
-                      <img src={image.url} alt={image.alt} />
-                    </ColumnFlexTwoCols>
-                    <ColumnFlexTwoCols>
-                      <TextBox as="div">
-                        <HeadingMedium>{title}</HeadingMedium>
-                        <RichText as="div">
-                          <StructuredText
-                            data={text}
-                            renderLinkToRecord={({
-                              record: { id },
-                              children,
-                              transformedMeta,
-                            }) => (
-                              <Navigator {...transformedMeta} recordId={id}>
-                                {children}
-                              </Navigator>
-                            )}
-                          />
-                        </RichText>
-                      </TextBox>
-                    </ColumnFlexTwoCols>
-                  </SectionContainerFlexTwoCols>
-                </SectionWrapper>
+                <SectionFlexTwoCols>
+                  <ColumnFlex hasImg>
+                    <img src={image.url} alt={image.alt} />
+                  </ColumnFlex>
+                  <ColumnFlex>
+                    <GridTextBox as="div">
+                      <HeadingMedium>{title}</HeadingMedium>
+                      <RichText as="div">
+                        <StructuredText
+                          data={text}
+                          renderLinkToRecord={({
+                            record: { id },
+                            children,
+                            transformedMeta,
+                          }) => (
+                            <Navigator {...transformedMeta} recordId={id}>
+                              {children}
+                            </Navigator>
+                          )}
+                        />
+                      </RichText>
+                    </GridTextBox>
+                  </ColumnFlex>
+                </SectionFlexTwoCols>
               );
             case 'DatoCmsSectionImageRight':
               return (
-                <SectionWrapper>
-                  <SectionContainerFlexTwoColsReverse>
-                    <ColumnFlexTwoCols>
-                      <TextBox as="div">
-                        <HeadingMedium>{title}</HeadingMedium>
-                        <RichText as="div">
-                          <StructuredText
-                            data={text}
-                            renderLinkToRecord={({
-                              record: { id },
-                              children,
-                              transformedMeta,
-                            }) => (
-                              <Navigator {...transformedMeta} recordId={id}>
-                                {children}
-                              </Navigator>
-                            )}
-                          />
-                        </RichText>
-                      </TextBox>
-                    </ColumnFlexTwoCols>
-                    <ColumnFlexTwoCols hasImg>
-                      <img src={image.url} alt={image.alt} />
-                    </ColumnFlexTwoCols>
-                  </SectionContainerFlexTwoColsReverse>
-                </SectionWrapper>
+                <SectionFlexTwoColsReverse>
+                  <ColumnFlex>
+                    <GridTextBox as="div">
+                      <HeadingMedium>{title}</HeadingMedium>
+                      <RichText as="div">
+                        <StructuredText
+                          data={text}
+                          renderLinkToRecord={({
+                            record: { id },
+                            children,
+                            transformedMeta,
+                          }) => (
+                            <Navigator {...transformedMeta} recordId={id}>
+                              {children}
+                            </Navigator>
+                          )}
+                        />
+                      </RichText>
+                    </GridTextBox>
+                  </ColumnFlex>
+                  <ColumnFlex hasImg>
+                    <img src={image.url} alt={image.alt} />
+                  </ColumnFlex>
+                </SectionFlexTwoColsReverse>
               );
             case 'DatoCmsThreeFeaturesSet':
               return (
-                <SectionWrapper>
-                  <SectionContainerGridThreeCols>
-                    <TextBox small>
-                      <HeadingSmallWithTip>
-                        {firstFeatureTitle}
-                      </HeadingSmallWithTip>
-                      <RichText>{firstFeatureDescription}</RichText>
-                    </TextBox>
-                    <TextBox small>
-                      <HeadingSmallWithTip>
-                        {secondFeatureTitle}
-                      </HeadingSmallWithTip>
-                      <RichText>{secondFeatureDescription}</RichText>
-                    </TextBox>
-                    <TextBox small>
-                      <HeadingSmallWithTip>
-                        {thirdFeatureTitle}
-                      </HeadingSmallWithTip>
-                      <RichText>{thirdFeatureDescription}</RichText>
-                    </TextBox>
-                  </SectionContainerGridThreeCols>
-                </SectionWrapper>
+                <SectionGridThreeCols>
+                  <GridTextBox small>
+                    <HeadingSmallWithTip>
+                      {firstFeatureTitle}
+                    </HeadingSmallWithTip>
+                    <RichText>{firstFeatureDescription}</RichText>
+                  </GridTextBox>
+                  <GridTextBox small>
+                    <HeadingSmallWithTip>
+                      {secondFeatureTitle}
+                    </HeadingSmallWithTip>
+                    <RichText>{secondFeatureDescription}</RichText>
+                  </GridTextBox>
+                  <GridTextBox small>
+                    <HeadingSmallWithTip>
+                      {thirdFeatureTitle}
+                    </HeadingSmallWithTip>
+                    <RichText>{thirdFeatureDescription}</RichText>
+                  </GridTextBox>
+                </SectionGridThreeCols>
               );
             default:
               return null;

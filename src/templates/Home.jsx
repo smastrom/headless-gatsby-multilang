@@ -6,10 +6,8 @@ import { Navigator } from '../components/Navigator';
 import { RichText } from '../components/Layout/RichText';
 import { ArticleCard } from '../components/Layout/Blog/Cards/ArticleCard';
 import {
-  SectionContainerGridThreeCols,
-  SectionWrapper,
-  SectionTitleContainer,
-  TextBox,
+  SectionGridThreeCols,
+  GridTextBox,
 } from '../components/Layout/sharedStyles/sectionStyles';
 import {
   HeadingSmallWithTip,
@@ -26,7 +24,7 @@ const HomepageTemplate = ({
     },
     datoCmsBlogRoot: { id },
     allBlogPosts: { postNodes },
-    datoCmsMiscTextString: { seeAllButton, seeAllPosts },
+    datoCmsMiscTextString: { seeAllPosts },
   },
   pageContext,
 }) => (
@@ -37,7 +35,6 @@ const HomepageTemplate = ({
     seoImage={seo?.seoImage?.seoImageUrl}
   >
     <Hero
-      hasDivider
       caption={heroAlt}
       title={heroTitle}
       subtitle={heroSubtitle}
@@ -47,28 +44,20 @@ const HomepageTemplate = ({
         </Navigator>
       }
       sectionChildren={
-        <SectionContainerGridThreeCols>
+        <SectionGridThreeCols noPaddings>
           {features.map(({ id: featureId, title, description }) => (
-            <TextBox small key={featureId}>
+            <GridTextBox small key={featureId}>
               <HeadingSmallWithTip>{title}</HeadingSmallWithTip>
               <RichText>{description}</RichText>
-            </TextBox>
+            </GridTextBox>
           ))}
-        </SectionContainerGridThreeCols>
+        </SectionGridThreeCols>
       }
     />
     {postNodes.length > 0 && (
-      <SectionWrapper backgroundColor="var(--backgroundColorAlt)">
-        <SectionTitleContainer hasButton>
-          <SectionTitle>{featuredPostsTitle}</SectionTitle>
-          <Navigator
-            className="classicButton classicButtonOutline"
-            recordId={id}
-          >
-            {seeAllButton}
-          </Navigator>
-        </SectionTitleContainer>
-        <SectionContainerGridThreeCols>
+      <section style={{ paddingTop: 'var(--globalPaddingTb)' }}>
+        <SectionTitle>{featuredPostsTitle}</SectionTitle>
+        <SectionGridThreeCols>
           {postNodes.map(
             ({
               id: recordId,
@@ -98,8 +87,8 @@ const HomepageTemplate = ({
               />
             )
           )}
-        </SectionContainerGridThreeCols>
-      </SectionWrapper>
+        </SectionGridThreeCols>
+      </section>
     )}
   </PageWrapper>
 );

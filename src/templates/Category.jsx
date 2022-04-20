@@ -4,10 +4,7 @@ import { Hero } from '../components/Layout/Hero';
 import { PageWrapper } from '../components/Layout/PageWrapper';
 import { CategoriesMenu } from '../components/Layout/Blog/CategoriesMenu';
 import { ArticleCard } from '../components/Layout/Blog/Cards/ArticleCard';
-import {
-  SectionContainerGridThreeCols,
-  SectionWrapper,
-} from '../components/Layout/sharedStyles/sectionStyles';
+import { SectionGridThreeCols } from '../components/Layout/sharedStyles/sectionStyles';
 
 const CategoryTemplate = ({
   data: {
@@ -28,39 +25,37 @@ const CategoryTemplate = ({
     <Hero caption={heroAlt} title={heroTitle} subtitle={heroSubtitle} />
     <CategoriesMenu />
     {postNodes.length > 0 && (
-      <SectionWrapper>
-        <SectionContainerGridThreeCols>
-          {postNodes.map(
-            ({
-              id,
-              meta: { updatedAt },
-              title,
-              coverImage,
-              subtitle,
-              author: {
-                authorName,
-                picture: { authorImageData },
-              },
-              categoryLink,
-            }) => (
-              <ArticleCard
-                key={id}
-                recordId={id}
-                date={updatedAt}
-                category={categoryLink}
-                cardImg={coverImage.gatsbyImageData}
-                cardImgMobile={coverImage.squaredImage}
-                altImg={title}
-                title={title}
-                excerpt={subtitle}
-                authorImg={authorImageData}
-                authorAltImg={authorName}
-                authorName={authorName}
-              />
-            )
-          )}
-        </SectionContainerGridThreeCols>
-      </SectionWrapper>
+      <SectionGridThreeCols>
+        {postNodes.map(
+          ({
+            id,
+            meta: { updatedAt },
+            title,
+            coverImage,
+            subtitle,
+            author: {
+              authorName,
+              picture: { authorImageData },
+            },
+            categoryLink,
+          }) => (
+            <ArticleCard
+              key={id}
+              recordId={id}
+              date={updatedAt}
+              category={categoryLink}
+              cardImg={coverImage.gatsbyImageData}
+              cardImgMobile={coverImage.squaredImage}
+              altImg={title}
+              title={title}
+              excerpt={subtitle}
+              authorImg={authorImageData}
+              authorAltImg={authorName}
+              authorName={authorName}
+            />
+          )
+        )}
+      </SectionGridThreeCols>
     )}
   </PageWrapper>
 );

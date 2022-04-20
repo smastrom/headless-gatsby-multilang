@@ -10,10 +10,12 @@ const Wrapper = styled.header`
   grid-auto-flow: row;
   row-gap: var(--gapSmall);
   justify-items: center;
+  margin: auto;
+  max-width: 800px;
+  width: 100%;
 
-  @media screen and (max-width: 860px) {
+  @media (max-width: 860px) {
     justify-items: inherit;
-    width: 100%;
   }
 `;
 
@@ -28,7 +30,7 @@ const AuthorDateContainer = styled.div`
 const Author = styled.address`
   font-size: var(--baseM);
 
-  @media screen and (max-width: 768px) {
+  @media (max-width: 768px) {
     font-size: var(--baseMMobile);
   }
 `;
@@ -37,6 +39,7 @@ const ImgFullWrapper = styled.div`
   --authorImgSize: 60px;
   --sharingIconSize: 35px;
   display: grid;
+  width: max-content;
   grid-template-columns: auto auto;
   column-gap: var(--gapRegular);
   align-items: center;
@@ -47,7 +50,7 @@ const ImgFullWrapper = styled.div`
       : `var(--gapRegular) 0 calc(var(--gapRegular) * 2)
   calc(var(--sharingIconSize) + var(--gapRegular))`};
 
-  @media screen and (max-width: 860px) {
+  @media (max-width: 860px) {
     width: 100%;
     align-items: left;
     margin: var(--gapRegular) 0 calc(var(--gapRegular) * 2) 0;
@@ -61,7 +64,7 @@ const ImgWrapper = styled.div`
   flex-direction: column;
   position: relative;
 
-  @media screen and (max-width: 860px) {
+  @media (max-width: 860px) {
     align-items: flex-start;
   }
 `;
@@ -85,7 +88,7 @@ const ArticleCover = styled(GatsbyImage)`
     border-radius: calc(var(--defaultRadius) * 2);
   }
 
-  @media screen and (max-width: 860px) {
+  @media (max-width: 860px) {
     width: calc(100% + calc(var(--globalPaddingLr) * 2));
     height: 300px;
     border-radius: 0;
@@ -99,7 +102,7 @@ const ArticleCover = styled(GatsbyImage)`
     }
   }
 
-  @media screen and (max-width: 768px) {
+  @media (max-width: 768px) {
     height: 250px;
   }
 `;
@@ -111,7 +114,7 @@ const SharingIcons = styled.aside`
   height: min-content;
   margin-top: calc(var(--authorImgSize) / 2);
 
-  @media screen and (max-width: 860px) {
+  @media (max-width: 860px) {
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: 1fr;
     width: min-content;
@@ -154,7 +157,7 @@ const Dot = styled.span`
   background: var(--baseTextColor);
   border-radius: 0.33em;
 
-  @media screen and (min-width: 621px) and (max-width: 680px) {
+  @media (min-width: 621px) and (max-width: 680px) {
     display: none;
   }
 `;
@@ -174,7 +177,7 @@ const CategoryBox = styled.h2`
   border: var(--borderRegular) solid var(--primaryColor);
   transition: background ${easeOutTiming}, color ${easeOutTiming};
 
-  @media screen and (max-width: 860px) {
+  @media (max-width: 860px) {
     left: -0.25em;
   }
 

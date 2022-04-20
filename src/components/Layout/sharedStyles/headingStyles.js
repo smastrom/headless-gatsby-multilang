@@ -9,11 +9,11 @@ const ArticleTitle = styled.h1`
   text-align: center;
   line-height: var(--headingsLineHeight);
 
-  @media screen and (max-width: 860px) {
+  @media (max-width: 860px) {
     text-align: inherit;
   }
 
-  @media screen and (max-width: 768px) {
+  @media (max-width: 768px) {
     font-size: var(--headingL);
   }
 `;
@@ -24,7 +24,7 @@ const ArticleSubtitle = styled.p`
   text-align: center;
   line-height: var(--bodyLineHeight);
 
-  @media screen and (max-width: 860px) {
+  @media (max-width: 860px) {
     text-align: inherit;
   }
 `;
@@ -34,10 +34,15 @@ const ArticleSubtitle = styled.p`
 const SectionTitle = styled.h1`
   font-size: var(--headingL);
   color: var(--headingsColor);
-  text-align: ${({ centered }) => (centered ? 'center' : 'inherit')};
+  text-align: inherit;
   line-height: var(--headingsLineHeight);
+  margin: auto;
+  padding: ${({ noPaddings }) =>
+    noPaddings ? '0' : ' 0 var(--globalPaddingLr)'};
+  width: 100%;
+  max-width: var(--globalContainer);
 
-  @media screen and (max-width: 768px) {
+  @media (max-width: 768px) {
     font-size: calc(var(--headingL) * 0.8);
   }
 `;
@@ -49,7 +54,7 @@ const HeadingMedium = styled.h1`
   font-weight: 700;
   line-height: 1.2;
 
-  @media screen and (max-width: 768px) {
+  @media (max-width: 768px) {
     font-size: var(--headingS);
   }
 `;
@@ -61,7 +66,7 @@ const HeadingSmall = styled.h1`
   font-weight: 700;
   line-height: 1.2;
 
-  @media screen and (max-width: 768px) {
+  @media (max-width: 768px) {
     font-size: var(--baseXL);
   }
 `;

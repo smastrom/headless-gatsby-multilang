@@ -1,15 +1,23 @@
 import styled from 'styled-components';
 
-const Container = styled.div`
-  display: flex;
+const Wrapper = styled.footer`
   width: var(--globalContainer);
+  width: 100%;
+  max-width: var(--globalContainer);
+  margin: auto;
+  padding: 0 var(--globalPaddingLr);
+`;
+
+const Container = styled.div`
+  border-top: 1px solid var(--dividerColor);
+  width: 100%;
+  padding: var(--globalPaddingLr) 0;
+  display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
-  max-width: var(--globalContainer);
 
-  @media screen and (max-width: 950px) {
+  @media (max-width: 950px) {
     flex-direction: column;
     gap: var(--gapSmall);
   }
@@ -28,4 +36,4 @@ const Column = styled.div`
   }
 `;
 
-export { Container, Column };
+export { Wrapper, Container, Column };

@@ -7,7 +7,6 @@ import { CategoriesDropdown } from '../CategoriesDropdown';
 import { DarkModeToggle } from '../DarkModeToggle';
 import { Logo } from '../../Icons/Logo';
 import { MobileMenu } from '../MobileMenu';
-import { Divider } from '../../sharedStyles/sectionStyles';
 
 import {
   Wrapper,
@@ -178,7 +177,6 @@ export const Header = () => {
             categoryArchiveRecordId={categoryArchiveId}
           />
         </Right>
-        <Divider bottom />
       </Container>
     </Wrapper>
   );

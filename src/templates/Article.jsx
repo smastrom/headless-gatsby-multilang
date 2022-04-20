@@ -7,16 +7,14 @@ import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 import { PageWrapper } from '../components/Layout/PageWrapper';
 import { ArticleHeader } from '../components/Layout/Blog/ArticleHeader';
-import { BackToBlog } from '../components/Layout/Blog/BackToBlog';
 import { SectionTitle } from '../components/Layout/sharedStyles/headingStyles';
 import { Navigator } from '../components/Navigator';
 import { ArticleImage } from '../components/Layout/Blog/ArticleImage';
 import { ArticleBody } from '../components/Layout/Blog/ArticleBody';
 import { ArticleCard } from '../components/Layout/Blog/Cards/ArticleCard';
 import {
-  SectionContainerGridTwoCols,
-  SectionTitleContainer,
-  SectionWrapper,
+  Section,
+  SectionGridTwoCols,
 } from '../components/Layout/sharedStyles/sectionStyles';
 
 const ArticleTemplate = ({
@@ -43,8 +41,7 @@ const ArticleTemplate = ({
     seoDescription={seo?.seoDescription}
     seoImage={seo?.image?.seoImageUrl}
   >
-    <SectionWrapper as="article" isBlog isArticle>
-      <BackToBlog />
+    <Section as="article">
       <ArticleHeader
         title={title}
         subtitle={subtitle}
@@ -107,13 +104,13 @@ const ArticleTemplate = ({
           />
         )}
       </ArticleBody>
-    </SectionWrapper>
+    </Section>
     {relatedPosts.length > 0 && (
-      <SectionWrapper>
-        <SectionTitleContainer isArticleSectionHeading>
-          <SectionTitle>{nextReadText}</SectionTitle>
-        </SectionTitleContainer>
-        <SectionContainerGridTwoCols>
+      <Section>
+        <SectionTitle noPaddings css={{ maxWidth: 'var(--articleContainer)' }}>
+          {nextReadText}
+        </SectionTitle>
+        <SectionGridTwoCols>
           {relatedPosts.map(
             ({
               id: relatedId,
@@ -143,8 +140,8 @@ const ArticleTemplate = ({
               />
             )
           )}
-        </SectionContainerGridTwoCols>
-      </SectionWrapper>
+        </SectionGridTwoCols>
+      </Section>
     )}
   </PageWrapper>
 );

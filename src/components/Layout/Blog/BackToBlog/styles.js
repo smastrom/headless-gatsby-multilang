@@ -6,6 +6,8 @@ import { Navigator } from '../../../Navigator';
 export const Button = styled(Navigator)`
   margin-bottom: var(--gapRegular);
   transform: ${({ $isRtl }) => $isRtl && 'rotate(180deg)'};
+  justify-content: ${({ $isRtl }) => $isRtl && 'flex-end'};
+  display: flex;
 
   & svg path {
     transition: fill ${easeOutTiming};

@@ -10,7 +10,7 @@ import {
 
 const Wrapper = styled.div`
   display: none;
-  @media screen and (max-width: 768px) {
+  @media (max-width: 768px) {
     display: block;
   }
 `;
@@ -59,7 +59,7 @@ const Nav = styled.nav`
     }
   }};
 
-  @media screen and (max-width: 480px) {
+  @media (max-width: 480px) {
     max-width: calc(100vw - calc(var(--globalPaddingLr) * 2));
   }
 `;

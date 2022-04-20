@@ -1,23 +1,25 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 const Wrapper = styled.section`
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: 100%;
-  height: ${({ fullView }) => fullView && '100vh'};
-  padding: var(--globalPaddingTb) var(--globalPaddingLr);
-  flex-direction: column;
-  position: relative;
-`;
-
-const Container = styled.div`
-  width: var(--globalContainer);
   display: grid;
+  padding: var(--globalPaddingTb) var(--globalPaddingLr);
+  margin: auto;
   row-gap: var(--gapXL);
-  justify-content: ${({ centered }) => centered && 'center'};
-  width: 100%;
   max-width: var(--globalContainer);
+  align-items: center;
+
+  ${({ isFullViewport }) =>
+    isFullViewport &&
+    css`
+      justify-content: center;
+      height: 100vh;
+
+      & > div {
+        justify-items: center;
+        text-align: center;
+      }
+    `};
 `;
 
 const TextBox = styled.div`
@@ -25,8 +27,9 @@ const TextBox = styled.div`
   grid-template-columns: 1fr;
   row-gap: var(--gapRegular);
   width: 600px;
-  justify-items: ${({ centered }) => centered && 'center'};
-  @media screen and (max-width: 767px) {
+  height: max-content;
+
+  @media (max-width: 768px) {
     width: 100%;
   }
 `;
@@ -43,10 +46,9 @@ const Caption = styled.h2`
 const Title = styled.h1`
   font-size: var(--headingXXL);
   color: var(--headingsColor);
-  text-align: ${({ centered }) => (centered ? 'center' : 'inherit')};
   line-height: var(--headingsLineHeight);
 
-  @media screen and (max-width: 768px) {
+  @media (max-width: 768px) {
     font-size: var(--headingXL);
   }
 `;
@@ -54,8 +56,7 @@ const Title = styled.h1`
 const Subtitle = styled.p`
   font-size: var(--baseXL);
   color: var(--baseTextColor);
-  text-align: ${({ centered }) => (centered ? 'center' : 'inherit')};
   line-height: var(--bodyLineHeight);
 `;
 
-export { Wrapper, Container, TextBox, Caption, Title, Subtitle };
+export { Wrapper, TextBox, Caption, Title, Subtitle };

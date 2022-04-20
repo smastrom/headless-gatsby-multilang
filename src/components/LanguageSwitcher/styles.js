@@ -12,7 +12,7 @@ const List = styled.ul`
   grid-auto-flow: column;
   column-gap: var(--gapRegular);
 
-  @media screen and (max-width: 767px) {
+  @media (max-width: 768px) {
     column-gap: 0;
   }
 `;
@@ -36,7 +36,7 @@ const Link = styled(GatsbyLink)`
     }
   }
 
-  @media screen and (max-width: 767px) {
+  @media (max-width: 768px) {
     padding: var(--gapSmall);
   }
 

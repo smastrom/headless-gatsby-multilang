@@ -77,7 +77,7 @@ export const uncontrolledHTMLStyles = css`
     background: var(--codeBlockBackgroundColor) none repeat scroll 0% 0% !important;
     border: var(--borderSmall) solid var(--dividerColor) !important;
 
-    @media screen and (max-width: 800px) {
+    @media (max-width: 800px) {
       border-radius: 0 !important;
       margin: var(--paragraphBottomMargin) calc(var(--globalPaddingLr) * -1) !important;
     }

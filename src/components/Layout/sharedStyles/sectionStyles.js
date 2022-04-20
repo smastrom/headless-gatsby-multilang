@@ -1,85 +1,72 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
-// Wrappers
+// Sections
 
-export const SectionWrapper = styled.section`
-  display: flex;
-  align-items: center;
-  width: 100%;
-  flex-direction: column;
-  position: relative;
-  background: ${({ backgroundColor }) => backgroundColor};
-
-  ${({ isBlog, noTopPaddings }) => {
-    if (isBlog) {
-      return css`
-        padding: var(--globalPaddingLr) var(--globalPaddingLr)
-          var(--globalPaddingTb);
-      `;
-    }
-    if (noTopPaddings) {
-      return css`
-        padding: 0 var(--globalPaddingLr);
-      `;
-    }
-    return css`
-      padding: var(--globalPaddingTb) var(--globalPaddingLr);
-    `;
-  }}
-
-  @media screen and (max-width: 860px) {
-    align-items: ${({ isArticle }) => (isArticle ? 'flex-start' : 'center')};
-  }
-`;
-
-// Containers
-
-export const SectionContainerGridThreeCols = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  column-gap: var(--gapXL);
-  row-gap: var(--gapXL);
+const Section = styled.section`
   width: 100%;
   max-width: var(--globalContainer);
-
-  @media screen and (max-width: 1100px) {
-    column-gap: var(--gapL);
-  }
-
-  @media screen and (max-width: 950px) {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  @media screen and (max-width: 620px) {
-    grid-template-columns: 1fr;
-  }
+  margin: auto;
+  padding: var(--globalPaddingLr) var(--globalPaddingLr) var(--globalPaddingTb)
+    var(--globalPaddingLr);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
-export const SectionContainerGridTwoCols = styled.div`
+const SectionGridTwoCols = styled.section`
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: var(--gapXL);
   row-gap: var(--gapXL);
+  margin: auto;
+  padding-top: var(--globalPaddingTb);
   max-width: var(--articleContainer);
   width: 100%;
 
-  @media screen and (max-width: 760px) {
+  @media (max-width: 760px) {
     column-gap: var(--gapL);
   }
 
-  @media screen and (max-width: 620px) {
+  @media (max-width: 620px) {
     grid-template-columns: 1fr;
   }
 `;
 
-export const SectionContainerFlexTwoCols = styled.div`
+const SectionGridThreeCols = styled.section`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: var(--gapXL);
+  row-gap: var(--gapXL);
+  margin: auto;
+  padding: ${({ noPaddings }) =>
+    noPaddings ? '0' : 'var(--globalPaddingTb) var(--globalPaddingLr)'};
+  width: 100%;
+  max-width: var(--globalContainer);
+
+  @media (max-width: 1100px) {
+    column-gap: var(--gapL);
+  }
+
+  @media (max-width: 950px) {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  @media (max-width: 620px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+const SectionFlexTwoCols = styled.section`
   width: var(--globalContainer);
   display: flex;
   flex-direction: row;
   width: 100%;
+  margin: auto;
+  padding: var(--globalPaddingTb) var(--globalPaddingLr);
   max-width: var(--globalContainer);
 
-  @media screen and (max-width: 767px) {
+  @media (max-width: 768px) {
     flex-direction: column;
 
     & > div:first-child {
@@ -88,11 +75,9 @@ export const SectionContainerFlexTwoCols = styled.div`
   }
 `;
 
-export const SectionContainerFlexTwoColsReverse = styled(
-  SectionContainerFlexTwoCols
-)`
+const SectionFlexTwoColsReverse = styled(SectionFlexTwoCols)`
   &&& {
-    @media screen and (max-width: 767px) {
+    @media (max-width: 768px) {
       flex-direction: column-reverse;
 
       & > div:first-child {
@@ -105,42 +90,22 @@ export const SectionContainerFlexTwoColsReverse = styled(
     margin-bottom: 0;
   }
 
-  @media screen and (max-width: 767px) {
+  @media (max-width: 768px) {
     & > div:last-child {
       margin-bottom: var(--gapL);
     }
   }
 `;
 
-export const SectionTitleContainer = styled.header`
-  display: flex;
-  align-items: center;
-  margin-bottom: var(--gapXL);
-  justify-content: ${({ hasButton }) => (hasButton ? 'space-between' : '')};
-  width: 100%;
-  max-width: ${({ isArticleSectionHeading }) =>
-    isArticleSectionHeading
-      ? 'var(--articleContainer)'
-      : 'var(--globalContainer)'};
+// Content containers
 
-  & a:last-child {
-    align-items: right;
-
-    @media screen and (max-width: 350px) {
-      display: none;
-    }
-  }
-`;
-
-// Elements
-
-export const ColumnFlexTwoCols = styled.div`
+const ColumnFlex = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   width: 50%;
 
-  @media screen and (max-width: 767px) {
+  @media (max-width: 768px) {
     width: 100%;
     justify-content: flex-start;
 
@@ -150,24 +115,18 @@ export const ColumnFlexTwoCols = styled.div`
   }
 `;
 
-export const TextBox = styled.section`
+const GridTextBox = styled.section`
   display: grid;
   row-gap: ${({ small }) => (small ? 'var(--gapSmall)' : 'var(--gapRegular)')};
   align-content: baseline;
 `;
 
-export const Divider = styled.hr`
-  width: var(--globalContainer);
-  bottom: ${({ bottom }) => bottom && '0'};
-  top: ${({ top }) => top && '0'};
-  position: absolute;
-  height: var(--borderSmall);
-  margin: 0;
-  border: var(--borderSmall) none;
-  background: var(--dividerColor);
-
-  @media screen and (max-width: 1160px) {
-    left: var(--globalPaddingLr);
-    width: calc(100% - calc(var(--globalPaddingLr) * 2));
-  }
-`;
+export {
+  Section,
+  SectionGridTwoCols,
+  SectionGridThreeCols,
+  SectionFlexTwoCols,
+  SectionFlexTwoColsReverse,
+  ColumnFlex,
+  GridTextBox,
+};

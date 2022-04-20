@@ -162,8 +162,7 @@ const NotFoundPage = () => {
         <NotFoundPageHead {...headProps} />
         <Hero
           {...heroProps}
-          fullView
-          centered
+          isFullViewport
           button={
             <Link
               {...linkProps}

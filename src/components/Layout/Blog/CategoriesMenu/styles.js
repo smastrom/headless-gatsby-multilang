@@ -2,25 +2,20 @@ import styled, { css } from 'styled-components';
 
 import { Navigator } from '../../../Navigator';
 
-const Wrapper = styled.div`
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 var(--globalPaddingLr);
-`;
-
 const divider = 'var(--borderSmall) solid var(--dividerColor);';
 
-const ScrollGradientContainer = styled.div`
+const Wrapper = styled.div`
+  max-width: var(--globalContainer);
+  padding: 0 var(--globalPaddingLr) var(--borderRegular) var(--globalPaddingLr);
+  margin: auto;
+  width: 100%;
+`;
+
+const Container = styled.div`
   --scrollBarHeight: 6px;
   position: relative;
-  width: var(--globalContainer);
-  padding-bottom: var(--borderRegular);
   border-top: ${divider};
   border-bottom: ${divider};
-  width: 100%;
-  max-width: var(--globalContainer);
 
   &::after {
     position: absolute;
@@ -30,6 +25,7 @@ const ScrollGradientContainer = styled.div`
     display: block;
     height: calc(100% - calc(var(--scrollBarHeight) * 2));
     top: 0;
+
     ${({ isRtl }) =>
       isRtl
         ? css`
@@ -51,7 +47,7 @@ const ScrollGradientContainer = styled.div`
   }
 `;
 
-const NavContainer = styled.nav`
+const Nav = styled.nav`
   width: var(--globalContainer);
   padding: var(--gapRegular) 0
     calc(var(--gapRegular) - calc(var(--scrollBarHeight) / 2)) 0;
@@ -100,10 +96,4 @@ const CategoryLink = styled(Navigator)`
   }
 `;
 
-export {
-  Wrapper,
-  ScrollGradientContainer,
-  NavContainer,
-  NavList,
-  CategoryLink,
-};
+export { Wrapper, Container, Nav, NavList, CategoryLink };

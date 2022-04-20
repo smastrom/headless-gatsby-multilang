@@ -4,10 +4,7 @@ import { PageWrapper } from '../components/Layout/PageWrapper';
 import { Hero } from '../components/Layout/Hero';
 import { CategoriesMenu } from '../components/Layout/Blog/CategoriesMenu';
 import { ArticleCard } from '../components/Layout/Blog/Cards/ArticleCard';
-import {
-  SectionContainerGridThreeCols,
-  SectionWrapper,
-} from '../components/Layout/sharedStyles/sectionStyles';
+import { SectionGridThreeCols } from '../components/Layout/sharedStyles/sectionStyles';
 
 const BlogRootTemplate = ({
   data: {
@@ -28,34 +25,26 @@ const BlogRootTemplate = ({
   >
     <Hero title={heroTitle} subtitle={heroSubtitle} />
     <CategoriesMenu />
-    <SectionWrapper>
-      <SectionContainerGridThreeCols>
-        {blogPostNodes.map(
-          ({
-            id,
-            meta: { updatedAt },
-            coverImage,
-            title,
-            subtitle,
-            author,
-          }) => (
-            <ArticleCard
-              key={id}
-              recordId={id}
-              date={updatedAt}
-              cardImg={coverImage.gatsbyImageData}
-              cardImgMobile={coverImage.squaredImage}
-              altImg={title}
-              title={title}
-              excerpt={subtitle}
-              authorImg={author?.picture.gatsbyImageData}
-              authorAltImg={author?.authorName}
-              authorName={author?.authorName}
-            />
-          )
-        )}
-      </SectionContainerGridThreeCols>
-    </SectionWrapper>
+
+    <SectionGridThreeCols>
+      {blogPostNodes.map(
+        ({ id, meta: { updatedAt }, coverImage, title, subtitle, author }) => (
+          <ArticleCard
+            key={id}
+            recordId={id}
+            date={updatedAt}
+            cardImg={coverImage.gatsbyImageData}
+            cardImgMobile={coverImage.squaredImage}
+            altImg={title}
+            title={title}
+            excerpt={subtitle}
+            authorImg={author?.picture.gatsbyImageData}
+            authorAltImg={author?.authorName}
+            authorName={author?.authorName}
+          />
+        )
+      )}
+    </SectionGridThreeCols>
   </PageWrapper>
 );
 

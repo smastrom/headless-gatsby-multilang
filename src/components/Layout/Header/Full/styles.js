@@ -1,23 +1,23 @@
 import styled from 'styled-components';
 
 const Wrapper = styled.header`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: var(--globalPaddingLr);
+  padding: 0 var(--globalPaddingLr);
+  margin: auto;
   width: 100%;
-  position: relative;
+  max-width: var(--globalContainer);
 `;
 
 const Container = styled.div`
+  width: 100%;
+  padding: var(--globalPaddingLr) 0;
   display: flex;
   justify-content: space-between;
-  width: var(--globalContainer);
   align-items: center;
+  border-bottom: 1px solid var(--dividerColor);
 `;
 
 const Nav = styled.nav`
-  @media screen and (max-width: 768px) {
+  @media (max-width: 768px) {
     display: none;
   }
 `;
@@ -37,7 +37,7 @@ const NavList = styled.ul`
     }
   }
 
-  @media screen and (max-width: 860px) {
+  @media (max-width: 860px) {
     column-gap: var(--gapL);
   }
 `;
@@ -47,7 +47,7 @@ const Right = styled.div`
   grid-auto-flow: column;
   column-gap: var(--gapRegular);
 
-  @media screen and (max-width: 768px) {
+  @media (max-width: 768px) {
     grid-template-columns: auto auto auto;
   }
 `;
@@ -58,7 +58,7 @@ const VerticalDivider = styled.span`
   background: var(--dividerColor);
   display: ${({ hideOnDesktop }) => (hideOnDesktop ? 'none' : 'block')};
 
-  @media screen and (max-width: 768px) {
+  @media (max-width: 768px) {
     display: ${({ hideOnMobile }) => (hideOnMobile ? 'none' : 'block')};
   }
 `;

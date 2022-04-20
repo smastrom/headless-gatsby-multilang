@@ -51,14 +51,14 @@ export const ArticleBodyStyles = styled.div`
 
   & h2 {
     font-size: var(--headingM);
-    @media screen and (max-width: 768px) {
+    @media (max-width: 768px) {
       font-size: var(--headingS);
     }
   }
 
   & h3 {
     font-size: var(--headingS);
-    @media screen and (max-width: 768px) {
+    @media (max-width: 768px) {
       font-size: var(--baseL);
     }
   }
@@ -71,7 +71,7 @@ export const ArticleBodyStyles = styled.div`
     height: var(--borderSmall);
   }
 
-  @media screen and (max-width: 860px) {
+  @media (max-width: 860px) {
     width: 100%;
   }
 
@@ -88,7 +88,7 @@ export const ArticleBodyStyles = styled.div`
     right: calc(var(--defaultRadius) / 2);
     top: calc(var(--defaultRadius) / 2);
 
-    @media screen and (max-width: 800px) {
+    @media (max-width: 800px) {
       left: 0 !important;
       top: calc(calc(var(--baseS) / 1.5) * -1) !important;
       right: unset !important;
