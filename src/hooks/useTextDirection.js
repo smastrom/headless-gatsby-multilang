@@ -1,8 +1,8 @@
 import { isRtlLang } from '../functions/langUtils';
-import { usePageLanguage } from './usePageLanguage';
+import { usePageLocale } from './usePageLocale';
 
 export const useTextDirection = () => {
-  const { pageLanguage } = usePageLanguage();
+  const { pageLanguage } = usePageLocale();
 
   if (!pageLanguage) {
     throw new Error(

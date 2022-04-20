@@ -1,6 +1,4 @@
-import React from 'react';
-
-export const FacebookIcon = () => (
+const FacebookIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="8.304"
@@ -16,7 +14,7 @@ export const FacebookIcon = () => (
   </svg>
 );
 
-export const TwitterIcon = () => (
+const TwitterIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="15.69"
@@ -32,7 +30,7 @@ export const TwitterIcon = () => (
   </svg>
 );
 
-export const LinkedinIcon = () => (
+const LinkedinIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width="13.598"
@@ -47,3 +45,5 @@ export const LinkedinIcon = () => (
     />
   </svg>
 );
+
+export { FacebookIcon, TwitterIcon, LinkedinIcon };

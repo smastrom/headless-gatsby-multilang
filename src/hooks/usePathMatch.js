@@ -1,5 +1,5 @@
 import { useStaticQuery, graphql } from 'gatsby';
-import { usePageLanguage } from './usePageLanguage';
+import { usePageLocale } from './usePageLocale';
 
 export const usePathMatch = (recordId) => {
   if (!recordId) {
@@ -23,7 +23,7 @@ export const usePathMatch = (recordId) => {
     allSitePage: { pageNodes },
   } = data;
 
-  const { pageLanguage } = usePageLanguage();
+  const { pageLanguage } = usePageLocale();
 
   const pathMatch = pageNodes.find(
     ({ pageContext: { id, locale } }) =>

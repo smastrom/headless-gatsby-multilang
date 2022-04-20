@@ -9,13 +9,15 @@ const dateOptions = {
   day: 'numeric',
 };
 
-export const formatDateTime = (dateString, contextLocale) =>
+const formatDateTime = (dateString, contextLocale) =>
   new Date(dateString).toLocaleString(contextLocale, {
     ...dateOptions,
     ...timeOptions,
   });
 
-export const formatDate = (dateString, contextLocale) =>
+const formatDate = (dateString, contextLocale) =>
   new Date(dateString).toLocaleString(contextLocale, {
     ...dateOptions,
   });
+
+export { formatDateTime, formatDate };

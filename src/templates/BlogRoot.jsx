@@ -1,13 +1,13 @@
-import React from 'react';
 import { graphql } from 'gatsby';
+
 import { PageWrapper } from '../components/Layout/PageWrapper';
 import { Hero } from '../components/Layout/Hero';
+import { CategoriesMenu } from '../components/Layout/Blog/CategoriesMenu';
+import { ArticleCard } from '../components/Layout/Blog/Cards/ArticleCard';
 import {
   SectionContainerGridThreeCols,
   SectionWrapper,
-} from '../components/Layout/SharedStyles/Sections';
-import { ArticleCard, CardImgArtDir } from '../components/Layout/Blog/Cards';
-import { CategoriesMenu } from '../components/Layout/Blog/CategoriesMenu';
+} from '../components/Layout/sharedStyles/sectionStyles';
 
 const BlogRootTemplate = ({
   data: {
@@ -38,21 +38,14 @@ const BlogRootTemplate = ({
             title,
             subtitle,
             author,
-            categoryLink,
           }) => (
             <ArticleCard
               key={id}
               recordId={id}
               date={updatedAt}
-              category={categoryLink}
-              cardImg={
-                coverImage &&
-                CardImgArtDir(
-                  coverImage.gatsbyImageData,
-                  coverImage.squaredImage,
-                  title
-                )
-              }
+              cardImg={coverImage.gatsbyImageData}
+              cardImgMobile={coverImage.squaredImage}
+              altImg={title}
               title={title}
               excerpt={subtitle}
               authorImg={author?.picture.gatsbyImageData}

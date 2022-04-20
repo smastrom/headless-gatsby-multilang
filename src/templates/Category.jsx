@@ -1,13 +1,13 @@
 import { graphql } from 'gatsby';
-import React from 'react';
+
 import { Hero } from '../components/Layout/Hero';
 import { PageWrapper } from '../components/Layout/PageWrapper';
 import { CategoriesMenu } from '../components/Layout/Blog/CategoriesMenu';
+import { ArticleCard } from '../components/Layout/Blog/Cards/ArticleCard';
 import {
   SectionContainerGridThreeCols,
   SectionWrapper,
-} from '../components/Layout/SharedStyles/Sections';
-import { ArticleCard, CardImgArtDir } from '../components/Layout/Blog/Cards';
+} from '../components/Layout/sharedStyles/sectionStyles';
 
 const CategoryTemplate = ({
   data: {
@@ -25,7 +25,7 @@ const CategoryTemplate = ({
     seoDescription={seo?.seoDescription}
     seoImage={seo?.seoImage?.seoImageUrl}
   >
-    <Hero alt={heroAlt} title={heroTitle} subtitle={heroSubtitle} />
+    <Hero caption={heroAlt} title={heroTitle} subtitle={heroSubtitle} />
     <CategoriesMenu />
     {postNodes.length > 0 && (
       <SectionWrapper>
@@ -48,14 +48,9 @@ const CategoryTemplate = ({
                 recordId={id}
                 date={updatedAt}
                 category={categoryLink}
-                cardImg={
-                  coverImage &&
-                  CardImgArtDir(
-                    coverImage.gatsbyImageData,
-                    coverImage.squaredImage,
-                    title
-                  )
-                }
+                cardImg={coverImage.gatsbyImageData}
+                cardImgMobile={coverImage.squaredImage}
+                altImg={title}
                 title={title}
                 excerpt={subtitle}
                 authorImg={authorImageData}

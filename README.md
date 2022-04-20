@@ -498,7 +498,7 @@ If no posts are set, the section won't be displayed.
 
 ## Colors
 
-Navigate to `src/components/Layout/SharedStyles/globalStyle.js` and change the css variables **<ins>values</ins>** for the two following classes:
+Navigate to `src/components/Layout/sharedStyles/globalStyle.js` and change the css variables **<ins>values</ins>** for the two following classes:
 
 ```css
 .lightTheme {
@@ -567,7 +567,7 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism'; // <-- Import your favourite style
 ```
 
-If you want to override some styles from the original theme, you can do that by editing css rules in `src/components/Layout/SharedStyles/TextContainers.jsx`.
+If you want to override some styles from the original theme, you can do that by editing css rules in `src/components/Layout/sharedStyles/TextContainers.jsx`.
 
 The related css block is commented as `/* Code block styles */`.
 
@@ -639,7 +639,7 @@ If you want to disable the redirect, just remove the `<Redirect>` component in `
 
 ```jsx
 import Redirect from './src/components/LanguageHelpers/Redirect';
-import GlobalStyle from './src/components/Layout/SharedStyles/globalStyle';
+import GlobalStyle from './src/components/Layout/sharedStyles/globalStyle';
 
 export const wrapPageElement = ({ element }) => (
   <>
@@ -1022,13 +1022,13 @@ This opens the doors to different scenarios where for example, your content edit
 You most like won't need to but if you want to access the `pageLanguage`, you can call this hook in any component file used in any of your templates:
 
 ```js
-import { usePageLanguage } from '/src/hooks/usePageLanguage';
+import { usePageLocale } from '/src/hooks/usePageLocale';
 ```
 
 And use it:
 
 ```js
-const { pageLanguage } = usePageLanguage();
+const { pageLanguage } = usePageLocale();
 
 console.log(pageLanguage); // Logs ("es-ES") or any other language
 ```

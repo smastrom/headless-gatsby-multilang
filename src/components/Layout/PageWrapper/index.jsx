@@ -1,6 +1,5 @@
-import React from 'react';
 import { PageHead } from '../../Head/PageHead';
-import { Header } from '../Header';
+import { Header } from '../Header/Full';
 import { Footer } from '../Footer';
 import { LanguageProvider } from '../../ContextProviders/LanguageProvider';
 

@@ -1,13 +1,14 @@
-import React, { createContext, useState } from 'react';
+import { createContext, useState } from 'react';
 
-export const LanguageContext = createContext({});
+const LanguageContext = createContext({});
 
-export const LanguageProvider = ({ children, pageData }) => {
+const LanguageProvider = ({ children, pageData }) => {
   const { locale, id } = pageData;
   const [pageLanguage] = useState(locale);
 
   return (
     <LanguageContext.Provider
+      // eslint-disable-next-line react/jsx-no-constructed-context-values
       value={{
         pageLanguage,
         id,
@@ -17,3 +18,5 @@ export const LanguageProvider = ({ children, pageData }) => {
     </LanguageContext.Provider>
   );
 };
+
+export { LanguageContext, LanguageProvider };

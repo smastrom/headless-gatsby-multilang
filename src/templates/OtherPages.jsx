@@ -1,9 +1,11 @@
-import React from 'react';
 import { graphql } from 'gatsby';
+
 import { StructuredText } from 'react-datocms';
-import { Navigator } from '../components/LanguageHelpers/Navigator';
+
 import { PageWrapper } from '../components/Layout/PageWrapper';
 import { Hero } from '../components/Layout/Hero';
+import { Navigator } from '../components/Navigator';
+import { RichText } from '../components/Layout/RichText';
 import {
   SectionContainerGridThreeCols,
   SectionContainerFlexTwoCols,
@@ -11,12 +13,11 @@ import {
   SectionContainerFlexTwoColsReverse,
   ColumnFlexTwoCols,
   TextBox,
-} from '../components/Layout/SharedStyles/Sections';
+} from '../components/Layout/sharedStyles/sectionStyles';
 import {
   HeadingMedium,
   HeadingSmallWithTip,
-} from '../components/Layout/SharedStyles/Headings';
-import { RichText } from '../components/Layout/SharedStyles/TextContainers';
+} from '../components/Layout/sharedStyles/headingStyles';
 
 const OtherPagesTemplate = ({
   data: {
@@ -53,7 +54,11 @@ const OtherPagesTemplate = ({
           switch (__typename) {
             case 'DatoCmsHero':
               return (
-                <Hero alt={heroAlt} title={heroTitle} subtitle={heroSubtitle} />
+                <Hero
+                  caption={heroAlt}
+                  title={heroTitle}
+                  subtitle={heroSubtitle}
+                />
               );
             case 'DatoCmsSectionImageLeft':
               return (

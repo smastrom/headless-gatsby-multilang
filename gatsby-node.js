@@ -1,8 +1,11 @@
-const path = require('path');
 const fs = require('fs');
-const https = require('https');
+const { resolve } = require('path');
+const { get } = require('https');
 
-exports.createPages = async ({ graphql, actions: { createPage } }) => {
+exports.createPages = async ({
+  graphql,
+  actions: { createPage, createRedirect },
+}) => {
   /**
    * We retrieve the project languages from DatoCMS,
    * the field "allLanguages" returns an array of all available languages,
@@ -29,8 +32,6 @@ exports.createPages = async ({ graphql, actions: { createPage } }) => {
     }
   `);
 
-  const [defaultLanguage] = allLanguages;
-
   console.log(
     '\x1b[35m',
     'multilang',
@@ -38,12 +39,33 @@ exports.createPages = async ({ graphql, actions: { createPage } }) => {
     `Found ${allLanguages.length} languages: ${allLanguages.join(', ')}`
   );
 
+  const [defaultLanguage] = allLanguages;
+
+  // Handle homepage server-side redirects
+
+  const secondaryLanguages = [...allLanguages];
+  secondaryLanguages.shift();
+
+  secondaryLanguages.forEach((language) => {
+    const langCode = language.split('-')[0];
+
+    createRedirect({
+      fromPath: '/',
+      toPath: `/${language}/`,
+      isPermanent: false,
+      conditions: {
+        language: [langCode],
+      },
+    });
+  });
+
   /**
    * From now on we query and export to the pageContext object the "originalId" and the "locale"
    * field for any page we generate.
    *
    * Since any record has the same originalId for each localized node, we will use it to
-   * find the correspondent paths in the LanguageSwitcher and Navigator components once pages are generated.
+   * find the correspondent paths in the LanguageSwitcher and Navigator components once pages
+   * are generated.
    *
    * Once page is generated, components are aware of the pageLangauge (locale) and the originalId
    * corresponding to that page, so it will be easier retrieving the correspondent path for each
@@ -52,7 +74,9 @@ exports.createPages = async ({ graphql, actions: { createPage } }) => {
    * By querying a "single istance" content model using the GraphQL field "allDato.."
    * we retrieve an array of n nodes. One node for each locale. We generate one page for each node.
    *
-   * If a field is set as "localizable" and localized on Dato, the field value will change for each node.
+   * If a field is set as "localizable" and localized on Dato, the field value will change
+   * for each node.
+   *
    * If not it will display the same value for each node.
    */
 
@@ -73,7 +97,7 @@ exports.createPages = async ({ graphql, actions: { createPage } }) => {
     }
   `);
 
-  const HomePageTemplate = path.resolve('src/templates/Home.jsx');
+  const HomePageTemplate = resolve('src/templates/Home.jsx');
 
   homepageNodes.forEach(({ id, locale }) => {
     createPage({
@@ -106,7 +130,7 @@ exports.createPages = async ({ graphql, actions: { createPage } }) => {
     `
   );
 
-  const CategoriesArchiveTemplate = path.resolve(
+  const CategoriesArchiveTemplate = resolve(
     'src/templates/CategoriesArchive.jsx'
   );
 
@@ -142,7 +166,7 @@ exports.createPages = async ({ graphql, actions: { createPage } }) => {
     }
   `);
 
-  const BlogRootTemplate = path.resolve('src/templates/BlogRoot.jsx');
+  const BlogRootTemplate = resolve('src/templates/BlogRoot.jsx');
 
   blogRootNodes.forEach(({ locale, slug, id }) => {
     createPage({
@@ -181,7 +205,7 @@ exports.createPages = async ({ graphql, actions: { createPage } }) => {
     }
   `);
 
-  const OtherPagesTemplate = path.resolve('src/templates/OtherPages.jsx');
+  const OtherPagesTemplate = resolve('src/templates/OtherPages.jsx');
 
   otherPagesNodes.forEach(({ locale, slug, id }) => {
     createPage({
@@ -227,7 +251,7 @@ exports.createPages = async ({ graphql, actions: { createPage } }) => {
     }
   `);
 
-  const CategoryTemplate = path.resolve('src/templates/Category.jsx');
+  const CategoryTemplate = resolve('src/templates/Category.jsx');
 
   categoryNodes.forEach(({ id, locale, slug }) => {
     const blogPathName = getBlogPathname(locale);
@@ -272,7 +296,7 @@ exports.createPages = async ({ graphql, actions: { createPage } }) => {
     }
   `);
 
-  const ArticleTemplate = path.resolve('src/templates/Article.jsx');
+  const ArticleTemplate = resolve('src/templates/Article.jsx');
 
   allLanguages.forEach((siteLocale) => {
     let pageCounter = 0;
@@ -378,13 +402,13 @@ exports.createPages = async ({ graphql, actions: { createPage } }) => {
   const icon = fs.createWriteStream(`${publicPath}/favicon-32.png`);
 
   try {
-    https.get(`${normalSize}`, (response) => {
+    get(`${normalSize}`, (response) => {
       response.pipe(iconNormal);
     });
-    https.get(`${bigSize}`, (response) => {
+    get(`${bigSize}`, (response) => {
       response.pipe(iconBig);
     });
-    https.get(`${favSize}`, (response) => {
+    get(`${favSize}`, (response) => {
       response.pipe(icon);
     });
   } catch (err) {
@@ -434,7 +458,8 @@ exports.createPages = async ({ graphql, actions: { createPage } }) => {
 
   if (additionalLanguages > 1) {
     seoAndPwaNodes
-      .filter(({ locale }) => locale !== defaultLanguage) // Exclude default language already generated
+      // Exclude default language already generated
+      .filter(({ locale }) => locale !== defaultLanguage)
       // eslint-disable-next-line no-shadow
       .forEach(({ name, shortName, description, pwaLocale }) => {
         // eslint-disable-next-line no-shadow

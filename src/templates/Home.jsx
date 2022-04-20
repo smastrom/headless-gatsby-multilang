@@ -1,20 +1,20 @@
-import React from 'react';
 import { graphql } from 'gatsby';
+
 import { PageWrapper } from '../components/Layout/PageWrapper';
 import { Hero } from '../components/Layout/Hero';
+import { Navigator } from '../components/Navigator';
+import { RichText } from '../components/Layout/RichText';
+import { ArticleCard } from '../components/Layout/Blog/Cards/ArticleCard';
 import {
   SectionContainerGridThreeCols,
   SectionWrapper,
   SectionTitleContainer,
   TextBox,
-} from '../components/Layout/SharedStyles/Sections';
+} from '../components/Layout/sharedStyles/sectionStyles';
 import {
   HeadingSmallWithTip,
   SectionTitle,
-} from '../components/Layout/SharedStyles/Headings';
-import { RichText } from '../components/Layout/SharedStyles/TextContainers';
-import { ArticleCard, CardImgArtDir } from '../components/Layout/Blog/Cards';
-import { Navigator } from '../components/LanguageHelpers/Navigator';
+} from '../components/Layout/sharedStyles/headingStyles';
 
 const HomepageTemplate = ({
   data: {
@@ -38,7 +38,7 @@ const HomepageTemplate = ({
   >
     <Hero
       hasDivider
-      alt={heroAlt}
+      caption={heroAlt}
       title={heroTitle}
       subtitle={heroSubtitle}
       button={
@@ -48,8 +48,8 @@ const HomepageTemplate = ({
       }
       sectionChildren={
         <SectionContainerGridThreeCols>
-          {features.map(({ id, title, description }) => (
-            <TextBox small key={id}>
+          {features.map(({ id: featureId, title, description }) => (
+            <TextBox small key={featureId}>
               <HeadingSmallWithTip>{title}</HeadingSmallWithTip>
               <RichText>{description}</RichText>
             </TextBox>
@@ -71,7 +71,7 @@ const HomepageTemplate = ({
         <SectionContainerGridThreeCols>
           {postNodes.map(
             ({
-              id,
+              id: recordId,
               meta: { updatedAt },
               title,
               coverImage,
@@ -83,18 +83,13 @@ const HomepageTemplate = ({
               categoryLink,
             }) => (
               <ArticleCard
-                key={id}
-                recordId={id}
+                key={recordId}
+                recordId={recordId}
                 date={updatedAt}
                 category={categoryLink}
-                cardImg={
-                  coverImage &&
-                  CardImgArtDir(
-                    coverImage.gatsbyImageData,
-                    coverImage.squaredImage,
-                    title
-                  )
-                }
+                cardImg={coverImage.gatsbyImageData}
+                cardImgMobile={coverImage.squaredImage}
+                altImg={title}
                 title={title}
                 excerpt={subtitle}
                 authorImg={authorImageData}

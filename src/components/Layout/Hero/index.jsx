@@ -1,59 +1,34 @@
-import React from 'react';
-import styled from 'styled-components';
-import { HeroSubtitle, HeroTitle, HeroAlt } from '../SharedStyles/Headings';
-import { Divider } from '../SharedStyles/Sections';
+import { Divider } from '../sharedStyles/sectionStyles';
 
-const HeroWrapper = styled.section`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: ${({ fullView }) => fullView && '100vh'};
-  padding: var(--globalPaddingTb) var(--globalPaddingLr);
-  flex-direction: column;
-  position: relative;
-`;
-
-const HeroContainer = styled.div`
-  width: var(--globalContainer);
-  display: grid;
-  row-gap: var(--gapXL);
-  justify-content: ${({ centered }) => centered && 'center'};
-  width: 100%;
-  max-width: var(--globalContainer);
-`;
-
-const HeroTextBox = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
-  row-gap: var(--gapRegular);
-  width: 600px;
-  justify-items: ${({ centered }) => centered && 'center'};
-  @media screen and (max-width: 767px) {
-    width: 100%;
-  }
-`;
+import {
+  Wrapper,
+  Container,
+  TextBox,
+  Caption,
+  Title,
+  Subtitle,
+} from './styles';
 
 export const Hero = ({
   fullView,
   centered,
-  alt,
+  caption,
   title,
   subtitle,
   button,
   sectionChildren,
   hasDivider,
 }) => (
-  <HeroWrapper fullView={fullView}>
-    <HeroContainer centered={centered}>
-      <HeroTextBox centered={centered}>
-        {alt && <HeroAlt>{alt}</HeroAlt>}
-        <HeroTitle centered={centered}>{title}</HeroTitle>
-        <HeroSubtitle centered={centered}>{subtitle}</HeroSubtitle>
+  <Wrapper fullView={fullView}>
+    <Container centered={centered}>
+      <TextBox centered={centered}>
+        {caption && <Caption>{caption}</Caption>}
+        <Title centered={centered}>{title}</Title>
+        <Subtitle centered={centered}>{subtitle}</Subtitle>
         {button}
-      </HeroTextBox>
+      </TextBox>
       {sectionChildren}
-    </HeroContainer>
+    </Container>
     {hasDivider && <Divider bottom />}
-  </HeroWrapper>
+  </Wrapper>
 );
