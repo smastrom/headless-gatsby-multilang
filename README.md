@@ -551,7 +551,7 @@ return <Header>{isDark ? <LogoBlack /> : <LogoWhite />}</Header>;
 
 ## Logo
 
-You can import and replace the logo in `src/components/Layout/Header.jsx`.
+You can import and replace the logo in `src/components/Layout/Header/Full`.
 
 <br />
 
@@ -651,7 +651,7 @@ Assuming that the user never visited the website and tries to access a non-exist
 
 In such case `de` is considered as the user's preferred language and they will see the correct localized content in German.
 
-If there is no match, content in website default language will be displayed.
+If there is no match, content in website default language will be rendered.
 
 The preferred language is always evaluated according to the order priority of the browser (user) languages.
 
@@ -669,7 +669,7 @@ This starter has built-in support for any right-to-left language such as Hebrew 
 
 All you need to do is to add the language code to your DatoCMS languages list, set the fallbacks and start the dev server as explained above. If the language code matches one these [lang codes](https://meta.wikimedia.org/wiki/Template:List_of_language_names_ordered_by_code), once you switch the language, the layout direction will change accordingly.
 
-It doesn't matter if you choose "ar" or "ar-AE", the correct language direction will always be identified and injected to the `<html>` dir attribute.
+It doesn't matter if you choose "ar" or "ar-AE", the correct language direction will always be identified and injected to the `<html>` _dir_ attribute.
 
 ## useTextDirection hook
 
@@ -856,8 +856,8 @@ export const query = graphql`
 
 Then pass the field value to the prop `recordId`:
 
-```html
-<Navigator recordId="{data.datoCmsBlogRoot.id}">
+```js
+<Navigator recordId={data.datoCmsBlogRoot.id}>
   {data.datoCmsBlogRoot.title}
 </Navigator>
 ```
@@ -1116,7 +1116,7 @@ const { formattedDate } = useFormattedDate(data.datoCmsBlogPost.meta.updatedAt.f
 
 ## Increase categories number displayed by the dropdown
 
-If you want to increase the number of categories displayed by the dropdown, you can edit the file `src/components/Layout/Header/index.jsx` and increase the `end` parameter of the `Array.prototype.slice()` of the following variable:
+If you want to increase the number of categories displayed by the dropdown, you can edit the file `src/components/Layout/Header/Full` and increase the `end` parameter of the `Array.prototype.slice()` of the following variable:
 
 ```js
 const categoryNodesMatch = categoryNodes
@@ -1211,7 +1211,7 @@ Cannot query field "datoCmsContactPage" on type ...
 
 You can encounter this error both during build time and development.
 
-What happened here is that you removed a field or content model on DatoCMS and forgot to remove any query or variable referring to it in the project files. Check [this](#removing-fields) section.
+What happened here is that you removed a field or content model on DatoCMS and forgot to remove any query or variable referring to it in the project files. Please check [this](#removing-fields) section on how to fix this issue.
 
 <br />
 
