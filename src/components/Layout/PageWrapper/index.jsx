@@ -1,8 +1,7 @@
-import React from 'react';
 import { PageHead } from '../../Head/PageHead';
-import { Header } from '../Header';
+import { Header } from '../Header/Full';
 import { Footer } from '../Footer';
-import { LanguageProvider } from '../../ContextProviders/LanguageProvider';
+import { LocaleProvider } from '../../ContextProviders/LocaleProvider';
 
 export const PageWrapper = ({
   pageData,
@@ -11,7 +10,7 @@ export const PageWrapper = ({
   seoImage,
   children,
 }) => (
-  <LanguageProvider pageData={pageData}>
+  <LocaleProvider pageData={pageData}>
     <PageHead
       seoTitle={seoTitle}
       seoDescription={seoDescription}
@@ -20,5 +19,5 @@ export const PageWrapper = ({
     <Header />
     <main>{children}</main>
     <Footer />
-  </LanguageProvider>
+  </LocaleProvider>
 );

@@ -1,25 +1,21 @@
-import React from 'react';
 import { graphql } from 'gatsby';
+
 import { StructuredText, renderNodeRule } from 'react-datocms';
 import { isCode } from 'datocms-structured-text-utils';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+
 import { PageWrapper } from '../components/Layout/PageWrapper';
 import { ArticleHeader } from '../components/Layout/Blog/ArticleHeader';
-import {
-  ArticleBody,
-  CodeContainer,
-} from '../components/Layout/SharedStyles/TextContainers';
-import {
-  SectionContainerGridTwoCols,
-  SectionTitleContainer,
-  SectionWrapper,
-} from '../components/Layout/SharedStyles/Sections';
-import { Navigator } from '../components/LanguageHelpers/Navigator';
-import { BackToBlog } from '../components/Layout/Blog/BackToBlog';
-import { ArticleCard, CardImgArtDir } from '../components/Layout/Blog/Cards';
-import { SectionTitle } from '../components/Layout/SharedStyles/Headings';
+import { SectionTitle } from '../components/Layout/sharedStyles/headingStyles';
+import { Navigator } from '../components/Navigator';
 import { ArticleImage } from '../components/Layout/Blog/ArticleImage';
+import { ArticleBody } from '../components/Layout/Blog/ArticleBody';
+import { ArticleCard } from '../components/Layout/Blog/Cards/ArticleCard';
+import {
+  Section,
+  SectionGridTwoCols,
+} from '../components/Layout/sharedStyles/sectionStyles';
 
 const ArticleTemplate = ({
   data: {
@@ -45,8 +41,7 @@ const ArticleTemplate = ({
     seoDescription={seo?.seoDescription}
     seoImage={seo?.image?.seoImageUrl}
   >
-    <SectionWrapper as="article" isBlog isArticle>
-      <BackToBlog />
+    <Section as="article">
       <ArticleHeader
         title={title}
         subtitle={subtitle}
@@ -66,9 +61,10 @@ const ArticleTemplate = ({
             key={id}
             data={structuredBody}
             customRules={[
+              // eslint-disable-next-line react/no-unstable-nested-components
               renderNodeRule(isCode, ({ node: { language, code }, key }) => (
                 <div style={{ position: 'relative' }} key={key}>
-                  <CodeContainer>{language}</CodeContainer>
+                  <div id="code_tip">{language}</div>
                   <SyntaxHighlighter language={language} style={atomDark}>
                     {code}
                   </SyntaxHighlighter>
@@ -76,11 +72,11 @@ const ArticleTemplate = ({
               )),
             ]}
             renderLinkToRecord={({
-              record: { id },
+              record: { id: recordId },
               children,
               transformedMeta,
             }) => (
-              <Navigator {...transformedMeta} recordId={id}>
+              <Navigator {...transformedMeta} recordId={recordId}>
                 {children}
               </Navigator>
             )}
@@ -108,49 +104,44 @@ const ArticleTemplate = ({
           />
         )}
       </ArticleBody>
-    </SectionWrapper>
+    </Section>
     {relatedPosts.length > 0 && (
-      <SectionWrapper>
-        <SectionTitleContainer isArticleSectionHeading>
-          <SectionTitle>{nextReadText}</SectionTitle>
-        </SectionTitleContainer>
-        <SectionContainerGridTwoCols>
+      <Section>
+        <SectionTitle noPaddings css={{ maxWidth: 'var(--articleContainer)' }}>
+          {nextReadText}
+        </SectionTitle>
+        <SectionGridTwoCols>
           {relatedPosts.map(
             ({
-              id,
-              meta: { updatedAt },
-              title,
+              id: relatedId,
+              meta: { updatedAt: relatedUpdatedAt },
+              title: relatedTitle,
               coverImage,
-              subtitle,
+              subtitle: relatedSubtitle,
               author: {
                 authorName,
                 picture: { authorImageData },
               },
-              categoryLink,
+              categoryLink: relatedCategoryLink,
             }) => (
               <ArticleCard
-                key={id}
-                recordId={id}
-                date={updatedAt}
-                category={categoryLink}
-                cardImg={
-                  coverImage &&
-                  CardImgArtDir(
-                    coverImage.gatsbyImageData,
-                    coverImage.squaredImage,
-                    title
-                  )
-                }
-                title={title}
-                excerpt={subtitle}
+                key={relatedId}
+                recordId={relatedId}
+                date={relatedUpdatedAt}
+                category={relatedCategoryLink}
+                cardImg={coverImage.gatsbyImageData}
+                cardImgMobile={coverImage.squaredImage}
+                altImg={relatedTitle}
+                title={relatedTitle}
+                excerpt={relatedSubtitle}
                 authorImg={authorImageData}
                 authorAltImg={authorName}
                 authorName={authorName}
               />
             )
           )}
-        </SectionContainerGridTwoCols>
-      </SectionWrapper>
+        </SectionGridTwoCols>
+      </Section>
     )}
   </PageWrapper>
 );

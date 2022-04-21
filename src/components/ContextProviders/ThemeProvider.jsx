@@ -1,64 +1,71 @@
-import React, { useState, createContext, useRef, useEffect } from 'react';
+import { useState, createContext, useEffect, useCallback } from 'react';
+
 import {
-  isLightInStorage,
-  isDarkInStorage,
-  prefersDark,
-  prefersLight,
-  setLightThemeClass,
-  restoreLightTheme,
-  restoreDarkTheme,
-  setLightTheme,
-  setDarkTheme,
-} from '../../functions/setTheme';
+  STORAGE_DARK_THEME_VALUE,
+  STORAGE_LIGHT_THEME_VALUE,
+  LIGHT_THEME_CLASSNAME,
+  DARK_THEME_CLASSNAME,
+} from '../../constants';
 import { isSSR } from '../../functions/isSSR';
+import {
+  isLightPreferred,
+  addClass,
+  removeClass,
+  setStorageTheme,
+} from '../../functions/themeUtils';
 
-export const ThemeContext = createContext({});
+const ThemeContext = createContext({});
 
-export const ThemeProvider = ({ children }) => {
+const ThemeProvider = ({ children }) => {
+  const [isMounted, setIsMounted] = useState(false);
   const [isDark, setIsDark] = useState(() => {
-    if (isSSR) {
-      return false;
-    }
-    if (isLightInStorage()) {
-      restoreLightTheme();
-      return false;
-    }
-    if (isDarkInStorage()) {
-      restoreDarkTheme();
+    if (!isSSR) {
+      if (!localStorage.theme) {
+        if (isLightPreferred()) {
+          setStorageTheme(STORAGE_LIGHT_THEME_VALUE);
+          addClass(LIGHT_THEME_CLASSNAME);
+          return false;
+        }
+        setStorageTheme(STORAGE_DARK_THEME_VALUE);
+        addClass(DARK_THEME_CLASSNAME);
+        return true;
+      }
+      if (localStorage.theme === STORAGE_LIGHT_THEME_VALUE) {
+        addClass(LIGHT_THEME_CLASSNAME);
+        return false;
+      }
+      addClass(DARK_THEME_CLASSNAME);
       return true;
     }
-    if (prefersLight()) {
-      setLightTheme();
-      return false;
-    }
-    if (prefersDark()) {
-      setDarkTheme();
-      return true;
-    }
-    setLightThemeClass();
-    return false;
   });
 
-  const skipInitialRender = useRef(true);
-
-  useEffect(() => {
-    if (skipInitialRender.current) {
-      skipInitialRender.current = false;
-    } else if (isDark) {
-      setDarkTheme();
+  const handleDarkModeSwitch = useCallback(() => {
+    if (isDark) {
+      setStorageTheme(STORAGE_LIGHT_THEME_VALUE);
+      removeClass(DARK_THEME_CLASSNAME);
+      addClass(LIGHT_THEME_CLASSNAME);
+      setIsDark(false);
     } else {
-      setLightTheme();
+      setStorageTheme(STORAGE_DARK_THEME_VALUE);
+      removeClass(LIGHT_THEME_CLASSNAME);
+      addClass(DARK_THEME_CLASSNAME);
+      setIsDark(true);
     }
   }, [isDark]);
 
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return null;
+  }
+
   return (
-    <ThemeContext.Provider
-      value={{
-        isDark,
-        setIsDark,
-      }}
-    >
+    <ThemeContext.Provider value={{ isDark, handleDarkModeSwitch }}>
       {children}
     </ThemeContext.Provider>
   );
 };
+
+export { ThemeContext, ThemeProvider };

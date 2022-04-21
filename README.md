@@ -8,25 +8,22 @@ The most powerful multilanguage blog starter for Gatsby. Completely headless.
 
 [Live Demo](https://headlessmultilingual.gatsbyjs.io)
 
-<br />
-
-> This starter has been completely reworked on Februrary 2022. Multilanguage features are now handled in a simpler and powerful way among with a bunch of new features.
-
 </br>
 
 # Features
 
 - **100% Headless**: Define languages and translate pages, posts, slugs, SEO meta tags and PWA settings directly on DatoCMS.
-- Language switcher component swapping between different and equal slugs per locale
+- Language switcher component swapping between different slugs/paths per locale
 - Automatic and easy internal links localization using custom Navigator component
 - User preferred language detection and redirection
 - Built-in support for RTL languages such as Arabic or Hebrew
-- Per-locale PWA webmanifest files generation on build time, dynamically injected according to the page language.
+- Per-locale PWA webmanifest files generation on build time, dynamically injected according to the page locale.
 - Support for any language code path such as "/en-GB" or "/en"
 - 404 page displaying localized content according to the user preferred language
 - Choose which post or category to translate (and generate) for each locale.
 - Related posts, social sharing and synthax highlighting.
 - Dark mode with CSS variables
+- Built without any internationalization plugin, just Gatsby APIs.
 
 </br>
 
@@ -74,9 +71,11 @@ The most powerful multilanguage blog starter for Gatsby. Completely headless.
 
 # Why DatoCMS
 
-It is the most powerful headless CMS out there and also, the only one up to the job. You can define app languages directly in the project administration area and query them via GraphQL as well. Moreover it has dozens of features that give your content editors superpowers.
+It is the most powerful headless CMS out there and also, the only one up to the job. You can define app languages directly in the project administration area and query them via GraphQL as well. Moreover, it has dozens of features that give your content editors superpowers.
 
-if you are not familiar with it, the following links will be useful:
+Don't worry about the pricing or any other plan restriction, as long as your website will have less than 300 pages (for each locale :blush:) you will never exceed the free developer plan. There are no limits on the locales you can configure in your project.
+
+if you are not familiar with DatoCMS, the following links will be useful:
 
 - [DatoCMS and Gatsby](https://www.gatsbyjs.com/guides/datocms/)
 - [Validations](https://www.datocms.com/docs/content-modelling/validations)
@@ -156,7 +155,7 @@ On DatoCMS navigate to: **Settings > Environment > Settings** and check for the 
 
 ### 2. Remove unwanted languages and pick a fallback language
 
-If your website final language list won't include any of the following starter lang codes (`en`, `es-ES` or `it`), pick one of your choice (for example `en`) and <ins>**do not delete it**</ins>, just keep it in the list (for the being) and **delete the others**.
+If your website final language list won't include any of the fully translated starter language codes (`en`, `es-ES` or `it`), pick one of your choice (for example `en`) and <ins>**do not delete it**</ins>, just keep it in the list (for the being) and **delete the others**.
 
 Otherwise, just delete the unnecessary languages, leave the ones you will use and pick **one of your choice**.
 
@@ -357,7 +356,7 @@ _You will always notice which records needs to be translated:_
   options: {
     apiToken: '<YOUR_PUBLIC_API_TOKEN>',
     localeFallbacks: { // <-- Delete from here
-      'zh': 'en',
+      zh: 'en',
       'pt-BR' : 'en',
     }, // <-- to here
   },
@@ -498,7 +497,7 @@ If no posts are set, the section won't be displayed.
 
 ## Colors
 
-Navigate to `src/components/Layout/SharedStyles/globalStyle.js` and change the css variables **<ins>values</ins>** for the two following classes:
+Navigate to `src/components/Layout/sharedStyles/globalStyles.js` and change the css variables **<ins>values</ins>** for the two following classes:
 
 ```css
 .lightTheme {
@@ -552,13 +551,19 @@ return <Header>{isDark ? <LogoBlack /> : <LogoWhite />}</Header>;
 
 ## Logo
 
-You can import and replace the logo in `src/components/Layout/Header.jsx`.
+You can import and replace the logo in `src/components/Layout/Header/Full`.
+
+<br />
+
+## Custom fonts
+
+Please check this [issue](https://github.com/smastrom/headless-gatsby-multilang/issues/8) for a guide on how to change the default (safe) fonts.
 
 <br />
 
 ## Blog synthax highlighting
 
-By using [react-datocms](https://github.com/datocms/react-datocms)' `<StructuredText />` component, I set a custom render rule for the `code` node using the amazing package [react-synthax-hightlighter](https://www.npmjs.com/package/react-syntax-highlighter).
+By using [react-datocms](https://github.com/datocms/react-datocms)' `<StructuredText />` component, a custom **render rule** for the `code` node has been set using the amazing package [react-synthax-hightlighter](https://www.npmjs.com/package/react-syntax-highlighter).
 
 To change the theme, simply replace the import in `src/templates/Article.jsx` with your favourite style. Complete documentation and styles reference can be found [here](https://github.com/react-syntax-highlighter/react-syntax-highlighter).
 
@@ -567,11 +572,9 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { atomDark } from 'react-syntax-highlighter/dist/esm/styles/prism'; // <-- Import your favourite style
 ```
 
-If you want to override some styles from the original theme, you can do that by editing css rules in `src/components/Layout/SharedStyles/TextContainers.jsx`.
+If you want to override some styles from the original theme, you can do that by editing css rules in `src/components/Layout/Blog/ArticleBody/styles.js`.
 
-The related css block is commented as `/* Code block styles */`.
-
-If you wish to use another synthax highlighter, you can set your own `renderNodeRule` by following react-datocms' [documentation](https://github.com/datocms/react-datocms).
+If you wish to use another synthax highlighter, you can set your own `renderNodeRule` by following react-datocms [documentation](https://github.com/datocms/react-datocms).
 
 <br />
 
@@ -607,60 +610,56 @@ If you wish to customize the manifest JSON schema, you can edit the `manifest` o
 
 # Redirect
 
-### When a redirect takes place?
+When the user visits the homepage in default language ("/") a redirect will always take place if the language included in the `Accept-Language` request header matches one of the website's **secondary languages**.
 
-Once the user's preferred language has been evaluated and stored to `localStorage`, a redirect takes place when the user visits the homepage in default language ("/") via direct access (refresh / link).
+The redirect will be performed server-side and not in the browser.
 
-### When a redirect doesn't take place?
+**When starting the development server you will notice a warning like:**
 
-If the user's preferred language is equal to the website default language ("/") no redirect will take place.
+> There are routes that match both page and redirect. Pages take precedence over redirects so the redirect will
+> not work:
+>
+> - page: "/" and redirect: "/" -> "/it/"
+> - page: "/" and redirect: "/" -> "/es-ES/"
+> - page: "/" and redirect: "/" -> "/ar-AE/"
 
-### How the preferred language is evaluated?
+Do not worry, the redirect will take place as expected :smiley:
 
-When the user visits the homepage ("/") for the very first time, we try to find a match among the app's languages and the browser available languages:
+Please take note that the redirect will work only once the website has been deployed to Gatsby Cloud and not during local development.
 
-- Browser Languages: `["de-CH", "en-US"]`
-
-- App Languages: `["fr", "en", "de"]`
-
-In such case `de` is stored as `preferred_lang` in `localStorage` and the user is redirected to ("/de"). The language is evaluated according to the order priority of the browser (user) languages.
-
-When no languages are specified in the browser languages list, the system default language will be used to evaluate the preferred language.
-
-If there is no match, the app's default language will be stored as the preferred one.
-
-### How the preferred language is updated?
-
-- When the user accesses any page in a secondary language ("/es/guia") or a page in default language ("/guide") via direct link, we assume that the user wants to set that language as the preferred one.
-
-- When the user switches the language from the switcher a new `preferred_lang` value is stored/overwritten in `localStorage`
-
-If you want to disable the redirect, just remove the `<Redirect>` component in `gatsby-browser.js`.
-
-```jsx
-import Redirect from './src/components/LanguageHelpers/Redirect';
-import GlobalStyle from './src/components/Layout/SharedStyles/globalStyle';
-
-export const wrapPageElement = ({ element }) => (
-  <>
-    <GlobalStyles />
-    <Redirect /> // {/* <-- Remove it */}
-    {element}
-  </>
-);
-```
-
-Wheter or not you have set the `<Redirect />` component, the preferred language will always be stored/overwritten once the user switches the language from the switcher.
+> If for any reason you want to disable the redirect you can remove the lines ~45 to 60 in gatsby-node.js.
 
 <br />
 
 # 404 page
 
-If user never visited the website before and tries to access to a non-existent page, the behavior follows the same logic of the homepage redirect, the preferred language is evaluated and content is displayed in the correspondent language.
-
-In case the user will try to access a non-existent page in the future, content in preferred language will be displayed and the _back to home_ button will redirect to the correspont homepage.
-
 Content for 404 page can be localized on DatoCMS in the content model named `404 Page`.
+
+Unfortunately, Gatsby doesn't allow to server-side render the 404 page on each request. Such page must be statically generated on each build.
+
+However, content will always be rendered in correct language by following a different approach (in the browser):
+
+**Case 1 - Visiting a non-existent page for the very first time**
+
+Assuming that the user never visited the website and tries to access a non-existent page, we try to find a match among the website languages and the browser available languages.
+
+**Example:**
+
+- Browser Languages: `["de-CH", "en-US"]`
+
+- Website Languages: `["fr", "en", "de"]`
+
+In such case `de` is considered as the user's preferred language and they will see the correct localized content in German.
+
+If there is no match, content in website default language will be rendered.
+
+The preferred language is always evaluated according to the order priority of the browser (user) languages.
+
+**Case 2 - Visiting a non-existent page after having already browsed the website**
+
+When the user switches the language a new `preferred_lang` value is stored/overwritten in `localStorage` and it will be used to render the correspondent localized data for the 404 page.
+
+If the user never switched the language, we assume their preferred language is the website default language and content will be rendered accordingly.
 
 <br />
 
@@ -670,7 +669,7 @@ This starter has built-in support for any right-to-left language such as Hebrew 
 
 All you need to do is to add the language code to your DatoCMS languages list, set the fallbacks and start the dev server as explained above. If the language code matches one these [lang codes](https://meta.wikimedia.org/wiki/Template:List_of_language_names_ordered_by_code), once you switch the language, the layout direction will change accordingly.
 
-It doesn't matter if you choose "ar" or "ar-AE", the correct language direction will always be identified and injected to the `<html>` dir attribute.
+It doesn't matter if you choose "ar" or "ar-AE", the correct language direction will always be identified and injected to the `<html>` _dir_ attribute.
 
 ## useTextDirection hook
 
@@ -831,16 +830,16 @@ There are only two props in addition:
 | Prop     | Description                                                        | Required |
 | -------- | ------------------------------------------------------------------ | -------- |
 | recordId | The originalId field value of the record used to generate the page | Yes      |
-| passRef  | In case you need to pass a ref and have access it                  | No       |
+| passRef  | In case you need to pass a ref                                     | No       |
 
-The component will take care of retrieve and render the proper path according to the page language.
+The component will take care of retrieving and render the proper path according to the page language.
 
 ### Single link
 
 Import the **Navigator** component in any of your template/component:
 
 ```js
-import { Navigator } from '../../LanguageHelpers/Navigator';
+import { Navigator } from '../../../Navigator';
 ```
 
 Query the `originalId` field of your record or content model (if a single instance) with GraphQL. You can use `useStaticQuery` as well:
@@ -855,10 +854,10 @@ export const query = graphql`
     ...
 ```
 
-Pass the field to the prop `recordId`:
+Then pass the field value to the prop `recordId`:
 
-```html
-<Navigator recordId="{data.datoCmsBlogRoot.id}">
+```js
+<Navigator recordId={data.datoCmsBlogRoot.id}>
   {data.datoCmsBlogRoot.title}
 </Navigator>
 ```
@@ -1019,32 +1018,33 @@ This opens the doors to different scenarios where for example, your content edit
 
 ## Accessing languages
 
-You most like won't need to but if you want to access the `pageLanguage`, you can call this hook in any component file used in any of your templates:
+You most like won't need to but if you want to access the `pageLocale`, you can call this hook in any component file used in any of your templates:
 
 ```js
-import { usePageLanguage } from '/src/hooks/usePageLanguage';
+import { usePageLocale } from '/src/hooks/usePageLocale';
 ```
 
 And use it:
 
 ```js
-const { pageLanguage } = usePageLanguage();
+const { pageLocale } = usePageLocale();
 
-console.log(pageLanguage); // Logs ("es-ES") or any other language
+console.log(pageLocale); // Logs "es-ES"
 ```
 
 > :warning: Do not call this hook in your template files, call it in any component file and use it in your templates.
 
-Same for the website default language:
+Same for the website languages:
 
 ```js
-import { useDefaultLanguage } from '/src/hooks/useDefaultLanguage';
+import { useLocales } from '/src/hooks/useLocales';
 ```
 
 ```js
-const { defaultLanguage } = useDefaultLanguage();
+const { locales, defaultLocale } = usedefaultLocale();
 
-console.log(defaultLanguage); // Logs ("en") or your website default language
+console.log(locales); // Logs ["en", "es", "it"]
+console.log(defaultLocale); // Logs "en"
 ```
 
 <br />
@@ -1084,25 +1084,43 @@ const dateOptions = {
 
 Options can be edited in `src/functions/formatDateTime.js`.
 
-There are two functions in the file mentioned above:
+There are two functions in the above mentioned file:
 
-`formatDate(dateString, pageLanguage)` - Returns `Jul 17, 2021` or `17 lug 2021` according to the page language
+`formatDate(dateString, pageLocale)` - Returns `Jul 17, 2021` or `17 lug 2021` according to the page locale
 
-`formatDateTime(dateString, pageLanguage)` - Returns `Feb 10, 2022, 12:20 PM` or `10 feb 2022, 12:21`
+`formatDateTime(dateString, pageLocale)` - Returns `Feb 10, 2022, 12:20 PM` or `10 feb 2022, 12:21`
 
-This functions are called inside components which render the date.
+### useFormattedDate hook
 
-If for example you want to set different options for RTL languages, you can import the `useTextDirection` hook inside your component file and conditionally format the string with a different function or parameter.
+To quickly format the date coming from any DatoCMS / GraphQL field, import the hook:
+
+```js
+import { useFormattedDate } from '../hooks/useFormattedDate';
+```
+
+And use it:
+
+```js
+datoCmsBlogPost(originalId: { eq: $id }, locale: { eq: $locale }) {
+  meta {
+    updatedAt
+  }
+  ...
+
+const { formattedDate } = useFormattedDate(data.datoCmsBlogPost.meta.updatedAt);
+
+<time>{formattedDate}</time>
+```
 
 <br />
 
 ## Increase categories number displayed by the dropdown
 
-If you want to increase the number of categories displayed by the dropdown, you can edit the file `src/components/Layout/Header/index.jsx` and increase the `end` parameter of the `Array.prototype.slice()` of the following variable:
+If you want to increase the number of categories displayed by the dropdown, you can edit the file `src/components/Layout/Header/Full` and increase the `end` parameter of the `Array.prototype.slice()` of the following variable:
 
 ```js
 const categoryNodesMatch = categoryNodes
-  .filter(({ locale }) => locale === pageLanguage)
+  .filter(({ locale }) => locale === pageLocale)
   .slice(0, 6); // <-- Increase it
 ```
 
@@ -1193,7 +1211,7 @@ Cannot query field "datoCmsContactPage" on type ...
 
 You can encounter this error both during build time and development.
 
-What happened here is that you removed a field or content model on DatoCMS and forgot to remove any query or variable referring to it in the project files. Check [this](#removing-fields) section.
+What happened here is that you removed a field or content model on DatoCMS and forgot to remove any query or variable referring to it in the project files. Please check [this](#removing-fields) section on how to fix this issue.
 
 <br />
 
