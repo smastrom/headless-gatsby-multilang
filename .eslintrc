@@ -28,6 +28,7 @@
     "react/jsx-props-no-spreading": "off",
     "react/jsx-curly-newline": "off",
     "react/jsx-wrap-multilines": "off",
-    "react/no-array-index-key": "off"
+    "react/no-array-index-key": "off",
+    "react/jsx-no-constructed-context-values": "off"
   }
 }

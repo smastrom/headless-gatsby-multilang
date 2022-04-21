@@ -25,7 +25,6 @@ const BlogRootTemplate = ({
   >
     <Hero title={heroTitle} subtitle={heroSubtitle} />
     <CategoriesMenu />
-
     <SectionGridThreeCols>
       {blogPostNodes.map(
         ({ id, meta: { updatedAt }, coverImage, title, subtitle, author }) => (

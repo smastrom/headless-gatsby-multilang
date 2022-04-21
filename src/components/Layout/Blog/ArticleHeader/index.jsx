@@ -10,10 +10,7 @@ import {
   TwitterIcon,
   LinkedinIcon,
 } from '../../Icons/SocialIcons';
-import {
-  formatDate,
-  formatDateTime,
-} from '../../../../functions/formatDateTime';
+import { formatDateTime } from '../../../../functions/formatDateTime';
 import { useTextDirection } from '../../../../hooks/useTextDirection';
 import { usePageLocale } from '../../../../hooks/usePageLocale';
 import { Navigator } from '../../../Navigator';
@@ -33,6 +30,7 @@ import {
   CategoryBox,
   LastModified,
 } from './styles';
+import { useFormattedDate } from '../../../../hooks/useFormattedDate';
 
 const commonExtLinkProps = {
   rel: 'noreferrer',
@@ -51,7 +49,7 @@ export const ArticleHeader = ({
   category,
 }) => {
   const { href } = useLocation();
-  const { pageLanguage } = usePageLocale();
+  const { pageLocale } = usePageLocale();
   const { isRtl } = useTextDirection();
 
   const SocialIcons = [
@@ -69,6 +67,8 @@ export const ArticleHeader = ({
     },
   ];
 
+  const { formattedDate } = useFormattedDate(firstPublish);
+
   return (
     <>
       <Wrapper>
@@ -85,12 +85,12 @@ export const ArticleHeader = ({
               <Dot />
             </>
           )}
-          <Author as="time">{formatDate(firstPublish, pageLanguage)}</Author>
+          <Author as="time">{formattedDate}</Author>
         </AuthorDateContainer>
         <ArticleTitle>{title}</ArticleTitle>
         <ArticleSubtitle>{subtitle}</ArticleSubtitle>
         <LastModified>
-          {`${lastModifiedText}: ${formatDateTime(lastModified, pageLanguage)}`}
+          {`${lastModifiedText}: ${formatDateTime(lastModified, pageLocale)}`}
         </LastModified>
       </Wrapper>
       <ImgFullWrapper $isRtl={isRtl}>

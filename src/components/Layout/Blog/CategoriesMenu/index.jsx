@@ -22,7 +22,7 @@ export const CategoriesMenu = () => {
     allDatoCmsCategory: { categoryNodes },
   } = data;
 
-  const { pageLanguage } = usePageLocale();
+  const { pageLocale } = usePageLocale();
   const { isRtl } = useTextDirection();
 
   return (
@@ -31,7 +31,7 @@ export const CategoriesMenu = () => {
         <Nav>
           <NavList>
             {categoryNodes
-              .filter(({ locale }) => locale === pageLanguage)
+              .filter(({ locale }) => locale === pageLocale)
               .map(({ id, title }) => (
                 <li key={title}>
                   <CategoryLink recordId={id} activeClassName="activeClassLink">

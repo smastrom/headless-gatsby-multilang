@@ -86,7 +86,7 @@ export const Header = () => {
 
   /**
    * Since it is not possible to use variables in useStatic query, we filter correspondent
-   * localized nodes returned from staticQuery according to the pageLanguage
+   * localized nodes returned from staticQuery according to the pageLocale
    * and pass those data to MobileMenu and DropdownCategories components
    */
 
@@ -98,26 +98,26 @@ export const Header = () => {
     allDatoCmsMiscTextString: { textStringNodes },
   } = data;
 
-  const { pageLanguage } = usePageLocale();
+  const { pageLocale } = usePageLocale();
 
   const { id: categoryArchiveId } = categoriesArchiveNodes.find(
-    ({ locale }) => locale === pageLanguage
+    ({ locale }) => locale === pageLocale
   );
 
   const homepageNodesMatch = homepageNodes.find(
-    ({ locale }) => locale === pageLanguage
+    ({ locale }) => locale === pageLocale
   );
 
   const { seeAllCategoriesText } = textStringNodes.find(
-    ({ locale }) => locale === pageLanguage
+    ({ locale }) => locale === pageLocale
   );
 
   const menuNodesMatch = menuNodes.filter(
-    ({ locale }) => locale === pageLanguage
+    ({ locale }) => locale === pageLocale
   );
 
   const categoryNodesMatch = categoryNodes
-    .filter(({ locale }) => locale === pageLanguage)
+    .filter(({ locale }) => locale === pageLocale)
     .slice(0, 6);
 
   const {

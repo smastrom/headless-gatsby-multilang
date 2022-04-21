@@ -14,7 +14,7 @@ exports.createPages = async ({
    * allLanguages = ["en", "it", "es-ES", "ar-AE"]
    *
    * The first array item is always equal to your default language.
-   * We use the "defaultLanguage" value to build the page paths properly.
+   * We use the "defaultLocale" value to build the page paths properly.
    *
    * As soon as you add, remove and edit the order languages on Dato, page
    * paths generate below will be re-generated accordingly.
@@ -22,12 +22,12 @@ exports.createPages = async ({
 
   const {
     data: {
-      datoCmsSite: { allLanguages },
+      datoCmsSite: { locales },
     },
   } = await graphql(`
     query {
       datoCmsSite {
-        allLanguages: locales
+        locales
       }
     }
   `);
@@ -36,14 +36,14 @@ exports.createPages = async ({
     '\x1b[35m',
     'multilang',
     '\x1b[0m',
-    `Found ${allLanguages.length} languages: ${allLanguages.join(', ')}`
+    `Found ${locales.length} languages: ${locales.join(', ')}`
   );
 
-  const [defaultLanguage] = allLanguages;
+  const [defaultLocale] = locales;
 
-  // Handle homepage server-side redirects
+  // Handle homepage server-side redirects - Start
 
-  const secondaryLanguages = [...allLanguages];
+  const secondaryLanguages = [...locales];
   secondaryLanguages.shift();
 
   secondaryLanguages.forEach((language) => {
@@ -58,6 +58,8 @@ exports.createPages = async ({
       },
     });
   });
+
+  // Handle homepage server-side redirects - End
 
   /**
    * From now on we query and export to the pageContext object the "originalId" and the "locale"
@@ -101,7 +103,7 @@ exports.createPages = async ({
 
   homepageNodes.forEach(({ id, locale }) => {
     createPage({
-      path: locale === defaultLanguage ? '/' : locale,
+      path: locale === defaultLocale ? '/' : locale,
       component: HomePageTemplate,
       context: {
         id,
@@ -137,7 +139,7 @@ exports.createPages = async ({
   categoriesArchiveNodes.forEach(({ locale, slug, id }) => {
     createPage({
       path: (() => {
-        if (locale === defaultLanguage) return `/${slug}`;
+        if (locale === defaultLocale) return `/${slug}`;
         return `/${locale}/${slug}/`;
       })(),
       component: CategoriesArchiveTemplate,
@@ -171,7 +173,7 @@ exports.createPages = async ({
   blogRootNodes.forEach(({ locale, slug, id }) => {
     createPage({
       path: (() => {
-        if (locale === defaultLanguage) return `/${slug}`;
+        if (locale === defaultLocale) return `/${slug}`;
         return `/${locale}/${slug}/`;
       })(),
       component: BlogRootTemplate,
@@ -209,7 +211,7 @@ exports.createPages = async ({
 
   otherPagesNodes.forEach(({ locale, slug, id }) => {
     createPage({
-      path: locale === defaultLanguage ? `/${slug}` : `${locale}/${slug}`,
+      path: locale === defaultLocale ? `/${slug}` : `${locale}/${slug}`,
       component: OtherPagesTemplate,
       context: {
         id,
@@ -258,7 +260,7 @@ exports.createPages = async ({
 
     createPage({
       path: (() => {
-        if (locale === defaultLanguage) return `${blogPathName}/${slug}`;
+        if (locale === defaultLocale) return `${blogPathName}/${slug}`;
         return `/${locale}/${blogPathName}/${slug}`;
       })(),
       component: CategoryTemplate,
@@ -298,7 +300,7 @@ exports.createPages = async ({
 
   const ArticleTemplate = resolve('src/templates/Article.jsx');
 
-  allLanguages.forEach((siteLocale) => {
+  locales.forEach((siteLocale) => {
     let pageCounter = 0;
 
     const blogPostNodesPerLocale = blogPostNodes.filter(
@@ -310,7 +312,7 @@ exports.createPages = async ({
     blogPostNodesPerLocale.forEach(({ locale, slug, id, categoryLink }) => {
       const categorySlug = categoryLink?.categorySlug;
       const isUncategorized = categoryLink === null;
-      const isGeneratingDefaultLang = locale === defaultLanguage;
+      const isGeneratingDefaultLang = locale === defaultLocale;
 
       pageCounter += 1;
 
@@ -452,14 +454,14 @@ exports.createPages = async ({
     JSON.stringify(manifest, undefined, 2)
   );
 
-  // Additional language webmanifest files generation
+  // Additional locales webmanifest files generation
 
-  const additionalLanguages = seoAndPwaNodes.length;
+  const additionalLocales = seoAndPwaNodes.length;
 
-  if (additionalLanguages > 1) {
+  if (additionalLocales > 1) {
     seoAndPwaNodes
       // Exclude default language already generated
-      .filter(({ locale }) => locale !== defaultLanguage)
+      .filter(({ locale }) => locale !== defaultLocale)
       // eslint-disable-next-line no-shadow
       .forEach(({ name, shortName, description, pwaLocale }) => {
         // eslint-disable-next-line no-shadow

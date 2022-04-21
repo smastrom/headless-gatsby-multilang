@@ -26,10 +26,10 @@ export const BackToBlog = () => {
     allDatoCmsMiscTextString: { textStringNodes },
   } = data;
 
-  const { pageLanguage } = usePageLocale();
+  const { pageLocale } = usePageLocale();
 
   const nodeLocaleMatch = textStringNodes.find(
-    ({ locale }) => locale === pageLanguage
+    ({ locale }) => locale === pageLocale
   );
   const { backToBlogAriaLabel } = nodeLocaleMatch;
 

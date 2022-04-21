@@ -1,18 +1,18 @@
 import { useState, createContext, useEffect, useCallback } from 'react';
 
 import {
-  isLightPreferred,
-  addClass,
-  removeClass,
-  setStorageTheme,
-} from '../../functions/themeUtils';
-import { isSSR } from '../../functions/isSSR';
-import {
   STORAGE_DARK_THEME_VALUE,
   STORAGE_LIGHT_THEME_VALUE,
   LIGHT_THEME_CLASSNAME,
   DARK_THEME_CLASSNAME,
 } from '../../constants';
+import { isSSR } from '../../functions/isSSR';
+import {
+  isLightPreferred,
+  addClass,
+  removeClass,
+  setStorageTheme,
+} from '../../functions/themeUtils';
 
 const ThemeContext = createContext({});
 
@@ -62,13 +62,7 @@ const ThemeProvider = ({ children }) => {
   }
 
   return (
-    <ThemeContext.Provider
-      // eslint-disable-next-line react/jsx-no-constructed-context-values
-      value={{
-        isDark,
-        handleDarkModeSwitch,
-      }}
-    >
+    <ThemeContext.Provider value={{ isDark, handleDarkModeSwitch }}>
       {children}
     </ThemeContext.Provider>
   );

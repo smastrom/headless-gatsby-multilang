@@ -1,5 +1,4 @@
-import { formatDate } from '../../../../functions/formatDateTime';
-import { usePageLocale } from '../../../../hooks/usePageLocale';
+import { useFormattedDate } from '../../../../hooks/useFormattedDate';
 
 import {
   CardLink,
@@ -28,9 +27,9 @@ export const ArticleCard = ({
   cardImgMobile,
   altImg,
 }) => {
-  const { pageLanguage } = usePageLocale();
-
   const images = artDirectedCardImgs(cardImg, cardImgMobile);
+
+  const { formattedDate } = useFormattedDate(date);
 
   return (
     <article>
@@ -40,7 +39,7 @@ export const ArticleCard = ({
         </CardImgContainer>
         <ContentWrapper>
           {category && <CategoryBox>{category.title}</CategoryBox>}
-          <Date>{formatDate(date, pageLanguage)}</Date>
+          <Date>{formattedDate}</Date>
           <PostTitle>{title}</PostTitle>
           <Excerpt>{excerpt}</Excerpt>
           <AuthorCtaContainer>

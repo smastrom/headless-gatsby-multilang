@@ -33,13 +33,13 @@ export const PageHead = ({ seoTitle, seoDescription, seoImage }) => {
   } = data;
 
   const { href } = useLocation();
-  const { pageLanguage } = usePageLocale();
+  const { pageLocale } = usePageLocale();
   const { defaultLocale } = useLocales();
 
   const { isRtl } = useTextDirection();
 
   const seoAndPwaNodesMatch = seoAndPwaNodes.find(
-    ({ locale }) => locale === pageLanguage
+    ({ locale }) => locale === pageLocale
   );
 
   const {
@@ -76,7 +76,7 @@ export const PageHead = ({ seoTitle, seoDescription, seoImage }) => {
     <Helmet>
       {/* HTML lang and dir attrs */}
 
-      <html lang={pageLanguage} dir={isRtl ? 'rtl' : 'ltr'} />
+      <html lang={pageLocale} dir={isRtl ? 'rtl' : 'ltr'} />
 
       {/* PWA */}
 
@@ -84,8 +84,8 @@ export const PageHead = ({ seoTitle, seoDescription, seoImage }) => {
       <link
         rel="manifest"
         href={(() => {
-          if (pageLanguage === defaultLocale) return '/manifest.webmanifest';
-          return `/manifest_${pageLanguage}.webmanifest`;
+          if (pageLocale === defaultLocale) return '/manifest.webmanifest';
+          return `/manifest_${pageLocale}.webmanifest`;
         })()}
         crossOrigin="anonymous"
       />

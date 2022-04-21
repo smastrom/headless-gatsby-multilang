@@ -26,7 +26,7 @@ export const Footer = () => {
     }
   `);
 
-  const { pageLanguage } = usePageLocale();
+  const { pageLocale } = usePageLocale();
 
   const {
     allDatoCmsFooter: { nodes },
@@ -36,7 +36,7 @@ export const Footer = () => {
     <Wrapper>
       <Container>
         {nodes
-          .filter(({ locale }) => locale === pageLanguage)
+          .filter(({ locale }) => locale === pageLocale)
           .map(
             ({
               id,

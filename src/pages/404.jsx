@@ -8,8 +8,8 @@ import {
   findSecondaryLang,
   isDefaultStored,
   isSecondaryStored,
-} from '../functions/langUtils';
-import { getPreferredLang } from '../functions/getPreferredLang';
+} from '../functions/localeUtils';
+import { getPreferredLocale } from '../functions/getPreferredLocale';
 import { isSSR } from '../functions/isSSR';
 import { NotFoundPageHead } from '../components/Head/NotFoundPageHead';
 import { useLocales } from '../hooks/useLocales';
@@ -76,6 +76,7 @@ const NotFoundPage = () => {
         storedLocale,
         defaultLocale
       );
+
       if (isDefaultLangStored) return defaultLangProps;
 
       // If secondary locale is already stored
@@ -85,6 +86,7 @@ const NotFoundPage = () => {
         storedLocale,
         defaultLocale
       );
+
       if (isSecondaryLangStored) {
         const storedLangProps = propNodes.find(
           ({ locale }) => locale === storedLocale
@@ -107,17 +109,20 @@ const NotFoundPage = () => {
       }
 
       /**
-       * If no locale has been saved (e.g. first time visit), evaluate the preferred locale
-       * according to browser language list
+       * If no locale has been stored previously (e.g. first time visit), evaluate
+       * the preferred locale according to browser language list
        */
 
-      const matchingLangCode = getPreferredLang(browserLangCodes, appLangCodes);
+      const matchingLangCode = getPreferredLocale(
+        browserLangCodes,
+        appLangCodes
+      );
 
-      const defaultLanguageMatch = matchingLangCode === defaultLocale;
+      const defaultLocaleMatch = matchingLangCode === defaultLocale;
 
       // If it equals to default language
 
-      if (!storedLocale && defaultLanguageMatch) {
+      if (!storedLocale && defaultLocaleMatch) {
         storeLocale(defaultLocale);
         return defaultLangProps;
       }

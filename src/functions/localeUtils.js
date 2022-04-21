@@ -31,16 +31,16 @@ const isRtlLang = (contextLocale) => {
   return rtlLangList.some((lang) => lang === isoLangCode);
 };
 
-const isDefaultStored = (array, storageItem, defaultLanguage) => {
+const isDefaultStored = (array, storageItem, defaultLocale) => {
   const isStored = array.some(
-    (lang) => lang === storageItem && lang === defaultLanguage
+    (lang) => lang === storageItem && lang === defaultLocale
   );
   return isStored;
 };
 
-const isSecondaryStored = (array, storageItem, defaultLanguage) => {
+const isSecondaryStored = (array, storageItem, defaultLocale) => {
   const isStored = array.some(
-    (lang) => lang === storageItem && lang !== defaultLanguage
+    (lang) => lang === storageItem && lang !== defaultLocale
   );
   return isStored;
 };

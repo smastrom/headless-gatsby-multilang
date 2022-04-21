@@ -1,6 +1,6 @@
-import { getLangCode } from './langUtils';
+import { getLangCode } from './localeUtils';
 
-export const getPreferredLang = (browserLangCodes, appLangCodes) => {
+export const getPreferredLocale = (browserLangCodes, appLangCodes) => {
   if (browserLangCodes.length < 1 || appLangCodes.length < 1) {
     throw new Error('Unable to retrieve language codes.');
   }
@@ -14,9 +14,8 @@ export const getPreferredLang = (browserLangCodes, appLangCodes) => {
     if (typeof findIetfLangCode === 'string') {
       matchingLangCode = findIetfLangCode;
     } else if (!findIetfLangCode) {
-      const browserLangCut = getLangCode(browserLang);
       const findFullLangCode = appLangCodes.find(
-        (appLangCode) => getLangCode(appLangCode) === browserLangCut
+        (appLangCode) => getLangCode(appLangCode) === getLangCode(browserLang)
       );
       if (typeof findFullLangCode === 'string') {
         matchingLangCode = findFullLangCode;

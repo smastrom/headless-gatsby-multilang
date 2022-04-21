@@ -1,9 +1,10 @@
 import { useContext } from 'react';
-import { LanguageContext } from '../components/ContextProviders/LanguageProvider';
+import { LocaleContext } from '../components/ContextProviders/LocaleProvider';
 
 export const usePageLocale = () => {
-  const { pageLanguage } = useContext(LanguageContext);
-  if (!pageLanguage) {
+  const { pageLocale } = useContext(LocaleContext);
+
+  if (!pageLocale) {
     throw new Error(
       `usePageLangauge hook cannot be called inside a template file. Call it inside of a component,
       then import the component in the template file.
@@ -13,5 +14,6 @@ export const usePageLocale = () => {
       in gatsby-node.js`
     );
   }
-  return { pageLanguage };
+
+  return { pageLocale };
 };

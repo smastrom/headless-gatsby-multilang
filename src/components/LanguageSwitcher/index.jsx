@@ -1,6 +1,6 @@
 import { graphql, useStaticQuery } from 'gatsby';
 
-import { storeLocale, getLangCode } from '../../functions/langUtils';
+import { storeLocale, getLangCode } from '../../functions/localeUtils';
 import { usePageId } from '../../hooks/usePageId';
 import { usePageLocale } from '../../hooks/usePageLocale';
 import { useLocales } from '../../hooks/useLocales';
@@ -31,7 +31,7 @@ export const LanguageSwitcher = () => {
   } = data;
 
   const { pageId } = usePageId();
-  const { pageLanguage } = usePageLocale();
+  const { pageLocale } = usePageLocale();
   const { defaultLocale, locales } = useLocales();
 
   const getPathMatch = (renderingLocale) => {
@@ -62,7 +62,7 @@ export const LanguageSwitcher = () => {
     <Nav>
       <List>
         {locales.map((locale) =>
-          locale === pageLanguage ? (
+          locale === pageLocale ? (
             <ListItem key={locale}>
               {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
               <Link isActive as="span">
