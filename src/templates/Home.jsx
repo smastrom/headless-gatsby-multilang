@@ -170,7 +170,6 @@ export const query = graphql`
     }
     datoCmsMiscTextString(locale: { eq: $locale }) {
       locale
-      seeAllButton
       seeAllPosts
     }
   }
