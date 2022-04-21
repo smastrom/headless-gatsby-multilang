@@ -75,7 +75,7 @@ It is the most powerful headless CMS out there and also, the only one up to the 
 
 Don't worry about the pricing or any other plan restriction, as long as your website will have less than 300 pages (for each locale :blush:) you will never exceed the free developer plan. There are no limits on the locales you can configure in your project.
 
-if you are not familiar with it, the following links will be useful:
+if you are not familiar with DatoCMS, the following links will be useful:
 
 - [DatoCMS and Gatsby](https://www.gatsbyjs.com/guides/datocms/)
 - [Validations](https://www.datocms.com/docs/content-modelling/validations)
