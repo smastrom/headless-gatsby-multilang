@@ -30,6 +30,7 @@ const ArticleTemplate = ({
       meta: { updatedAt, firstPublishedAt },
       categoryLink,
       relatedPosts,
+      noTranslate
     },
     datoCmsMiscTextString: { updatedAtText, nextReadText },
   },
@@ -54,6 +55,7 @@ const ArticleTemplate = ({
         lastModified={updatedAt}
         lastModifiedText={updatedAtText}
         category={categoryLink}
+        noTranslate={noTranslate]
       />
       <ArticleBody>
         {structuredBody?.value && (
@@ -105,13 +107,15 @@ const ArticleTemplate = ({
         )}
       </ArticleBody>
     </Section>
-    {relatedPosts.length > 0 && (
+    {relatedPosts.filter(({ noTranslate }) => !noTranslate).length > 0 && (
       <Section>
         <SectionTitle noPaddings css={{ maxWidth: 'var(--articleContainer)' }}>
           {nextReadText}
         </SectionTitle>
         <SectionGridTwoCols>
-          {relatedPosts.map(
+          {relatedPosts
+           .filter(({ noTranslate }) => !noTranslate)
+           .map(
             ({
               id: relatedId,
               meta: { updatedAt: relatedUpdatedAt },
@@ -189,6 +193,7 @@ export const query = graphql`
       }
       relatedPosts {
         id: originalId
+        locale
         meta {
           updatedAt
         }
@@ -220,6 +225,7 @@ export const query = graphql`
         }
         subtitle
         title
+        noTranslate
       }
       structuredBody {
         blocks {
